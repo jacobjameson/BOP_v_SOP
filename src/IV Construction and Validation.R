@@ -172,104 +172,130 @@ screenreg(list(placebo3.1, placebo3.2, placebo3.3),
 
 # Sub Group Analysis 1
 ## Use tendency constructed from all complaints
-#=========================================================================
-# LOS
-#=========================================================================
-
-# loop over all unique complaints and run subgroup analysis
-unique_complaints <- unique(final$CHIEF_COMPLAINT)
-
-results_df <- data.frame(
-  CHIEF_COMPLAINT = character(),
-  Coefficient = numeric(),
-  P_value = numeric(),
-  stringsAsFactors = FALSE
-)
-
-for(complaint in unique_complaints){
+subgroup_analysis <- function(dependent_var, caption_text){
   
+  unique_complaints <- unique(final$CHIEF_COMPLAINT)
+  
+  results_df <- data.frame(
+    CHIEF_COMPLAINT = character(),
+    Coefficient = numeric(),
+    P_value = numeric(),
+    stringsAsFactors = FALSE
+  )
+  
+  for(complaint in unique_complaints){
+    
     sub_data <- final[final$CHIEF_COMPLAINT == complaint, ]
-    result <- summary(felm(ln_ED_LOS ~ avg_nEDTests | 
-                           dayofweekt + month  | 
-                           (any.batch ~ batch.tendency + avg_nEDTests) | 0, 
-                         data = sub_data))
+    result <- summary(
+      felm(as.formula(
+        paste(dependent_var,"~ avg_nEDTests | 
+                            dayofweekt + month  | 
+                            (any.batch ~ batch.tendency + avg_nEDTests) | 0")),
+                           data = sub_data))
+    
+    coeff <- result$coef["`any.batch(fit)`", "Estimate"]
+    p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
+    
+    results_df <- rbind(results_df, 
+                        data.frame(CHIEF_COMPLAINT = complaint, 
+                                   Coefficient = coeff, P_value = p_val))
+  }
   
-  coeff <- result$coef["`any.batch(fit)`", "Estimate"]
-  p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
+  # Formatting
+  results_df$Coefficient <- round(results_df$Coefficient, 3)
+  results_df$P_value <- round(results_df$P_value, 3)
+  results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
+                                    ifelse(results_df$P_value < 0.05, "**", 
+                                           ifelse(results_df$P_value < 0.1, "*", "")))
+  results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
+                                           results_df$Significance)
+  results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
   
-  results_df <- rbind(results_df, 
-                      data.frame(CHIEF_COMPLAINT = complaint, 
-                                 Coefficient = coeff, P_value = p_val))
+  latex_table <- xtable(results_df, 
+                        caption = caption_text, 
+                        align = c("l","l", "r", "r"))
+  
+  return(print(latex_table, type = "latex", caption.placement = "top"))
 }
 
-# Convert to a Latex Table
-results_df$Coefficient <- round(results_df$Coefficient, 3)
-results_df$P_value <- round(results_df$P_value, 3)
-
-results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
-                           ifelse(results_df$P_value < 0.05, "**", 
-                           ifelse(results_df$P_value < 0.1, "*", "")))
-
-results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
-                                         results_df$Significance)
-
-results_df$Coefficient_Starred <- as.character(results_df$Coefficient_Starred)
-results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
-
-latex_table <- xtable(results_df, 
-                      caption = "Regression Results by Chief Complaint", 
-                      align = c("l","l", "r", "r"))
-
-print(latex_table, type = "latex", caption.placement = "top")
-
-#=========================================================================
-# Number of Tests
-#=========================================================================
-
-# loop over all unique complaints and run subgroup analysis
-results_df <- data.frame(
-  CHIEF_COMPLAINT = character(),
-  Coefficient = numeric(),
-  P_value = numeric(),
-  stringsAsFactors = FALSE
+# Run the analyses and print tables
+analyses <- list(
+  list(var="ln_ED_LOS", caption="LOS Regression Results by Chief Complaint"),
+  list(var="nEDTests", caption="NTests Regression Results by Chief Complaint"),
+  list(var="RTN_72_HR", caption="72 Return Regression Results by Chief Complaint")
 )
 
-for(complaint in unique_complaints){
+lapply(analyses, function(x) subgroup_analysis(x$var, x$caption))
+
+# Sub Group Analysis 2
+## Use tendency constructed from each complaints
+
+subgroup_analysis2 <- function(dependent_var, caption_text){
   
-  sub_data <- final[final$CHIEF_COMPLAINT == complaint, ]
-  result <- summary(felm(nEDTests ~ avg_nEDTests | 
-                         dayofweekt + month  | 
-                         (any.batch ~ batch.tendency + avg_nEDTests) | 0, 
-                         data = sub_data))
+  unique_complaints <- unique(final$CHIEF_COMPLAINT)
   
-  coeff <- result$coef["`any.batch(fit)`", "Estimate"]
-  p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
+  results_df <- data.frame(
+    CHIEF_COMPLAINT = character(),
+    Coefficient = numeric(),
+    P_value = numeric(),
+    stringsAsFactors = FALSE
+  )
   
-  results_df <- rbind(results_df, 
-                      data.frame(CHIEF_COMPLAINT = complaint, 
-                                 Coefficient = coeff, P_value = p_val))
+  for(complaint in unique_complaints){
+    
+    sub_data <- final[final$CHIEF_COMPLAINT == complaint, ]
+    
+    
+    # Construct batch tendency for the subset
+    sub_data$residual_batch <- resid(
+      felm(any.batch ~ 1 | dayofweekt + month, 
+           data=sub_data
+      )
+    )
+    sub_data <- sub_data %>%
+      group_by(ED_PROVIDER) %>%
+      mutate(Sum_Resid=sum(residual_batch, na.rm=T),
+             batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>% 
+      ungroup()
+    
+    result <- summary(
+      felm(as.formula(
+        paste(dependent_var,"~ avg_nEDTests | 
+                            dayofweekt + month  | 
+                            (any.batch ~ batch.tendency + avg_nEDTests) | 0")),
+        data = sub_data))
+    
+    coeff <- result$coef["`any.batch(fit)`", "Estimate"]
+    p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
+    
+    results_df <- rbind(results_df, 
+                        data.frame(CHIEF_COMPLAINT = complaint, 
+                                   Coefficient = coeff, P_value = p_val))
+  }
+  
+  # Formatting
+  results_df$Coefficient <- round(results_df$Coefficient, 3)
+  results_df$P_value <- round(results_df$P_value, 3)
+  results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
+                                    ifelse(results_df$P_value < 0.05, "**", 
+                                           ifelse(results_df$P_value < 0.1, "*", "")))
+  results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
+                                           results_df$Significance)
+  results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
+  
+  latex_table <- xtable(results_df, 
+                        caption = caption_text, 
+                        align = c("l","l", "r", "r"))
+  
+  return(print(latex_table, type = "latex", caption.placement = "top"))
 }
 
-# Convert to a Latex Table
-results_df$Coefficient <- round(results_df$Coefficient, 3)
-results_df$P_value <- round(results_df$P_value, 3)
+# Run the analyses and print tables
+analyses <- list(
+  list(var="ln_ED_LOS", caption="LOS Regression Results by Chief Complaint"),
+  list(var="nEDTests", caption="NTests Regression Results by Chief Complaint"),
+  list(var="RTN_72_HR", caption="72 Return Regression Results by Chief Complaint")
+)
 
-results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
-                           ifelse(results_df$P_value < 0.05, "**", 
-                           ifelse(results_df$P_value < 0.1, "*", "")))
-
-results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
-                                         results_df$Significance)
-
-results_df$Coefficient_Starred <- as.character(results_df$Coefficient_Starred)
-results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
-
-latex_table <- xtable(results_df, 
-                      caption = "Regression Results by Chief Complaint", 
-                      align = c("l","l", "r", "r"))
-
-print(latex_table, type = "latex", caption.placement = "top")
-
-
-
+lapply(analyses, function(x) subgroup_analysis2(x$var, x$caption))
 
