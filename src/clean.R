@@ -588,7 +588,7 @@ final$complaint_esi <- paste(final$CHIEF_COMPLAINT, final$ESI)
 # Limit to non-urniary complaints (low batching liklihood)
 final <- final %>%
   group_by(CHIEF_COMPLAINT) %>%
-  filter(n() > 1000, CHIEF_COMPLAINT != 'Urinary Complaints')
+  filter(n() > 1000)
 
 
 rm(list = setdiff(ls(), "final"))

@@ -78,4 +78,78 @@ screenreg(list(first_stage_final,
 ## Placebo Check
 #=========================================================================
 
+final %>%
+  group_by(CHIEF_COMPLAINT) %>%
+  summarise(mean.batch = mean(any.batch), n =n()) %>%
+  arrange(desc(mean.batch))
+
+# The idea here is that we want to show that being a high-batching
+# physician is not associated with other traits of a high-quality
+# physician. We are going to show that for Urinary Complaints,
+# a complaint area where batching is rare, that there are not preferable
+# outcomes associated with being a batcher
+
+placebo <- final %>%
+  filter(CHIEF_COMPLAINT == 'Urinary Complaints')
+
+#=========================================================================
+# LOS
+#=========================================================================
+placebo1.1 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
+                  dayofweekt + month | 0 | ED_PROVIDER, 
+                  data = placebo)
+
+placebo1.2 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
+                  dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                  data = placebo)
+
+placebo1.3 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
+                  dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                  data = placebo)
+
+screenreg(list(placebo1.1, placebo1.2, placebo1.3), 
+          include.fstatistic = T)
+
+#=========================================================================
+# Number of Tests
+#=========================================================================
+
+placebo2.1 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month | 0 | ED_PROVIDER, 
+                   data = placebo)
+
+placebo2.2 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                   data = placebo)
+
+placebo2.3 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                   data = placebo)
+
+screenreg(list(placebo2.1, placebo2.2, placebo2.3), 
+          include.fstatistic = T)
+
+#=========================================================================
+# 72 HR Return
+#=========================================================================
+
+placebo3.1 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month | 0 | ED_PROVIDER, 
+                   data = placebo)
+
+placebo3.2 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                   data = placebo)
+
+placebo3.3 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
+                   dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                   data = placebo)
+
+screenreg(list(placebo3.1, placebo3.2, placebo3.3), 
+          include.fstatistic = T)
+
+
+
+
+
 
