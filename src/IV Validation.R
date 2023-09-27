@@ -11,25 +11,6 @@ library(xtable)
 
 ##########################################################################
 #=========================================================================
-# IV Construction --------------------------------------------------------
-#=========================================================================
-##########################################################################
-
-# Step 1: leave-out residualize at the ED encounter level
-## conditional on shift-level variation, random assignment
-## residual from regression represents physician tendency to batch
-final$residual_batch <- resid(
-  felm(any.batch ~ 0 | dayofweekt + month, data=final))
-
-# Step 2: get batch tendency for each provider
-final <- final %>%
-  group_by(ED_PROVIDER) %>%
-  mutate(Sum_Resid=sum(residual_batch, na.rm=T),
-         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>% 
-  ungroup()
-
-##########################################################################
-#=========================================================================
 # Establishing IV Validity -----------------------------------------------
 #=========================================================================
 ## Relevance
