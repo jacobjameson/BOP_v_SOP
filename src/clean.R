@@ -6,6 +6,7 @@ rm(list = ls())
 
 library(tidyverse)
 library(stringr)
+library(lfe)
 
 #=========================================================================
 # Determine test times
@@ -553,8 +554,7 @@ final <- df %>%
          rel_minutes_triage, lab_image_batch, image_image_batch, imaging,
          overlap_per_min, overlap_count, complaint_esi, dayofweekt, month) %>%
   mutate(RTN_72_HR = ifelse(RTN_72_HR == 'Y', 1, 0),
-         RTN_72_HR_ADMIT = ifelse(RTN_72_HR_ADMIT == 'Y', 1, 0)) %>%
-  filter(nEDTests > 0, ED_LOS != 0, ED_LOS < 2880)
+         RTN_72_HR_ADMIT = ifelse(RTN_72_HR_ADMIT == 'Y', 1, 0)) 
 
 final$age_groups <- cut(final$ARRIVAL_AGE_DI, 
                         c(-Inf, 20, 45, 65, Inf),
@@ -592,6 +592,7 @@ final <- final %>%
 
 
 rm(list = setdiff(ls(), "final"))
+
 #=========================================================================
 ##########################################################################
 #=========================================================================
