@@ -8,6 +8,7 @@ source('src/clean.R')
 library(caret)
 library(lmtest)
 library(sandwich)
+library(ggsci)
 library(xtable) # Output to LaTeX table format
 
 ##########################################################################
@@ -58,25 +59,17 @@ for (dummy in vars) {
 }
 
 print(xtable(balance, 
-             caption = "Exhibit 2: Wald Test Results"), type = "latex")
+             caption = "Wald Test Results"), type = "latex")
 
 ##########################################################################
 
 ##########################################################################
 #=========================================================================
-# Table []
-#   - Show that across physician, there is random assignment and patient
-#     characteristics are balanced
+# Figure []
+#   - Show that frequency of batching that occurs across complaints
 #=========================================================================
 
-#=========================================================================
-# Figure 2
-#   - Show that across physician, there is variation in batching and 
-#     propensity to test
-#=========================================================================
-
-fig.2 <- final %>%
-  filter(nEDTests > 0, ED_LOS != 0, ED_LOS < 2880)
+fig.2 <- final 
 
 collapsed_df <- fig.2 %>%
   group_by(CHIEF_COMPLAINT) %>%
@@ -114,10 +107,7 @@ collapsed_df$type <- factor(collapsed_df$type,
                                        "Lab + Image Batching Rate",
                                        "Image + Image Batching Rate"))
 
-
-
 collapsed_df <- unique(collapsed_df)
-
 
 collapsed_df %>%
   filter(type != "Fraction of Complaint") %>%
@@ -126,9 +116,8 @@ collapsed_df %>%
   labs(x = "Chief Complaint\n",
        y = '\nFrequency',
        title = 'Frequency of Batched Cases by Complaint') +
-  scale_fill_manual(values = c("Fraction of Complaint" = "blue",
-                               "Image + Image Batching Rate" = "grey40",
-                               "Lab + Image Batching Rate" = "grey60")) +
+  scale_fill_manual(values = c("Image + Image Batching Rate" = "#0E65A3",
+                               "Lab + Image Batching Rate" = "#F79500")) +
   theme_minimal() +  scale_x_discrete(labels = function(x) str_wrap(x, width = 12)) +
   scale_y_continuous(labels = scales::percent) +
   theme(axis.text.x = element_text(color = "black", size = 11, angle=0),
@@ -136,9 +125,22 @@ collapsed_df %>%
         axis.title =element_blank(),
         plot.title = element_text(color = "black", size = 20, face = "bold", hjust=0.5),
         legend.title = element_blank(),
-        legend.position = 'right',
+        legend.position = 'top',
         legend.text = element_text(color = "black", size = 14),
         plot.caption =element_text(color = "black", size = 14, hjust=0.5))
+
+ggsave("manuscript/figures/frequency_batches.pdf", width = 14, height = 8)
+ggsave("manuscript/figures/frequency_batches.png", width = 14, height = 8, bg = 'white')
+##########################################################################
+
+##########################################################################
+#=========================================================================
+# Figure []
+#   - Show that frequency of batching that occurs across complaints
+#=========================================================================
+
+
+
 
 
 
