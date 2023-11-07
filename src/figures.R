@@ -3,7 +3,6 @@
 # Author: Jacob Jameson 
 #=========================================================================
 rm(list = ls()) 
-source('src/clean.R')
 
 library(caret)
 library(lmtest)
@@ -11,10 +10,44 @@ library(sandwich)
 library(ggsci)
 library(xtable) # Output to LaTeX table format
 
-final <- read_csv('final.csv')
+data <- read_csv('outputs/data/final.csv')
 
 
 ##########################################################################
+
+
+library(ggplot2)
+library(lfe)
+
+
+# Run your fixed effects model
+FS <- lm(any.batch ~ batch.tendency + as.factor(dayofweekt) + 
+           as.factor(month_of_year), data)
+
+data$predlm <- predict(FS)
+predslm <- predict(FS, interval = "confidence")
+data <- cbind(data, predslm)
+
+predslm
+# Extract the fitted values
+data$fitted_values <- first_stage_final$fitted.values
+data$predlm = predict(first_stage_final)
+
+
+# Create the histogram with the regression curve
+ggplot(data, aes(x = batch.tendency)) +
+  geom_histogram(aes(y = ..density..), binwidth = 0.05, fill = "blue", alpha = 0.7) +
+  geom_ribbon( aes(ymin = lwr, ymax = upr, color = NULL), alpha = .15) +
+  geom_line( aes(y = fit), size = 1) +
+  labs(x = "Physician Leniency", y = "Density (Histogram) / Fitted Probability (Curve)") +
+  theme_minimal() +
+  theme(axis.title.y.right = element_text(angle = 0)) +
+  scale_y_continuous(sec.axis = sec_axis(~., name = "Fitted Probability of Prescribed Opioids"))
+
+# Note: Adjust binwidth in geom_histogram and span in geom_smooth as needed
+
+
+
 
 ##########################################################################
 #=========================================================================

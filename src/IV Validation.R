@@ -3,14 +3,13 @@
 # Author: Jacob Jameson 
 #=========================================================================
 
-source('src/clean.R')
 library(lfe)
 library(stargazer)
 library(texreg)
 library(xtable)
+library(tidyverse)
 
-final <- final %>%
-  filter(nEDTests > 0, ED_LOS != 0, ED_LOS < 2880)
+data <- read_csv('final.csv')
 
 ##########################################################################
 #=========================================================================
@@ -32,38 +31,110 @@ final <- final %>%
 
 # Shift-level FE
 first_stage_final <- felm(any.batch ~ batch.tendency | 
-                          dayofweekt + month |
+                          dayofweekt + month_of_year |
                           0| ED_PROVIDER, 
-                          data = final)
+                          data = data)
 
 # Shift-level + complaint FE
 first_stage_final_d <- felm(any.batch ~ batch.tendency | 
-                            dayofweekt + month + age_groups + 
+                            dayofweekt + month_of_year + age_groups + 
                             complaint_esi |
                             0|ED_PROVIDER,
-                            data = final)
+                            data = data)
 
 # Shift-level + complaint + individual FE
 first_stage_final_d_i <- felm(any.batch ~ batch.tendency | 
-                              dayofweekt + month + age_groups + 
+                              dayofweekt + month_of_year + age_groups + 
                               complaint_esi + GENDER + race |
                               0| ED_PROVIDER , 
-                              data = final)
-# Latex First-Stage
-stargazer(first_stage_final, 
-          first_stage_final_d,
-          first_stage_final_d_i, title='')
+                              data = data)
 
-# Print First-Stage
+# Save the results to a .txt file
+sink("outputs/tables/First Stage.txt")
+
 screenreg(list(first_stage_final,
                first_stage_final_d,
                first_stage_final_d_i), 
           include.fstatistic = T)
 
+stargazer(list(first_stage_final,first_stage_final_d,
+               first_stage_final_d_i), type = "text", 
+          header = FALSE, title = "First Stage", style = 'QJE')
+
+sink()
+
+
+##########################################################################
+#=========================================================================
+# Mediation Analysis -----------------------------------------------------
+#=========================================================================
+##########################################################################
+library(mediation)
+
+data$ESI <- as.factor(data$ESI)
+
+reduced.form.LOS.M <- 
+  lm(avg_nEDTests ~ 
+         batch.tendency + dayofweekt + month_of_year + 
+         age_groups + CHIEF_COMPLAINT + ESI, data = data
+  )
+
+reduced.form.LOS.Y <- 
+  lm(ln_ED_LOS ~ 
+       batch.tendency + avg_nEDTests + dayofweekt + 
+       month_of_year + age_groups +  CHIEF_COMPLAINT + ESI, data = data
+  )
+
+mediation <- mediate(reduced.form.LOS.M, reduced.form.LOS.Y,
+                     treat='batch.tendency', mediator='avg_nEDTests',
+                     boot=TRUE, sims=1)
+
+summary(mediation)
+
+##########################################################################
 #=========================================================================
 # Reduced-Form Results ---------------------------------------------------
 #=========================================================================
+##########################################################################
 
+reduced.form.LOS <- 
+  felm(ln_ED_LOS ~ 
+         batch.tendency + avg_nEDTests | 
+         dayofweekt + month_of_year + age_groups + complaint_esi |
+         0|0, 
+       data = data
+   )
+
+reduced.form.ntest <- 
+  felm(nEDTests ~ 
+         batch.tendency + avg_nEDTests | 
+         dayofweekt + month_of_year + age_groups + complaint_esi |
+         0|ED_PROVIDER, 
+       data = data
+  )
+
+
+reduced.form.72 <- 
+  felm(RTN_72_HR ~ 
+         batch.tendency + avg_nEDTests | 
+         dayofweekt + month_of_year + age_groups + complaint_esi |
+         0|ED_PROVIDER, 
+       data = data
+  )
+
+stargazer(list(reduced.form.LOS,reduced.form.ntest,
+               reduced.form.72), type = "text", 
+          header = FALSE, title = "Reduced Form", style = 'QJE')
+
+# All coefficients are scaled by 100 and multiplied again by the 
+# difference in batch tendency between the ninetieth and tenth lenient physicians (11.6 pp) 
+# for interpretability. 
+
+percentile_10 <- quantile(data$batch.tendency, probs = 0.10)
+percentile_90 <- quantile(data$batch.tendency, probs = 0.90)
+coeffecient.scale <- percentile_90 - percentile_10
+
+reduced.form.72$coefficients * 100 * coeffecient.scale
 ##########################################################################
 #=========================================================================
 # Exclusion --------------------------------------------------------------
@@ -71,10 +142,17 @@ screenreg(list(first_stage_final,
 #=========================================================================
 ##########################################################################
 
-final %>%
+data <- read_csv('outputs/data/all_clean.csv')
+
+placebo.complaints <- data %>%
   group_by(CHIEF_COMPLAINT) %>%
   summarise(mean.batch = mean(any.batch), n =n()) %>%
-  arrange(desc(mean.batch))
+  filter(mean.batch <= 0.1) 
+
+placebo.complaints <- placebo.complaints$CHIEF_COMPLAINT
+
+placebo <- data %>%
+  filter(CHIEF_COMPLAINT %in% placebo.complaints)
 
 # The idea here is that we want to show that being a high-batching
 # physician is not associated with other traits of a high-quality
@@ -82,65 +160,69 @@ final %>%
 # a complaint area where batching is rare, that there are not preferable
 # outcomes associated with being a batcher
 
-placebo <- final %>%
-  filter(CHIEF_COMPLAINT == 'Urinary Complaints')
-
 #=========================================================================
 # LOS
 #=========================================================================
 
+# Save the results to a .txt file
+sink("outputs/tables/Placebo Check.txt")
+
 placebo1.1 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month | 0 | ED_PROVIDER, 
+                  dayofweekt + month_of_year | 0 | ED_PROVIDER, 
                   data = placebo)
 
 placebo1.2 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                  dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
                   data = placebo)
 
 placebo1.3 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                  dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
                   data = placebo)
 
-screenreg(list(placebo1.1, placebo1.2, placebo1.3), 
-          include.fstatistic = T)
+stargazer(list(placebo1.1, placebo1.2, placebo1.3), type = "text", 
+          header = FALSE, title = "Placebo Check", style = 'QJE')
 
 #=========================================================================
 # Number of Tests
 #=========================================================================
 
 placebo2.1 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month | 0 | ED_PROVIDER, 
+                   dayofweekt + month_of_year | 0 | ED_PROVIDER, 
                    data = placebo)
 
 placebo2.2 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                   dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
                    data = placebo)
 
 placebo2.3 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                   dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
                    data = placebo)
 
-screenreg(list(placebo2.1, placebo2.2, placebo2.3), 
-          include.fstatistic = T)
+
+stargazer(list(placebo2.1, placebo2.2, placebo2.3), type = "text", 
+          header = FALSE, title = "Placebo Check", style = 'QJE')
 
 #=========================================================================
 # 72 HR Return
 #=========================================================================
 
 placebo3.1 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month | 0 | ED_PROVIDER, 
+                   dayofweekt + month_of_year | 0 | ED_PROVIDER, 
                    data = placebo)
 
 placebo3.2 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month + ESI | 0 | ED_PROVIDER, 
+                   dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
                    data = placebo)
 
 placebo3.3 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month + ESI + race + GENDER |0| ED_PROVIDER, 
+                   dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
                    data = placebo)
 
-screenreg(list(placebo3.1, placebo3.2, placebo3.3), 
-          include.fstatistic = T)
+
+stargazer(list(placebo3.1, placebo3.2, placebo3.3), type = "text", 
+          header = FALSE, title = "Placebo Check", style = 'QJE')
+
+sink()
 
 ##########################################################################
 #=========================================================================
@@ -153,6 +235,17 @@ screenreg(list(placebo3.1, placebo3.2, placebo3.3),
 ## (Bhuller et al. 2020).
 #=========================================================================
 ##########################################################################
+
+
+
+
+
+
+
+
+
+
+
 
 # Sub Group Analysis 1
 ## Use tendency constructed from all complaints

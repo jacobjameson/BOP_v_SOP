@@ -7,6 +7,7 @@ rm(list = ls())
 library(tidyverse)
 library(stringr)
 library(lfe)
+library(lubridate)
 
 #=========================================================================
 # Determine test times
@@ -19,19 +20,15 @@ df <- read.csv(paste0(path, 'deidentified_FINAL.csv'))
 test_columns = c("US_PERF", "NON_CON_CT_PERF", "CON_CT_PERF", 
                  "LAB_PERF", "XR_PERF")
 
-test_time_columns = c("US_ORDER_DTTM", "NON_CON_CT_ORDER_DTTM",
-                      "CON_CT_ORDER_DTTM", "LAB_ORDER_DTTM", 
-                      "XR_ORDER_DTTM")
 
 colnames(df)[colnames(df) == "PLAIN_XRAY"] = "XR_PERF"
-colnames(df)[colnames(df) == "US_ORDER_DTTM_REL"] ="US_ORDER_DTTM"
-colnames(df)[colnames(df) == "CT_WITHOUT_CONTR_ORDER_DTTM_REL"] = "NON_CON_CT_ORDER_DTTM"
-colnames(df)[colnames(df) == "CT_WITH_CONTR_ORDER_DTTM_REL"] ="CON_CT_ORDER_DTTM"
-colnames(df)[colnames(df) == "LAB_ORDER_DTTM_REL"] ="LAB_ORDER_DTTM"
-colnames(df)[colnames(df) == "PLAIN_XRAY_ORDER_DTTM_REL"] ="XR_ORDER_DTTM"
+colnames(df)[colnames(df) == "US_ORDER_DTTM_REL"] ="US_ORDER_DTTM_REL"
+colnames(df)[colnames(df) == "CT_WITHOUT_CONTR_ORDER_DTTM_REL"] = "NON_CON_CT_ORDER_REL"
+colnames(df)[colnames(df) == "CT_WITH_CONTR_ORDER_DTTM_REL"] ="CON_CT_ORDER_REL"
+colnames(df)[colnames(df) == "LAB_ORDER_DTTM_REL"] ="LAB_ORDER_REL"
+colnames(df)[colnames(df) == "PLAIN_XRAY_ORDER_DTTM_REL"] ="XR_ORDER_REL"
 
-df$CT_PERF = ifelse(df$NON_CON_CT_PERF=='Y' | 
-                      df$CON_CT_PERF=='Y', 1, 0)
+df$CT_PERF = ifelse(df$NON_CON_CT_PERF=='Y' | df$CON_CT_PERF=='Y', 1, 0)
 
 df$ESI = as.character(df$ESI)
 
@@ -41,18 +38,19 @@ for (i in test_columns){
 
 df$nEDTests = rowSums(df[test_columns])
 
-df[append(test_columns, "nEDTests")]
+# Identify columns with *_REL suffix
+rel_cols <- grep("_REL$", names(df), value = TRUE)
 
-
-for (i in test_time_columns){
-  newcol_hr = paste0(str_remove(i, "_ORDER_DTTM"),"_HR")
-  newcol_min = paste0(str_remove(i, "_ORDER_DTTM"),"_MIN")
-  df[[newcol_min]] = as.numeric(str_sub(df[[i]], - 2, - 1))
-  df[[newcol_hr]] = as.numeric(str_sub(df[[i]], 0, 5))
-  
-  tmp = df[[newcol_hr]]*60 + df[[newcol_min]]
-  df[[i]] = tmp
+# Apply the transformation to each *_REL column
+for (col in rel_cols) {
+  df <- df %>%
+    separate(col, c(paste0(col, "_hours"), paste0(col, "_minutes")), sep = ":") %>%
+    mutate(!!col := as.numeric(get(paste0(col, "_hours"))) * 60 + 
+             as.numeric(get(paste0(col, "_minutes"))))
 }
+
+df <- df %>%
+  select(-matches("_hours$|_minutes$"))
 
 #=========================================================================
 # Determine batching
@@ -61,91 +59,55 @@ for (i in test_time_columns){
 #=========================================================================
 
 # Determine which was the first test ordered -----------------------------
+# Columns of interest
 
-df$lowest_column <- apply(df[test_time_columns], 1, function(x) {
-  colnames(df[test_time_columns])[which.min(x)]
-})
+cols_of_interest <- c('US_ORDER_DTTM_REL', 'NON_CON_CT_ORDER_REL', 'CON_CT_ORDER_REL',
+                      'LAB_ORDER_REL', 'XR_ORDER_REL')
 
-df$lowest_column <- as.character(gsub("", "", df$lowest_column))
-
-df$batch <- ''
-df$batched.time.interval <- ''
-
-for (i in 1:nrow(df)){
+# Function to determine batch
+determine_batch <- function(row) {
+  min_time <- min(row, na.rm = TRUE)
+  tests <- names(row)
   
-  lowest <- df$lowest_column[i]
-  first_time <- df[[lowest]][i]
-  batched <- ''
-  batched.time.interval <- ''
+  batch <- tests[which(row <= min_time + 5 & !is.na(row))]
   
-  if (!is.na(df$lowest_column[i])) {
-    
-    if (!is.na(df$US_ORDER_DTTM[i]) && 
-        df$US_ORDER_DTTM[i] - first_time <= 1){
-      
-      batched <- paste0(batched, ',US')
-      batched.time.interval <- paste0(
-        batched.time.interval, ',', df$US_ORDER_DTTM[i] - first_time)
-    }
-    if (!is.na(df$LAB_ORDER_DTTM[i]) && 
-        df$LAB_ORDER_DTTM[i] - first_time <= 1){
-      
-      batched <- paste0(batched, ',LAB')
-      batched.time.interval <- paste0(
-        batched.time.interval, ',', df$LAB_ORDER_DTTM[i] - first_time)
-    }
-    if (!is.na(df$NON_CON_CT_ORDER_DTTM[i]) && 
-        df$NON_CON_CT_ORDER_DTTM[i] - first_time <= 1){
-      
-      batched <- paste0(batched, ',NCT')
-      batched.time.interval <- paste0(
-        batched.time.interval, ',', df$NON_CON_CT_ORDER_DTTM[i] - first_time)
-    }
-    if (!is.na(df$CON_CT_ORDER_DTTM[i]) && 
-        df$CON_CT_ORDER_DTTM[i] - first_time <= 1){
-      
-      batched <- paste0(batched, ',CT')
-      batched.time.interval <- paste0(
-        batched.time.interval, ',', df$CON_CT_ORDER_DTTM[i] - first_time)
-    }
-    if (!is.na(df$XR_ORDER_DTTM[i]) && 
-        df$XR_ORDER_DTTM[i] - first_time <= 1){
-      
-      batched <- paste0(batched, ',XR')
-      batched.time.interval <- paste0(
-        batched.time.interval, ',', df$XR_ORDER_DTTM[i] - first_time)
-    }
-  }
-  df$batch[i] <- batched
-  df$batched.time.interval[i] <- batched.time.interval
+  return(paste(batch, collapse = ","))
 }
+
+# Apply function to each row for the columns of interest
+df$batch <- apply(df[cols_of_interest], 1, determine_batch)
 
 #=========================================================================
 # Lab-Image Batch --------------------------------------------------------
 #=========================================================================
+# Function to determine if a batch meets the criteria
+is_lab_image_batch <- function(batch) {
+  lab_present <- grepl("LAB_ORDER_REL", batch)
+  other_tests_present <- any(sapply(c('US_ORDER_DTTM_REL',
+                                      'NON_CON_CT_ORDER_REL', 
+                                      'CON_CT_ORDER_REL', 
+                                      'XR_ORDER_REL'), function(test) grepl(test, batch)))
+  
+  return(as.integer(lab_present & other_tests_present))
+}
 
-df$lab_image_batch <- ifelse(
-  grepl("LAB", df$batch) & 
-    grepl("(XR|NCT|CT|US)", df$batch, ignore.case = TRUE), 1, 0
-)
+df$lab_image_batch <- sapply(df$batch, is_lab_image_batch)
+
 #=========================================================================
 # Image-Image Batch ------------------------------------------------------
 #=========================================================================
+# Function to determine if a batch meets the criteria for image_image_batch
+is_image_image_batch <- function(batch) {
+  image_tests <- c('US_ORDER_DTTM_REL', 'NON_CON_CT_ORDER_REL', 
+                   'CON_CT_ORDER_REL', 'XR_ORDER_REL')
+  
+  batch_tests <- unlist(strsplit(batch, ","))
+  count_present <- sum(image_tests %in% batch_tests)
+  
+  return(as.integer(count_present >= 2))
+}
 
-df$image_image_batch <- ifelse(
-  rowSums(sapply(c("NCT", "CT", "XR", "US"),
-                 function(x) grepl(x, df$batch, ignore.case = TRUE))) >= 2, 1, 0
-)
-
-df$image_image_batch <- ifelse(df$batch == ',NCT', 0, df$image_image_batch)
-
-
-df$imaging <- ifelse(
-  df$XR_PERF == 1 | 
-    df$CON_CT_PERF == 1 | 
-    df$NON_CON_CT_PERF == 1 |
-    df$US_PERF == 1, 1, 0
-)
+df$image_image_batch <- sapply(df$batch, is_image_image_batch)
 
 #=========================================================================
 # Any Batch --------------------------------------------------------------
@@ -154,6 +116,29 @@ df$imaging <- ifelse(
 df$any.batch <- ifelse(
   df$lab_image_batch == 1 | df$image_image_batch == 1, 1, 0
 )
+
+
+# Function to determine the sequenced tests
+get_sequenced <- function(batch, row) {
+  all_tests <- c('US_ORDER_DTTM_REL', 'NON_CON_CT_ORDER_REL', 
+                 'CON_CT_ORDER_REL', 'LAB_ORDER_REL', 'XR_ORDER_REL')
+  
+  batch_tests <- unlist(strsplit(batch, ","))
+  
+  # Identify tests not in the batch
+  non_batch_tests <- setdiff(all_tests, batch_tests)
+  
+  # Check if any of these tests have a non-NA value in the current row
+  sequenced_tests <- non_batch_tests[!is.na(row[non_batch_tests])]
+  
+  if (length(sequenced_tests) > 0) {
+    return(paste(sequenced_tests, collapse = ","))
+  } else {
+    return(NA)
+  }
+}
+
+df$sequenced <- apply(df, 1, function(row) get_sequenced(as.character(row["batch"]), row))
 
 #=========================================================================
 # Clean Vars -------------------------------------------------------------
@@ -487,56 +472,25 @@ df$hypotensive <- ifelse(
 #=========================================================================
 
 df <- df %>%
-  separate(ARRIVAL_DTTM_REL, c("hours", "minutes"), sep = ":") %>%
-  mutate(rel_minutes_arrival = as.numeric(hours)*60 + as.numeric(minutes),
+  mutate(rel_minutes_arrival = ARRIVAL_DTTM_REL,
          rel_minutes_depart = rel_minutes_arrival + ED_LOS)
 
-df$rel_minutes_depart <- df$rel_minutes_depart - min(df$rel_minutes_arrival)
-df$rel_minutes_arrival <- df$rel_minutes_arrival - min(df$rel_minutes_arrival)
+# Calculate the number of patients in the hospital at the time of each patient's arrival
+df$patients_in_hospital <- sapply(df$rel_minutes_arrival, function(arrival_time) {
+  sum(df$rel_minutes_arrival <= arrival_time & df$rel_minutes_depart > arrival_time) - 1
+})
 
-overlap_counts <- numeric(nrow(df))
-for (i in 1:nrow(df)) {
-  
-  current_arrival <- df$rel_minutes_arrival[i]
-  current_departure <- df$rel_minutes_depart[i]
-  
-  overlap_count <- sum(df$rel_minutes_arrival < current_departure & 
-                         df$rel_minutes_depart > current_arrival)
-  
-  overlap_counts[i] <- overlap_count
-}
+# Define arbitrary start date
+start_date <- as.POSIXct("2000-01-01 00:00:00", tz = "UTC")
 
-# overlap count
-df$overlap_count <- overlap_counts
+# Convert relative minutes to datetime
+df$datetime <- start_date + minutes(df$rel_minutes_arrival)
 
-# overlap per minute
-df$overlap_per_min <- df$overlap_count / (df$ED_LOS)
-
-# time FE
-df$rel.hours <- as.numeric(df$hours)
-df$rel.hours <- df$rel.hours - min(df$rel.hours)
-
-# Create month of the year variable
-df$month <- cut((df$rel.hours %/% (30*24)) %% 12 + 1,
-                breaks = c(0, 1:12))
-
-# Create day of the week variable
-df$day_of_week <- cut((df$rel.hours %/% (24*7)) %% 7 + 1,
-                      breaks = c(0, 1:7))
-
-# Create hour of the day variable
-df$hour <- cut(df$rel.hours %% 24 + 1,
-               breaks = c(0, 1:24))
-
-df$dayofweekt <- paste(df$day_of_week, df$hour)
-
-df <- df %>%
-  separate(TRIAGE_COMPLETED_REL, 
-           c("triage_hours", "triage_minutes"), sep = ":") %>%
-  mutate(rel_minutes_triage =
-           (as.numeric(triage_hours)*60 + 
-              as.numeric(triage_minutes)) - 
-           rel_minutes_arrival)
+# Extract hour of day, day of week, and month of year
+df$hour_of_day <- hour(df$datetime)
+df$day_of_week <- weekdays(df$datetime)
+df$month_of_year <- month(df$datetime, label = TRUE)
+df$dayofweekt <- paste(df$day_of_week, df$hour_of_day)
 
 
 #=========================================================================
@@ -546,13 +500,6 @@ df <- df %>%
 df$ln_ED_LOS <- log(df$ED_LOS)
 
 final <- df %>% 
-  drop_na(ESI, CHIEF_COMPLAINT, ED_PROVIDER, ESI, nEDTests, ARRIVAL_AGE_DI) %>%
-  select(ESI,  CHIEF_COMPLAINT, EXT_ID, 
-         ARRIVAL_AGE_DI, ED_LOS, ln_ED_LOS, ED_PROVIDER, nEDTests, hours,
-         RTN_72_HR, RTN_72_HR_ADMIT, race, XR_PERF, GENDER, ED_DISPOSITION,
-         tachycardic, tachypneic, febrile, hypotensive, rel.hours, any.batch,
-         rel_minutes_triage, lab_image_batch, image_image_batch, imaging,
-         overlap_per_min, overlap_count, complaint_esi, dayofweekt, month) %>%
   mutate(RTN_72_HR = ifelse(RTN_72_HR == 'Y', 1, 0),
          RTN_72_HR_ADMIT = ifelse(RTN_72_HR_ADMIT == 'Y', 1, 0)) 
 
@@ -585,12 +532,6 @@ providers_less_than_500 <- names(provider_counts[provider_counts < 520])
 final <- final[!(final$ED_PROVIDER %in% providers_less_than_500), ]
 final$complaint_esi <- paste(final$CHIEF_COMPLAINT, final$ESI)
 
-# Limit to non-urniary complaints (low batching liklihood)
-final <- final %>%
-  group_by(CHIEF_COMPLAINT) %>%
-  filter(n() > 1000)
-
-
 rm(list = setdiff(ls(), "final"))
 #=========================================================================
 ##########################################################################
@@ -603,14 +544,35 @@ rm(list = setdiff(ls(), "final"))
 ## conditional on shift-level variation, random assignment
 ## residual from regression represents physician tendency to batch
 final$residual_batch <- resid(
-  felm(any.batch ~ 0 | dayofweekt + month, data=final))
+  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
+
+final$residual_batch_li <- resid(
+  felm(lab_image_batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
+
+final$residual_batch_ii <- resid(
+  felm(image_image_batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
 
 # Step 2: get batch tendency for each provider
 final <- final %>%
   group_by(ED_PROVIDER) %>%
   mutate(Sum_Resid=sum(residual_batch, na.rm=T),
-         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>% 
+         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1),
+         
+         Sum_Resid_li=sum(residual_batch_li, na.rm=T),
+         batch.tendency_li = (Sum_Resid_li - residual_batch_li) / (n() - 1),
+         
+         Sum_Resid_ii=sum(residual_batch_ii, na.rm=T),
+         batch.tendency_ii = (Sum_Resid_ii - residual_batch_ii) / (n() - 1),
+         
+         avg.batch.tendency = mean(batch.tendency)) %>%
   ungroup()
 
-write.csv(final, 'final.csv')
+write.csv(final, 'outputs/data/all_clean.csv')
+
+# Limit to prevalent complaints only
+final <- final %>%
+  group_by(CHIEF_COMPLAINT) %>%
+  filter(n() > 1000)
+
+write.csv(final, 'outputs/data/final.csv')
 #=========================================================================
