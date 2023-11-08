@@ -278,7 +278,6 @@ and $X_i$ is the same as in the reduced-form approach. $Batched_i$ variable suff
 
 ## Identifying Assumptions
 
-
 The reduced-form approach delivers an unbiased estimate of the causal effect of being treated by a higher tendency to batch physician, since assignment of patients to ED physicians is random, conditional on seasonality and shift (``conditional independence"). The residualization in equation (1) controls for more controls than required to achieve quasi-random assignment; they are included for statistical precision in measuring physician tendency to batch. 
 
 Our instrumental variable approach, which aims to recover the causal effect of having diagnostic tests batch ordered, relies on three additional assumptions: relevance, exclusion, and monotonicity. We reported a strong first stage (i.e., relevance) at the end of the previous Section. The exclusion restriction requires that the instrument must influence the outcome of interest only through its effect on test batching. This is perhaps our strongest assumption and is at its core, untestable. However, several features of the ED setting suggest that such violation may likely only have a small impact and may be less concerning than in other health care settings. First, unlike in primary care settings, where the patient and primary care provider have many repeat encounters, the scope of what the emergency physician can do to impact medium-term outcomes is limited and well-observed by the researcher. Second, any violation of the exclusion restriction needs to directly affect the specific outcome of interest. The channel by which ED physicians can influence length of stay relative outcomes is likely through testing and diagnosis. Nevertheless, we take this assumption seriously and perform a placebo check in Section 4.2 as well as various robustness checks in Section 4.4.
@@ -290,9 +289,54 @@ Finally, the monotonicity assumption is necessary for interpreting the coefficie
 
 ## Reduced-Form Results
 
-In this section, we examine the causal effects of provider batching tendency. We first present the effects on our main outcomes of length of stay, 72hr readmission, and healthcare resource utilization (number of tests).We find statistically and economically significant positive effects of assignment to a high batching physician on every outcome (Table 3). Estimated coefficients are scaled by the difference in leniency going from the nineti- eth to tenth percentile in physician leniency—equal to 11.6 pp—for interpretability. Assignment to a physician in the top prescribing decile (relative to one in the bottom decile) is associated with a 0.24 pp increase in the probability of long-term prescrip- tion opioid use—a 4.1 percent increase. The effect on proxies for opioid-seeking behavior is 0.50 pp—a 3.4 percent increase. Effects on development of opioid use disorder and on opioid overdose mortality are 2.1 percent and 8.8 percent, respec- tively. These findings highlight the substantial role ED physicians can play in put- ting patients on a path of long-term opioid use and dependence.
+In this section, we examine the causal effects of provider batching tendency. One thing that we note in the 
 
 
+
+We first present the effects on our main outcomes of length of stay, 72hr readmission, and healthcare resource utilization (number of tests). We find statistically and economically significant positive effects of assignment to a high batching physician on every outcome (Table 3). Estimated coefficients are scaled by the difference in leniency going from the ninetieth to tenth percentile in physician leniency—equal to 11.6 pp—for interpretability. Assignment to a physician in the top prescribing decile (relative to one in the bottom decile) is associated with a 0.24 pp increase in the probability of long-term prescription opioid use— a 4.1 percent increase. The effect on proxies for opioid-seeking behavior is 0.50 pp—a 3.4 percent increase. Effects on development of opioid use disorder and on opioid overdose mortality are 2.1 percent and 8.8 percent, respec- tively. These findings highlight the substantial role ED physicians can play in putting patients on a path of long-term opioid use and dependence.
+
+
+
+\begin{table}[htbp]
+\centering
+\caption{Reduced Form Regression Results}
+\label{tab:reducedform}
+\begin{tabular}{p{6cm}ccc}
+\toprule
+& \multicolumn{1}{c}{\textbf{Log ED LOS}}
+& \multicolumn{1}{c}{\textbf{Number of Tests}}
+& \multicolumn{1}{c}{\textbf{72hr Return}} \\
+& \multicolumn{1}{c}{(1)}
+& \multicolumn{1}{c}{(2)}
+& \multicolumn{1}{c}{(3)} \\
+\midrule
+\textit{Model 1} & & & \\
+Batch Tendency      & $0.905^{***}$ & $1.715^{***}$ & $-0.025$  \\
+                    & $(0.308)$  & $(0.329)$     & $(0.019)$ \\
+\\
+Seasonality and shift fixed effects? & Yes & Yes & Yes \\
+Chief Complaint? & Yes & Yes & Yes \\
+Patient observables? & Yes & Yes & Yes \\
+\midrule
+\midrule
+\textit{Model 2} & & & \\
+Batch Tendency      & $-0.103$      & $0.120^{***}$ & $0.020$   \\
+                    & $(0.462)$     & $(0.046)$     & $(0.021)$ \\
+                    &     &     &  \\
+Testing Inclination    & $0.608^{**}$  & $0.963^{***}$ & $-0.027^{**}$ \\
+                    & $(0.242)$  & $(0.021)$     & $(0.011)$ \\
+\\
+Seasonality and shift fixed effects? & Yes & Yes & Yes \\
+Chief Complaint? & Yes & Yes & Yes \\
+Patient observables? & Yes & Yes & Yes \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{Estimates of the reduced form are for the baseline sample described in the text. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
+\end{table}
 
 
 ## Placebo Check

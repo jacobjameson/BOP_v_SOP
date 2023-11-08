@@ -9,7 +9,7 @@ library(texreg)
 library(xtable)
 library(tidyverse)
 
-data <- read_csv('final.csv')
+data <- read_csv('outputs/data/final.csv')
 
 ##########################################################################
 #=========================================================================
@@ -30,20 +30,20 @@ data <- read_csv('final.csv')
 ##########################################################################
 
 # Shift-level FE
-first_stage_final <- felm(any.batch ~ batch.tendency | 
+first_stage_final <- felm(any.batch ~ batch.tendency + test.inclination | 
                           dayofweekt + month_of_year |
                           0| ED_PROVIDER, 
                           data = data)
 
 # Shift-level + complaint FE
-first_stage_final_d <- felm(any.batch ~ batch.tendency | 
+first_stage_final_d <- felm(any.batch ~ batch.tendency + test.inclination | 
                             dayofweekt + month_of_year + age_groups + 
                             complaint_esi |
                             0|ED_PROVIDER,
                             data = data)
 
 # Shift-level + complaint + individual FE
-first_stage_final_d_i <- felm(any.batch ~ batch.tendency | 
+first_stage_final_d_i <- felm(any.batch ~ batch.tendency + test.inclination | 
                               dayofweekt + month_of_year + age_groups + 
                               complaint_esi + GENDER + race |
                               0| ED_PROVIDER , 
@@ -97,44 +97,108 @@ summary(mediation)
 #=========================================================================
 ##########################################################################
 
+reduced.form.LOS.0 <- 
+  felm(ln_ED_LOS ~ 
+         batch.tendency | 
+         dayofweekt + month_of_year + complaint_esi |
+         0|ED_PROVIDER, 
+       data = data
+  )
+
+reduced.form.ntest.0 <- 
+  felm(nEDTests ~ 
+         batch.tendency | 
+         dayofweekt + month_of_year + complaint_esi |
+         0|ED_PROVIDER, 
+       data = data
+  )
+
+reduced.form.72.0 <- 
+  felm(RTN_72_HR ~ 
+         batch.tendency  | 
+         dayofweekt + month_of_year + complaint_esi |
+         0|ED_PROVIDER, 
+       data = data
+  )
+
 reduced.form.LOS <- 
   felm(ln_ED_LOS ~ 
-         batch.tendency + avg_nEDTests | 
-         dayofweekt + month_of_year + age_groups + complaint_esi |
-         0|0, 
+         batch.tendency + test.inclination | 
+         dayofweekt + month_of_year + complaint_esi |
+         0|ED_PROVIDER, 
        data = data
    )
 
 reduced.form.ntest <- 
   felm(nEDTests ~ 
-         batch.tendency + avg_nEDTests | 
-         dayofweekt + month_of_year + age_groups + complaint_esi |
+         batch.tendency + test.inclination | 
+         dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
   )
-
 
 reduced.form.72 <- 
   felm(RTN_72_HR ~ 
-         batch.tendency + avg_nEDTests | 
-         dayofweekt + month_of_year + age_groups + complaint_esi |
+         batch.tendency + test.inclination | 
+         dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
   )
 
-stargazer(list(reduced.form.LOS,reduced.form.ntest,
+
+data %>%
+  group_by(ED_PROVIDER) %>%
+  summarize(test.inclination = mean(test.inclination), 
+            batch.tendency = mean(batch.tendency)) %>%
+ggplot()  +
+  geom_point(aes(y=test.inclination, x = batch.tendency),size=5, stroke=1) +
+  geom_vline(xintercept=0) +
+  geom_hline(yintercept=0) +
+  geom_smooth(aes(y=test.inclination,x = batch.tendency), method = "lm",se = T) +
+  theme_bw() +
+  theme(plot.background=element_rect(fill='white'),
+        panel.border = element_blank(),
+        axis.text.y  = element_text(size=20, color='black'), 
+        axis.text.x  = element_text(size=20),
+        plot.margin = unit(c(0.5, 0.2, 0.2, 0.2), "cm"),
+        panel.grid.major=element_line(color='grey85',size=0.3),
+        legend.position = 'none',
+        axis.title.y =  element_text(color = 'black',size = 20),
+        axis.title.x = element_text(color = 'black',size = 20),
+        strip.text.x = element_text(color = 'black', size = 20, face = "bold"),
+        plot.title = element_text(color = "black", size = 30, 
+                                  face = "bold", margin = margin(0,0,30,0), hjust = 0),
+        plot.subtitle = element_text(color = "black", size = 14, 
+                                     margin = margin(0,0,30,0),hjust = 0),
+        legend.text = element_text(size=15),
+        legend.title = element_text(size=16, face = 'bold'),
+        legend.background = element_rect(fill = "grey96", color = NA)) +
+  labs(x='\nBatch-Ordering Tendency',
+       y='Test Ordering Inclination\n')
+
+# Save the results to a .txt file
+sink("outputs/tables/Reduced Form.txt")
+
+stargazer(list(reduced.form.LOS.0, 
+               reduced.form.ntest.0,
+               reduced.form.72.0), type = "text", 
+          header = FALSE, title = "Reduced Form", style = 'QJE')
+
+stargazer(list(reduced.form.LOS, 
+               reduced.form.ntest,
                reduced.form.72), type = "text", 
           header = FALSE, title = "Reduced Form", style = 'QJE')
 
+sink()
 # All coefficients are scaled by 100 and multiplied again by the 
-# difference in batch tendency between the ninetieth and tenth lenient physicians (11.6 pp) 
+# difference in batch tendency between the ninetieth and tenth lenient physicians  
 # for interpretability. 
 
 percentile_10 <- quantile(data$batch.tendency, probs = 0.10)
 percentile_90 <- quantile(data$batch.tendency, probs = 0.90)
 coeffecient.scale <- percentile_90 - percentile_10
 
-reduced.form.72$coefficients * 100 * coeffecient.scale
+
 ##########################################################################
 #=========================================================================
 # Exclusion --------------------------------------------------------------

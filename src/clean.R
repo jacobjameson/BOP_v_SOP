@@ -552,6 +552,9 @@ final$residual_batch_li <- resid(
 final$residual_batch_ii <- resid(
   felm(image_image_batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
 
+final$residual_ntests <- resid(
+  felm(nEDTests ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
+
 # Step 2: get batch tendency for each provider
 final <- final %>%
   group_by(ED_PROVIDER) %>%
@@ -564,7 +567,19 @@ final <- final %>%
          Sum_Resid_ii=sum(residual_batch_ii, na.rm=T),
          batch.tendency_ii = (Sum_Resid_ii - residual_batch_ii) / (n() - 1),
          
+         Sum_Resid_ntests=sum(residual_ntests, na.rm=T),
+         test.inclination = (Sum_Resid_ntests - residual_ntests) / (n() - 1),
+         
          avg.batch.tendency = mean(batch.tendency)) %>%
+  ungroup()
+
+final$residual_batch <- resid(
+  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi + test.inclination, data=final))
+
+final <- final %>%
+  group_by(ED_PROVIDER) %>%
+  mutate(Sum_Resid=sum(residual_batch, na.rm=T),
+         batch.tendency.2 = (Sum_Resid - residual_batch) / (n() - 1)) %>%
   ungroup()
 
 write.csv(final, 'outputs/data/all_clean.csv')
