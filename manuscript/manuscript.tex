@@ -675,27 +675,19 @@ measures (i.e., by complaint category) in Section 4.4.
 \subsection{Reduced-Form Results}\label{reduced-form-results}}
 
 In this section, we examine the causal effects of provider batching
-tendency. We first present the effects on our main outcomes of length of
-stay, 72hr readmission, and healthcare resource utilization (number of
-tests). We find statistically and economically significant positive
-effects of assignment to a high batching physician on every outcome
-(Table 3). Estimated coefficients are scaled by the difference in
-leniency going from the ninetieth to tenth percentile in physician
-leniency---equal to 11.6 pp---for interpretability. Assignment to a
-physician in the top prescribing decile (relative to one in the bottom
-decile) is associated with a 0.24 pp increase in the probability of
-long-term prescription opioid use--- a 4.1 percent increase. The effect
-on proxies for opioid-seeking behavior is 0.50 pp---a 3.4 percent
-increase. Effects on development of opioid use disorder and on opioid
-overdose mortality are 2.1 percent and 8.8 percent, respec- tively.
-These findings highlight the substantial role ED physicians can play in
-putting patients on a path of long-term opioid use and dependence.
+tendency. Our reduced form regression results, as presented in Table
+\ref{tab:reducedform}, indicate that the physician's batch tendency is
+associated with longer emergency department length of stay (ED LOS), a
+greater number of tests ordered, and does not significantly influence
+the likelihood of a 72-hour return. However, the relationship between
+batch tendency and our outcomes of interest is nuanced by the presence
+of testing inclination among physicians.
 
 \begin{table}[htbp]
 \centering
-\caption{Reduced Form Regression Results}
+\caption{Reduced Form Regression Results with Scaled Coefficients}
 \label{tab:reducedform}
-\begin{tabular}{p{7cm}ccc}
+\begin{tabular}{p{6cm}ccc}
 \toprule
 & \multicolumn{1}{c}{\textbf{Log ED LOS}}
 & \multicolumn{1}{c}{\textbf{Number of Tests}}
@@ -705,32 +697,79 @@ putting patients on a path of long-term opioid use and dependence.
 & \multicolumn{1}{c}{(3)} \\
 \midrule
 \textit{Model 1} & & & \\
-Batch Tendency      & $0.905^{***}$ & $1.715^{***}$ & $-0.025$  \\
-                    & $(0.308)$  & $(0.329)$     & $(0.019)$ \\
+Batch Tendency      & $0.138^{***}$ & $0.270^{***}$ & $-0.004$  \\
+                    & $(0.047)$  & $(0.052)$     & $(0.003)$ \\
 \\
 Seasonality and shift fixed effects? & Yes & Yes & Yes \\
 Chief Complaint? & Yes & Yes & Yes \\
 Patient observables? & Yes & Yes & Yes \\
+Hospital volume? & Yes & Yes & Yes \\
 \midrule
 \midrule
 \textit{Model 2} & & & \\
-Batch Tendency      & $-0.103$      & $0.120^{***}$ & $0.020$   \\
-                    & $(0.462)$     & $(0.046)$     & $(0.021)$ \\
+Batch Tendency      & $-0.018$      & $0.019^{**}$ & $0.003$   \\
+                    & $(0.071)$     & $(0.007)$     & $(0.003)$ \\
                     &     &     &  \\
-Testing Inclination    & $0.608^{**}$  & $0.963^{***}$ & $-0.027^{**}$ \\
-                    & $(0.242)$  & $(0.021)$     & $(0.011)$ \\
+Testing Inclination    & $0.595^{**}$  & $0.962^{***}$ & $-0.027^{**}$ \\
+                    & $(0.234)$  & $(0.021)$     & $(0.011)$ \\
 \\
 Seasonality and shift fixed effects? & Yes & Yes & Yes \\
 Chief Complaint? & Yes & Yes & Yes \\
 Patient observables? & Yes & Yes & Yes \\
+Hospital volume? & Yes & Yes & Yes \\
+\midrule
+Mean number of encounters per physician & 1805.3 &  &  \\
+\midrule
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
 \small
-\item \textit{Estimates of the first stage for the baseline sample described in the text. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Column 3 corresponds to the baseline controls. Robust standard errors are clustered at the physician level.}
+\item \textit{Estimates of the reduced form are for the baseline sample described in the text. Coefficients on batch tendency and testing inclination are scaled by the difference between batch tendency and testing inclination respectively of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
 \item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
 \end{tablenotes}
 \end{table}
+
+Similar to our method used to measure physician batch tendency, we use
+the physician's residualized leave-out average test rate to get a
+measure of a physicians propensity to test (which we call testing
+inclination). A key consideration in our analysis is the strong positive
+correlation (r = 0.79) between batch tendency and testing inclination.
+Such a high degree of correlation raises the concern that physicians
+with a higher testing inclination may batch more often because as a
+result of ordering more tests. Failure to control for this inclination
+could result in biased estimates of the effect of batch tendency. We
+note this assumption made on the causal pathway and further explore this
+in the section on mediation analysis.
+
+In Model 2, we control for testing inclination and observe notable
+changes in the coefficients for batch tendency. The previously
+significant positive association with Log ED LOS diminishes, suggesting
+that the initial estimate may have been capturing the combined effects
+of batching and testing inclination. Estimated coefficients for batch
+tendency are scaled by the difference in batch tendency going from the
+ninetieth to tenth percentile in physician batch tendency---equal to
+15.8 pp---for interpretability, and coefficients for testing inclination
+are scaled by the difference in testing inclination going from the
+ninetieth to tenth percentile in physician testing inclination---equal
+to 34.9 pp.
+
+Assignment to a physician in the top batching decile (relative to one in
+the bottom decile) is associated with a 0.2 unit increase in the number
+of diagnostic tests being ordered per patient encounter, without any
+additional change in the liklihood of a 72 hour return. With an average
+of 1,805 patient encounters per physician in our study period, this
+translates to an additional 8,667 diagnostic tests with no perceived
+benefit in terms of reducing returns or length of stay.
+
+The effects of testing inclination are also striking. We find that a
+movement from a physician in the top testing decile (relative to one in
+the bottom decile) is associated with 0.6\% change in the length of stay
+in the emergency department, a 0.96 unit increase in the number of
+diagnostic tests being ordered per patient encounter, and -0.03 pp
+change in the probability of a patient returning within 72 hours. Given
+the average number of patient encounters per physician in our study
+period this translates to an additional 1088 patient hours in LOS,
+41,594 diagnostic tests, and 47 avoided 72 hour returns.
 
 \hypertarget{placebo-check}{%
 \subsection{Placebo Check}\label{placebo-check}}

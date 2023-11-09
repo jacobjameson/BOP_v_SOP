@@ -99,15 +99,15 @@ summary(mediation)
 
 reduced.form.LOS.0 <- 
   felm(ln_ED_LOS ~ 
-         batch.tendency | 
-         dayofweekt + month_of_year + complaint_esi |
+         batch.tendency + patients_in_hospital | 
+         dayofweekt + month_of_year + complaint_esi  |
          0|ED_PROVIDER, 
        data = data
   )
 
 reduced.form.ntest.0 <- 
   felm(nEDTests ~ 
-         batch.tendency | 
+         batch.tendency + patients_in_hospital | 
          dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
@@ -115,15 +115,15 @@ reduced.form.ntest.0 <-
 
 reduced.form.72.0 <- 
   felm(RTN_72_HR ~ 
-         batch.tendency  | 
-         dayofweekt + month_of_year + complaint_esi |
+         batch.tendency  + patients_in_hospital| 
+         dayofweekt + month_of_year + complaint_esi  |
          0|ED_PROVIDER, 
        data = data
   )
 
 reduced.form.LOS <- 
   felm(ln_ED_LOS ~ 
-         batch.tendency + test.inclination | 
+         batch.tendency + test.inclination + patients_in_hospital| 
          dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
@@ -131,7 +131,7 @@ reduced.form.LOS <-
 
 reduced.form.ntest <- 
   felm(nEDTests ~ 
-         batch.tendency + test.inclination | 
+         batch.tendency + test.inclination + patients_in_hospital | 
          dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
@@ -139,7 +139,7 @@ reduced.form.ntest <-
 
 reduced.form.72 <- 
   felm(RTN_72_HR ~ 
-         batch.tendency + test.inclination | 
+         batch.tendency + test.inclination  + patients_in_hospital| 
          dayofweekt + month_of_year + complaint_esi |
          0|ED_PROVIDER, 
        data = data
@@ -176,6 +176,20 @@ ggplot()  +
   labs(x='\nBatch-Ordering Tendency',
        y='Test Ordering Inclination\n')
 
+
+# All coefficients are scaled by the 
+# difference in batch tendency between the ninetieth and tenth lenient physicians  
+# for interpretability. 
+percentile_10.b <- quantile(data$batch.tendency, probs = 0.10)
+percentile_90.b <- quantile(data$batch.tendency, probs = 0.90)
+
+percentile_10.t <- quantile(data$test.inclination, probs = 0.10)
+percentile_90.t <- quantile(data$test.inclination, probs = 0.90)
+
+coeffecient.scale.b <- percentile_90.b - percentile_10.b
+coeffecient.scale.t <- percentile_90.t - percentile_10.t
+
+
 # Save the results to a .txt file
 sink("outputs/tables/Reduced Form.txt")
 
@@ -189,15 +203,37 @@ stargazer(list(reduced.form.LOS,
                reduced.form.72), type = "text", 
           header = FALSE, title = "Reduced Form", style = 'QJE')
 
+
+# Scale your models
+
+scale_factors.1 <- c(coeffecient.scale.b, coeffecient.scale.t)
+scale_factors.2 <- c(coeffecient.scale.b)
+
+scale_coefficients <- function(model, scale_factors) {
+
+  scaled_model <- model
+  
+  scaled_model$coefficients[1, "Estimate"] <- model$coefficients[1, "Estimate"] * scale_factors[1]
+  scaled_model$coefficients[1, "Cluster s.e."] <- model$coefficients[1, "Cluster s.e."] * scale_factors[1]
+  
+  if (length(scale_factors) == 2) {
+    
+    scaled_model$coefficients[2, "Estimate"] <- model$coefficients[2, "Estimate"] * scale_factors[2]
+    scaled_model$coefficients[2, "Cluster s.e."] <- model$coefficients[2, "Cluster s.e."] * scale_factors[2]
+  }
+  
+  return(scaled_model)
+}
+
+scale_coefficients(summary(reduced.form.LOS.0), scale_factors.1)
+scale_coefficients(summary(reduced.form.ntest.0), scale_factors.1)
+scale_coefficients(summary(reduced.form.72.0), scale_factors.1)
+
+scale_coefficients(summary(reduced.form.LOS), scale_factors.2)
+scale_coefficients(summary(reduced.form.ntest), scale_factors.2)
+scale_coefficients(summary(reduced.form.72), scale_factors.2)
+
 sink()
-# All coefficients are scaled by 100 and multiplied again by the 
-# difference in batch tendency between the ninetieth and tenth lenient physicians  
-# for interpretability. 
-
-percentile_10 <- quantile(data$batch.tendency, probs = 0.10)
-percentile_90 <- quantile(data$batch.tendency, probs = 0.90)
-coeffecient.scale <- percentile_90 - percentile_10
-
 
 ##########################################################################
 #=========================================================================
