@@ -131,11 +131,6 @@ stargazer(list(model2.LOS,
           header = FALSE, title = "Reduced Form", style = 'QJE')
 
 
-# Scale your models
-
-scale_factors.1 <- c(coeffecient.scale.b, coeffecient.scale.t)
-scale_factors.2 <- c(coeffecient.scale.b)
-
 
 # Function for scaling the coefficients in regressions for 
 # interpretability
@@ -160,6 +155,9 @@ scale_coefficients <- function(model, scale_factors) {
   
   return(scaled_model)
 }
+
+scale_factors.1 <- c(coeffecient.scale.b, coeffecient.scale.t)
+scale_factors.2 <- c(coeffecient.scale.b)
 
 # Scaled regression results
 summary(model1.LOS)$call
@@ -206,90 +204,94 @@ data <- read_csv('outputs/data/all_clean.csv')
 placebo.complaints <- data %>%
   group_by(CHIEF_COMPLAINT) %>%
   summarise(mean.batch = mean(any.batch), n=n()) %>%
-  filter(mean.batch <= 0.1) 
+  filter(mean.batch <= 0.1)
 
 placebo.complaints <- placebo.complaints$CHIEF_COMPLAINT
 
 placebo <- data %>%
   filter(CHIEF_COMPLAINT %in% placebo.complaints)
 
-# The idea here is that we want to show that being a high-batching
-# physician is not associated with other physician traits 
-# associated with quality. 
-# We are going to show that for Urinary Complaints,
-# a complaint area where batching is rare, that there are not preferable
-# outcomes associated with being a batcher
-
-#=========================================================================
-# LOS
-#=========================================================================
-
 # Save the results to a .txt file
 sink("outputs/tables/Placebo Check.txt")
 
-#
+#=========================================================================
+# Time controls only
+
 placebo1.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination | 
               dayofweekt + month_of_year |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
 placebo1.ntest <- felm(
   nEDTests ~ batch.tendency + test.inclination | 
               dayofweekt + month_of_year |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
 placebo1.72 <- felm(
   RTN_72_HR ~ batch.tendency + test.inclination | 
               dayofweekt + month_of_year |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
 
 stargazer(list(placebo1.LOS,
                placebo1.ntest,
                placebo1.72),
           type = "text", header = FALSE, 
-          title = "First Stage", style = 'QJE')
+          title = "Placebo Check-- no controls", style = 'QJE')
 
+#=========================================================================
+# Time controls + complaint severity
 
-#
 placebo2.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination | 
               dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
 placebo2.ntest <- felm(
   nEDTests ~ batch.tendency + test.inclination | 
              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
 placebo2.72 <- felm(
   RTN_72_HR ~ batch.tendency + test.inclination | 
               dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
 
-#
+stargazer(list(placebo2.LOS,
+               placebo2.ntest,
+               placebo2.72),
+          type = "text", header = FALSE, 
+          title = "Placebo Check-- Complaint", style = 'QJE')
+
+#=========================================================================
+# Time controls + complaint + person level + volums
+
 placebo3.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination + 
               patients_in_hospital | 
               dayofweekt + month_of_year + complaint_esi + 
               race + GENDER |0| ED_PROVIDER, 
-  data = data)
-
+  data = placebo)
 
 placebo3.ntest <- felm(
   nEDTests ~ batch.tendency + test.inclination + 
              patients_in_hospital | 
              dayofweekt + month_of_year + complaint_esi + 
              race + GENDER |0| ED_PROVIDER, 
-  data = data)
-
+  data = placebo)
 
 placebo3.72 <- felm(
   RTN_72_HR ~ batch.tendency + test.inclination + 
               patients_in_hospital | 
               dayofweekt + month_of_year + complaint_esi + 
               race + GENDER |0| ED_PROVIDER, 
-  data = data)
+  data = placebo)
+
+stargazer(list(placebo3.LOS,
+               placebo3.ntest,
+               placebo3.72),
+          type = "text", header = FALSE, 
+          title = "Placebo Check-- all controls", style = 'QJE')
 
 
 sink()
@@ -306,146 +308,43 @@ sink()
 #=========================================================================
 ##########################################################################
 
+data <- read_csv('outputs/data/final.csv')
 
+complaints <- unique(data$CHIEF_COMPLAINT)
 
-
-
-
-
-
-
-
-
-
-# Sub Group Analysis 1
-## Use tendency constructed from all complaints
-subgroup_analysis <- function(dependent_var, caption_text){
+model_results <- list()
+# Iterate through each complaint and run the regression
+for(complaint in complaints) {
   
-  unique_complaints <- unique(final$CHIEF_COMPLAINT)
-  
-  results_df <- data.frame(
-    CHIEF_COMPLAINT = character(),
-    Coefficient = numeric(),
-    P_value = numeric(),
-    stringsAsFactors = FALSE
+  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
+  model <- felm(
+    any.batch ~ batch.tendency + test.inclination | 
+                dayofweekt + month_of_year + age_groups + ESI | 0 | ED_PROVIDER,
+    data = data_subset
   )
-  
-  for(complaint in unique_complaints){
-    
-    sub_data <- final[final$CHIEF_COMPLAINT == complaint, ]
-    result <- summary(
-      felm(as.formula(
-        paste(dependent_var,"~ avg_nEDTests | 
-                            dayofweekt + month  | 
-                            (any.batch ~ batch.tendency + avg_nEDTests) | 0")),
-                           data = sub_data))
-    
-    coeff <- result$coef["`any.batch(fit)`", "Estimate"]
-    p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
-    
-    results_df <- rbind(results_df, 
-                        data.frame(CHIEF_COMPLAINT = complaint, 
-                                   Coefficient = coeff, P_value = p_val))
-  }
-  
-  # Formatting
-  results_df$Coefficient <- round(results_df$Coefficient, 3)
-  results_df$P_value <- round(results_df$P_value, 3)
-  results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
-                                    ifelse(results_df$P_value < 0.05, "**", 
-                                           ifelse(results_df$P_value < 0.1, "*", "")))
-  results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
-                                           results_df$Significance)
-  results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
-  
-  latex_table <- xtable(results_df, 
-                        caption = caption_text, 
-                        align = c("l","l", "r", "r"))
-  
-  return(print(latex_table, type = "latex", caption.placement = "top"))
+  model_results[[complaint]] <- model
 }
 
-# Run the analyses and print tables
-analyses <- list(
-  list(var="ln_ED_LOS", caption="LOS Regression Results by Chief Complaint"),
-  list(var="nEDTests", caption="NTests Regression Results by Chief Complaint"),
-  list(var="RTN_72_HR", caption="72 Return Regression Results by Chief Complaint")
-)
+# Save the results to a .txt file
+sink("outputs/tables/Monotonicity.txt")
 
-lapply(analyses, function(x) subgroup_analysis(x$var, x$caption))
+stargazer(model_results[1:5], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[1:5],
+          style = 'QJE')
 
-# Sub Group Analysis 2
-## Use tendency constructed from each complaints
+stargazer(model_results[5:10], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[5:10],
+          style = 'QJE')
 
-subgroup_analysis2 <- function(dependent_var, caption_text){
-  
-  unique_complaints <- unique(final$CHIEF_COMPLAINT)
-  
-  results_df <- data.frame(
-    CHIEF_COMPLAINT = character(),
-    Coefficient = numeric(),
-    P_value = numeric(),
-    stringsAsFactors = FALSE
-  )
-  
-  for(complaint in unique_complaints){
-    
-    sub_data <- final[final$CHIEF_COMPLAINT == complaint, ]
-    
-    
-    # Construct batch tendency for the subset
-    sub_data$residual_batch <- resid(
-      felm(any.batch ~ 1 | dayofweekt + month, 
-           data=sub_data
-      )
-    )
-    sub_data <- sub_data %>%
-      group_by(ED_PROVIDER) %>%
-      mutate(Sum_Resid=sum(residual_batch, na.rm=T),
-             batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>% 
-      ungroup()
-    
-    result <- summary(
-      felm(as.formula(
-        paste(dependent_var,"~ avg_nEDTests | 
-                            dayofweekt + month  | 
-                            (any.batch ~ batch.tendency + avg_nEDTests) | 0")),
-        data = sub_data))
-    
-    coeff <- result$coef["`any.batch(fit)`", "Estimate"]
-    p_val <- result$coef["`any.batch(fit)`", "Pr(>|t|)"]
-    
-    results_df <- rbind(results_df, 
-                        data.frame(CHIEF_COMPLAINT = complaint, 
-                                   Coefficient = coeff, P_value = p_val))
-  }
-  
-  # Formatting
-  results_df$Coefficient <- round(results_df$Coefficient, 3)
-  results_df$P_value <- round(results_df$P_value, 3)
-  results_df$Significance <- ifelse(results_df$P_value < 0.01, "***", 
-                                    ifelse(results_df$P_value < 0.05, "**", 
-                                           ifelse(results_df$P_value < 0.1, "*", "")))
-  results_df$Coefficient_Starred <- paste0(results_df$Coefficient, 
-                                           results_df$Significance)
-  results_df <- results_df[, c("CHIEF_COMPLAINT", "Coefficient_Starred", "P_value")]
-  
-  latex_table <- xtable(results_df, 
-                        caption = caption_text, 
-                        align = c("l","l", "r", "r"))
-  
-  return(print(latex_table, type = "latex", caption.placement = "top"))
-}
+stargazer(model_results[10:15], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[10:15],
+          style = 'QJE')
 
-# Run the analyses and print tables
-analyses <- list(
-  list(var="ln_ED_LOS", caption="LOS Regression Results by Chief Complaint"),
-  list(var="nEDTests", caption="NTests Regression Results by Chief Complaint"),
-  list(var="RTN_72_HR", caption="72 Return Regression Results by Chief Complaint")
-)
 
-lapply(analyses, function(x) subgroup_analysis2(x$var, x$caption))
-
+sink()
 
 
 ##########################################################################
@@ -477,6 +376,7 @@ stargazer(list(m1, m2, m3), type = "latex",
 # Mediation Analysis -----------------------------------------------------
 #=========================================================================
 ##########################################################################
+
 library(mediation)
 
 data$ESI <- as.factor(data$ESI)

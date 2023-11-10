@@ -2,24 +2,24 @@
 ====================================================================
                             Model 1       Model 2       Model 3     
 --------------------------------------------------------------------
-batch.tendency                  1.03 ***      1.05 ***      1.05 ***
-                               (0.01)        (0.02)        (0.02)   
-test.inclination                0.01         -0.01         -0.01    
+batch.tendency                  1.06 ***      1.08 ***      1.08 ***
+                               (0.02)        (0.02)        (0.02)   
+test.inclination                0.00         -0.01         -0.01    
                                (0.01)        (0.01)        (0.01)   
 --------------------------------------------------------------------
-Num. obs.                   43328         43328         43328       
-R^2 (full model)                0.03          0.24          0.24    
+Num. obs.                   41929         41929         41929       
+R^2 (full model)                0.03          0.23          0.23    
 R^2 (proj model)                0.02          0.03          0.03    
-Adj. R^2 (full model)           0.02          0.23          0.23    
+Adj. R^2 (full model)           0.02          0.22          0.23    
 Adj. R^2 (proj model)           0.02          0.02          0.02    
-F statistic (full model)        6.99         50.15         49.13    
+F statistic (full model)        6.85         47.05         46.10    
 F (full model): p-value         0.00          0.00          0.00    
-F statistic (proj model)     3723.62       6302.15       6235.44    
+F statistic (proj model)     3678.09       5423.33       5325.57    
 F (proj model): p-value         0.00          0.00          0.00    
 Num. groups: dayofweekt       168           168           168       
 Num. groups: month_of_year     12            12            12       
 Num. groups: age_groups                       4             4       
-Num. groups: complaint_esi                   87            87       
+Num. groups: complaint_esi                   82            82       
 Num. groups: GENDER                                         2       
 Num. groups: race                                           6       
 ====================================================================
@@ -30,16 +30,16 @@ First Stage
                                            any.batch                        
                            (1)                (2)                (3)        
 ----------------------------------------------------------------------------
-batch.tendency           1.030***           1.051***           1.050***     
-                         (0.015)            (0.016)            (0.016)      
+batch.tendency           1.061***           1.082***           1.081***     
+                         (0.018)            (0.018)            (0.019)      
                                                                             
-test.inclination          0.011              -0.008             -0.007      
-                         (0.009)            (0.006)            (0.006)      
+test.inclination          0.001              -0.012             -0.012      
+                         (0.009)            (0.008)            (0.008)      
                                                                             
-N                         43,328             43,328             43,328      
-R2                        0.028              0.239              0.239       
-Adjusted R2               0.024              0.234              0.234       
-Residual Std. Error 0.479 (df = 43147) 0.425 (df = 43058) 0.425 (df = 43052)
+N                         41,929             41,929             41,929      
+R2                        0.029              0.230              0.230       
+Adjusted R2               0.025              0.225              0.225       
+Residual Std. Error 0.482 (df = 41748) 0.429 (df = 41664) 0.429 (df = 41658)
 ============================================================================
 Notes:                                ***Significant at the 1 percent level.
                                        **Significant at the 5 percent level.

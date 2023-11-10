@@ -61,7 +61,8 @@ df <- df %>%
 # Determine which was the first test ordered -----------------------------
 # Columns of interest
 
-cols_of_interest <- c('US_ORDER_DTTM_REL', 'NON_CON_CT_ORDER_REL', 'CON_CT_ORDER_REL',
+cols_of_interest <- c('US_ORDER_DTTM_REL', 'NON_CON_CT_ORDER_REL', 
+                      'CON_CT_ORDER_REL',
                       'LAB_ORDER_REL', 'XR_ORDER_REL')
 
 # Function to determine batch
@@ -533,6 +534,7 @@ final <- final[!(final$ED_PROVIDER %in% providers_less_than_500), ]
 final$complaint_esi <- paste(final$CHIEF_COMPLAINT, final$ESI)
 
 rm(list = setdiff(ls(), "final"))
+
 #=========================================================================
 ##########################################################################
 #=========================================================================
@@ -571,6 +573,7 @@ final <- final %>%
          test.inclination = (Sum_Resid_ntests - residual_ntests) / (n() - 1),
          
          avg.batch.tendency = mean(batch.tendency)) %>%
+  
   ungroup()
 
 final$residual_batch <- resid(
@@ -580,14 +583,17 @@ final <- final %>%
   group_by(ED_PROVIDER) %>%
   mutate(Sum_Resid=sum(residual_batch, na.rm=T),
          batch.tendency.2 = (Sum_Resid - residual_batch) / (n() - 1)) %>%
-  ungroup()
+  ungroup() %>%
+  filter(ED_LOS > 0)
 
 write.csv(final, 'outputs/data/all_clean.csv')
 
 # Limit to prevalent complaints only
 final <- final %>%
   group_by(CHIEF_COMPLAINT) %>%
-  filter(n() > 1000)
+  filter(n() > 1000) %>%
+  ungroup() %>%
+  filter(CHIEF_COMPLAINT != 'Urinary Complaints')
 
 write.csv(final, 'outputs/data/final.csv')
 #=========================================================================

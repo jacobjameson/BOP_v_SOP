@@ -4,16 +4,16 @@ Reduced Form
                                    ln_ED_LOS      nEDTests    RTN_72_HR  
                                       (1)           (2)          (3)     
 -------------------------------------------------------------------------
-batch.tendency                      0.873***      1.712***      -0.025   
-                                    (0.299)       (0.329)      (0.019)   
+batch.tendency                      0.871***      1.733***      -0.026   
+                                    (0.298)       (0.329)      (0.018)   
                                                                          
-patients_in_hospital                0.012***       0.001*      -0.00001  
+patients_in_hospital                0.012***       0.001*      -0.00002  
                                     (0.001)       (0.001)      (0.0002)  
                                                                          
-N                                    43,328        43,328       43,328   
-R2                                   0.234         0.261        0.012    
-Adjusted R2                          0.229         0.257        0.005    
-Residual Std. Error (df = 43061)     0.485         0.844        0.186    
+N                                    41,929        41,929       41,929   
+R2                                   0.234         0.260        0.011    
+Adjusted R2                          0.230         0.255        0.005    
+Residual Std. Error (df = 41667)     0.484         0.847        0.184    
 =========================================================================
 Notes:                             ***Significant at the 1 percent level.
                                     **Significant at the 5 percent level.
@@ -24,65 +24,59 @@ Reduced Form
                                    ln_ED_LOS      nEDTests    RTN_72_HR  
                                       (1)           (2)          (3)     
 -------------------------------------------------------------------------
-batch.tendency                       -0.113       0.119**       0.020    
-                                    (0.452)       (0.047)      (0.021)   
+batch.tendency                       -0.107       0.146***      0.019    
+                                    (0.448)       (0.052)      (0.020)   
                                                                          
-test.inclination                    0.595**       0.962***     -0.027**  
-                                    (0.234)       (0.021)      (0.011)   
+test.inclination                    0.590**       0.957***    -0.028***  
+                                    (0.231)       (0.024)      (0.011)   
                                                                          
-patients_in_hospital                0.012***       0.001       -0.00001  
+patients_in_hospital                0.012***       0.001       -0.00002  
                                     (0.001)       (0.001)      (0.0002)  
                                                                          
-N                                    43,328        43,328       43,328   
-R2                                   0.243         0.269        0.012    
-Adjusted R2                          0.238         0.264        0.006    
-Residual Std. Error (df = 43060)     0.483         0.839        0.186    
+N                                    41,929        41,929       41,929   
+R2                                   0.244         0.267        0.011    
+Adjusted R2                          0.239         0.263        0.005    
+Residual Std. Error (df = 41666)     0.482         0.842        0.184    
 =========================================================================
 Notes:                             ***Significant at the 1 percent level.
                                     **Significant at the 5 percent level.
                                     *Significant at the 10 percent level.
-                                    
 felm(formula = ln_ED_LOS ~ batch.tendency + patients_in_hospital | 
     dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
     data = data)
                         Estimate Cluster s.e.
-batch.tendency       0.137501928 0.0471086827
-patients_in_hospital 0.004265857 0.0002266588
-
+batch.tendency       0.137190164 0.0470177247
+patients_in_hospital 0.004288168 0.0002330106
 felm(formula = nEDTests ~ batch.tendency + patients_in_hospital | 
     dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
     data = data)
                          Estimate Cluster s.e.
-batch.tendency       0.2697050087 0.0518170041
-patients_in_hospital 0.0004237958 0.0002406918
-
+batch.tendency       0.2730854606 0.0519089398
+patients_in_hospital 0.0004249243 0.0002481019
 felm(formula = RTN_72_HR ~ batch.tendency + patients_in_hospital | 
     dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
     data = data)
                           Estimate Cluster s.e.
-batch.tendency       -3.936110e-03 2.944565e-03
-patients_in_hospital -3.810553e-06 5.276253e-05
-
+batch.tendency       -4.139965e-03 2.820977e-03
+patients_in_hospital -7.775343e-06 5.333933e-05
 felm(formula = ln_ED_LOS ~ batch.tendency + test.inclination + 
     patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
     0 | ED_PROVIDER, data = data)
                         Estimate Cluster s.e.
-batch.tendency       -0.01784650 0.0712960009
-test.inclination      0.59530793 0.2337225445
-patients_in_hospital  0.01211615 0.0005848842
-
+batch.tendency       -0.01682447 0.0706579683
+test.inclination      0.58975903 0.2314335875
+patients_in_hospital  0.01216907 0.0006069262
 felm(formula = nEDTests ~ batch.tendency + test.inclination + 
     patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
     0 | ED_PROVIDER, data = data)
                         Estimate Cluster s.e.
-batch.tendency       0.018781037 0.0073466963
-test.inclination     0.961561273 0.0212279834
-patients_in_hospital 0.001009504 0.0006150197
-
+batch.tendency       0.023076731 0.0081641438
+test.inclination     0.957343465 0.0235953158
+patients_in_hospital 0.001014991 0.0006396313
 felm(formula = RTN_72_HR ~ batch.tendency + test.inclination + 
     patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
     0 | ED_PROVIDER, data = data)
                           Estimate Cluster s.e.
-batch.tendency        3.098355e-03 0.0032722589
-test.inclination     -2.695665e-02 0.0113816540
-patients_in_hospital -5.136757e-06 0.0001506862
+batch.tendency        3.062576e-03 0.0031741909
+test.inclination     -2.758026e-02 0.0106387901
+patients_in_hospital -1.643584e-05 0.0001523342
