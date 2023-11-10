@@ -348,21 +348,51 @@ The effects of testing inclination are also striking. We find that a movement fr
 
 ## Placebo Check
 
-In this section we investigate whether the reduced-form effects observed in Section 4.1 are due to differences in batch rates across providers or due to other provider differences correlated with batch tendency We start by studying reduced-form effects among patients with complaints that are never prescribed opioids, as a ``placebo/falsification check.” By way of example, consider a patient who arrives at the ED with a urinary tact infection—a condition for which patients rarely undergo imaging testing. For such patients, we should expect to see no impact of batch tendency only if high batching and low batching physicians do not systematically differ in other dimensions of care relevant to patient outcomes. Conversely, if we do find a reduced-form effect for these patients, then high batch tendency physicians must systematically differ from low batch tendency physicians in other dimensions of care, beyond batching.
+In this section we investigate whether the reduced-form effects observed in Section 4.1 are due to differences in batch rates across providers or due to other provider differences correlated with batch tendency We start by studying reduced-form effects among patients with complaints that are never batched, as a ``placebo/falsification check.” By way of example, consider a patient who arrives at the ED with a urinary tact infection—a condition for which patients rarely undergo imaging testing. For such patients, we should expect to see no impact of batch tendency only if high batching and low batching physicians do not systematically differ in other dimensions of care relevant to patient outcomes. Conversely, if we do find a reduced-form effect for these patients, then high batch tendency physicians must systematically differ from low batch tendency physicians in other dimensions of care, beyond batching.
 
-To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician prescribing leniency for the subsample, following equation (3). The results of this exercise are displayed in Table 4. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
+To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician prescribing leniency for the subsample, following equation (3). The results of this exercise are displayed in Table __. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
 
-To further probe robustness, we perform the placebo exercise for a set of non-opioid outcomes—in the form of homelessness, suicide, all-cause mortality, and preventable hospitalizations—in online Appendix Table G.7. Note that these outcomes are likely to be more sensitive to other dimensions of physician care than our opioid-related outcomes because the causal link to prescription opioid exposure is less tight, while other margins of care may matter relatively more. Indeed, we do find a sizable and statistically significant effect of being assigned to a high-prescribing physician on preventable hospitalizations and all-cause mor- tality for our placebo conditions. For patients with ED diagnoses that are rarely prescribed an opioid (column 3), assignment to a physician in the top decile of the opioid prescribing range increases the likelihood of a preventable hospitalization within 3 years by 0.27 pp, or 1.8 percent.19
-
-The failure of our placebo check for some non-opioid outcomes suggests that there may be dimensions of care correlated with opioid prescribing tendency that vary across ED physicians and may impact non-opioid patient outcomes. While the set of potentially relevant dimensions of care is very large and may include dimen- sions unobservable to the researcher (such as, for example, instructions on medica- tion adherence and use, physician-nurse scheduling that lead to complementarities), we can make progress by accounting for the chief observable dimensions likely to correlate highly with patient health outcomes in ED settings: quality of care as mea- sured by immediate patient mortality, intensity of procedures, and tendency to admit patients for inpatient hospitalizations. In moving toward a well-identified IV design that estimates the causal impact of an opioid prescription on patient outcomes, we address these potential violations to the exclusion restriction by estimating physician “propensities” along these “non-focal” (relative to opioid prescribing) dimensions and including them as controls (details are provided in Section IIIE). This approach follows recent advances from the judge stringency literature (Mueller-Smith 2015; Bhuller et al. 2020), which deals with similar concerns.
-
-We recognize that given the multidimensionality of physician behavior, potential for exclusion restriction violations remains even after controlling for chief dimensions of behavior. For this reason, we also present reduced-form results, and we keep a tight focus on opioid-related outcomes, for which such concerns are less pronounced relative to general health outcomes.
 
 
 
 ## Instrumental Variables Results
 
 
+\begin{table}[!htbp] \centering 
+  \caption{IV Results} 
+  \label{} 
+\begin{tabular}{p{6cm}ccc}
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & ln\_ED\_LOS & RTN\_72\_HR & nEDTests \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Batch & $-$0.097 & 0.019 & 0.113$^{***}$ \\ 
+  & (0.435) & (0.020) & (0.043) \\ 
+  & & & \\ 
+ Testing Inclination & 0.607$^{**}$ & $-$0.027$^{**}$ & 0.964$^{***}$ \\ 
+  & (0.238) & (0.011) & (0.020) \\ 
+  & & & \\ 
+Seasonality and shift fixed effects? & Yes & Yes & Yes \\
+Chief Complaint? & Yes & Yes & Yes \\
+Patient observables? & Yes & Yes & Yes \\
+Hospital volume? & Yes & Yes & Yes \\
+\midrule
+\textit{N} & 43,328 & 43,328 & 43,328 \\ 
+R$^{2}$ & 0.195 & 0.009 & 0.306 \\ 
+Adjusted R$^{2}$ & 0.190 & 0.002 & 0.302 \\ 
+Residual Std. Error (df = 43061) & 0.498 & 0.187 & 0.818 \\ 
+\\
+\midrule
+\midrule
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{Estimates of the IV model are for the baseline sample described in the text. Coefficients on testing inclination are scaled by the difference between testing inclination of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
+\end{table}
 
 
 ## Robustness

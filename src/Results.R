@@ -24,21 +24,21 @@ final <- final %>%
 ##########################################################################
 
 
-summary(felm(ln_ED_LOS ~ avg_nEDTests |
-                 dayofweekt + month + complaint_esi | 
-               (any.batch ~ batch.tendency + avg_nEDTests)|0, data = final))
+m1 <- (felm(ln_ED_LOS ~ test.inclination |
+                 dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data))
 
-summary(felm(RTN_72_HR ~ avg_nEDTests |
-              dayofweekt + month + complaint_esi | 
-              (any.batch ~ batch.tendency + avg_nEDTests)|0, data = final))
+m2 <-(felm(RTN_72_HR ~ test.inclination |
+              dayofweekt + month_of_year + complaint_esi | 
+              (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data))
 
-summary(felm(nEDTests ~ avg_nEDTests |
-               dayofweekt + month + complaint_esi | 
-               (any.batch ~ batch.tendency + avg_nEDTests)|0, data = final))
+m3 <- (felm(nEDTests ~ test.inclination |
+               dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data))
 
- t<- felm(nEDTests ~ avg_nEDTests |
-           dayofweekt + month + complaint_esi | 
-           (any.batch ~ batch.tendency + avg_nEDTests)|0, data = final)
+stargazer(list(m1, m2, m3), type = "latex", 
+          header = FALSE, title = "IV Results", style = 'QJE')
+
 # Sub Group Analysis 1
 ## Use tendency constructed from all complaints
  subgroup_analysis <- function(dependent_var, caption_text){

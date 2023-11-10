@@ -1,5 +1,5 @@
 #=========================================================================
-# Purpose: Validate IV
+# Purpose: Validate IV + Main Results
 # Author: Jacob Jameson 
 #=========================================================================
 
@@ -21,7 +21,6 @@ data <- read_csv('outputs/data/final.csv')
 #=========================================================================
 ##########################################################################
 
-
 ##########################################################################
 #=========================================================================
 # Relevance --------------------------------------------------------------
@@ -30,24 +29,24 @@ data <- read_csv('outputs/data/final.csv')
 ##########################################################################
 
 # Shift-level FE
-first_stage_final <- felm(any.batch ~ batch.tendency + test.inclination | 
-                          dayofweekt + month_of_year |
-                          0| ED_PROVIDER, 
-                          data = data)
+first_stage_final <- felm(
+  any.batch ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year |0| ED_PROVIDER, 
+  data = data)
 
 # Shift-level + complaint FE
-first_stage_final_d <- felm(any.batch ~ batch.tendency + test.inclination | 
-                            dayofweekt + month_of_year + age_groups + 
-                            complaint_esi |
-                            0|ED_PROVIDER,
-                            data = data)
+first_stage_final_d <- felm(
+  any.batch ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year + age_groups + 
+              complaint_esi | 0 | ED_PROVIDER,
+  data = data)
 
 # Shift-level + complaint + individual FE
-first_stage_final_d_i <- felm(any.batch ~ batch.tendency + test.inclination | 
-                              dayofweekt + month_of_year + age_groups + 
-                              complaint_esi + GENDER + race |
-                              0| ED_PROVIDER , 
-                              data = data)
+first_stage_final_d_i <- felm(
+  any.batch ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year + age_groups + 
+              complaint_esi + GENDER + race | 0 | ED_PROVIDER,
+  data = data)
 
 # Save the results to a .txt file
 sink("outputs/tables/First Stage.txt")
@@ -57,39 +56,13 @@ screenreg(list(first_stage_final,
                first_stage_final_d_i), 
           include.fstatistic = T)
 
-stargazer(list(first_stage_final,first_stage_final_d,
-               first_stage_final_d_i), type = "text", 
-          header = FALSE, title = "First Stage", style = 'QJE')
+stargazer(list(first_stage_final,
+               first_stage_final_d,
+               first_stage_final_d_i),
+          type = "text", header = FALSE, 
+          title = "First Stage", style = 'QJE')
 
 sink()
-
-
-##########################################################################
-#=========================================================================
-# Mediation Analysis -----------------------------------------------------
-#=========================================================================
-##########################################################################
-library(mediation)
-
-data$ESI <- as.factor(data$ESI)
-
-reduced.form.LOS.M <- 
-  lm(avg_nEDTests ~ 
-         batch.tendency + dayofweekt + month_of_year + 
-         age_groups + CHIEF_COMPLAINT + ESI, data = data
-  )
-
-reduced.form.LOS.Y <- 
-  lm(ln_ED_LOS ~ 
-       batch.tendency + avg_nEDTests + dayofweekt + 
-       month_of_year + age_groups +  CHIEF_COMPLAINT + ESI, data = data
-  )
-
-mediation <- mediate(reduced.form.LOS.M, reduced.form.LOS.Y,
-                     treat='batch.tendency', mediator='avg_nEDTests',
-                     boot=TRUE, sims=1)
-
-summary(mediation)
 
 ##########################################################################
 #=========================================================================
@@ -97,89 +70,44 @@ summary(mediation)
 #=========================================================================
 ##########################################################################
 
-reduced.form.LOS.0 <- 
-  felm(ln_ED_LOS ~ 
-         batch.tendency + patients_in_hospital | 
-         dayofweekt + month_of_year + complaint_esi  |
-         0|ED_PROVIDER, 
-       data = data
-  )
+# Model 1 does not control testing inclination
+model1.LOS <- felm(
+  ln_ED_LOS ~ batch.tendency + patients_in_hospital | 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
-reduced.form.ntest.0 <- 
-  felm(nEDTests ~ 
-         batch.tendency + patients_in_hospital | 
-         dayofweekt + month_of_year + complaint_esi |
-         0|ED_PROVIDER, 
-       data = data
-  )
+model1.ntest <- felm(
+  nEDTests ~ batch.tendency + patients_in_hospital | 
+             dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
-reduced.form.72.0 <- 
-  felm(RTN_72_HR ~ 
-         batch.tendency  + patients_in_hospital| 
-         dayofweekt + month_of_year + complaint_esi  |
-         0|ED_PROVIDER, 
-       data = data
-  )
+model1.72 <- felm(
+  RTN_72_HR ~ batch.tendency  + patients_in_hospital | 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
-reduced.form.LOS <- 
-  felm(ln_ED_LOS ~ 
-         batch.tendency + test.inclination + patients_in_hospital| 
-         dayofweekt + month_of_year + complaint_esi |
-         0|ED_PROVIDER, 
-       data = data
-   )
+# Model 2 controls for testing inclination
+model2.LOS <- felm(
+  ln_ED_LOS ~ batch.tendency + test.inclination + patients_in_hospital | 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
-reduced.form.ntest <- 
-  felm(nEDTests ~ 
-         batch.tendency + test.inclination + patients_in_hospital | 
-         dayofweekt + month_of_year + complaint_esi |
-         0|ED_PROVIDER, 
-       data = data
-  )
+model2.ntest <- felm(
+  nEDTests ~ batch.tendency + test.inclination + patients_in_hospital | 
+             dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
-reduced.form.72 <- 
-  felm(RTN_72_HR ~ 
-         batch.tendency + test.inclination  + patients_in_hospital| 
-         dayofweekt + month_of_year + complaint_esi |
-         0|ED_PROVIDER, 
-       data = data
-  )
+model2.72 <- felm(
+  RTN_72_HR ~ batch.tendency + test.inclination + patients_in_hospital| 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
 
+#=========================================================================
+# All coefficients are scaled by the difference in tendency/inclination
+# between the ninetieth and tenth percentile physicians for 
+# interpretability. 
+#=========================================================================
 
-data %>%
-  group_by(ED_PROVIDER) %>%
-  summarize(test.inclination = mean(test.inclination), 
-            batch.tendency = mean(batch.tendency)) %>%
-ggplot()  +
-  geom_point(aes(y=test.inclination, x = batch.tendency),size=5, stroke=1) +
-  geom_vline(xintercept=0) +
-  geom_hline(yintercept=0) +
-  geom_smooth(aes(y=test.inclination,x = batch.tendency), method = "lm",se = T) +
-  theme_bw() +
-  theme(plot.background=element_rect(fill='white'),
-        panel.border = element_blank(),
-        axis.text.y  = element_text(size=20, color='black'), 
-        axis.text.x  = element_text(size=20),
-        plot.margin = unit(c(0.5, 0.2, 0.2, 0.2), "cm"),
-        panel.grid.major=element_line(color='grey85',size=0.3),
-        legend.position = 'none',
-        axis.title.y =  element_text(color = 'black',size = 20),
-        axis.title.x = element_text(color = 'black',size = 20),
-        strip.text.x = element_text(color = 'black', size = 20, face = "bold"),
-        plot.title = element_text(color = "black", size = 30, 
-                                  face = "bold", margin = margin(0,0,30,0), hjust = 0),
-        plot.subtitle = element_text(color = "black", size = 14, 
-                                     margin = margin(0,0,30,0),hjust = 0),
-        legend.text = element_text(size=15),
-        legend.title = element_text(size=16, face = 'bold'),
-        legend.background = element_rect(fill = "grey96", color = NA)) +
-  labs(x='\nBatch-Ordering Tendency',
-       y='Test Ordering Inclination\n')
-
-
-# All coefficients are scaled by the 
-# difference in batch tendency between the ninetieth and tenth lenient physicians  
-# for interpretability. 
 percentile_10.b <- quantile(data$batch.tendency, probs = 0.10)
 percentile_90.b <- quantile(data$batch.tendency, probs = 0.90)
 
@@ -189,18 +117,17 @@ percentile_90.t <- quantile(data$test.inclination, probs = 0.90)
 coeffecient.scale.b <- percentile_90.b - percentile_10.b
 coeffecient.scale.t <- percentile_90.t - percentile_10.t
 
-
 # Save the results to a .txt file
 sink("outputs/tables/Reduced Form.txt")
 
-stargazer(list(reduced.form.LOS.0, 
-               reduced.form.ntest.0,
-               reduced.form.72.0), type = "text", 
+stargazer(list(model1.LOS, 
+               model1.ntest,
+               model1.72), type = "text", 
           header = FALSE, title = "Reduced Form", style = 'QJE')
 
-stargazer(list(reduced.form.LOS, 
-               reduced.form.ntest,
-               reduced.form.72), type = "text", 
+stargazer(list(model2.LOS, 
+               model2.ntest,
+               model2.72), type = "text", 
           header = FALSE, title = "Reduced Form", style = 'QJE')
 
 
@@ -209,29 +136,61 @@ stargazer(list(reduced.form.LOS,
 scale_factors.1 <- c(coeffecient.scale.b, coeffecient.scale.t)
 scale_factors.2 <- c(coeffecient.scale.b)
 
+
+# Function for scaling the coefficients in regressions for 
+# interpretability
 scale_coefficients <- function(model, scale_factors) {
 
   scaled_model <- model
   
-  scaled_model$coefficients[1, "Estimate"] <- model$coefficients[1, "Estimate"] * scale_factors[1]
-  scaled_model$coefficients[1, "Cluster s.e."] <- model$coefficients[1, "Cluster s.e."] * scale_factors[1]
+  scaled_model$coefficients[1, "Estimate"] <-
+    model$coefficients[1, "Estimate"] * scale_factors[1]
+  
+  scaled_model$coefficients[1, "Cluster s.e."] <- 
+    model$coefficients[1, "Cluster s.e."] * scale_factors[1]
   
   if (length(scale_factors) == 2) {
     
-    scaled_model$coefficients[2, "Estimate"] <- model$coefficients[2, "Estimate"] * scale_factors[2]
-    scaled_model$coefficients[2, "Cluster s.e."] <- model$coefficients[2, "Cluster s.e."] * scale_factors[2]
+    scaled_model$coefficients[2, "Estimate"] <- 
+      model$coefficients[2, "Estimate"] * scale_factors[2]
+    
+    scaled_model$coefficients[2, "Cluster s.e."] <-
+      model$coefficients[2, "Cluster s.e."] * scale_factors[2]
   }
   
   return(scaled_model)
 }
 
-scale_coefficients(summary(reduced.form.LOS.0), scale_factors.1)
-scale_coefficients(summary(reduced.form.ntest.0), scale_factors.1)
-scale_coefficients(summary(reduced.form.72.0), scale_factors.1)
+# Scaled regression results
+summary(model1.LOS)$call
+scale_coefficients(
+  summary(model1.LOS), 
+  scale_factors.1)$coefficients[,c('Estimate', 'Cluster s.e.')]
 
-scale_coefficients(summary(reduced.form.LOS), scale_factors.2)
-scale_coefficients(summary(reduced.form.ntest), scale_factors.2)
-scale_coefficients(summary(reduced.form.72), scale_factors.2)
+summary(model1.ntest)$call
+scale_coefficients(
+  summary(model1.ntest), 
+  scale_factors.1)$coefficients[,c('Estimate', 'Cluster s.e.')]
+
+summary(model1.72)$call
+scale_coefficients(
+  summary(model1.72), 
+  scale_factors.1)$coefficients[,c('Estimate', 'Cluster s.e.')]
+
+summary(model2.LOS)$call
+scale_coefficients(
+  summary(model2.LOS), 
+  scale_factors.2)$coefficients[,c('Estimate', 'Cluster s.e.')]
+
+summary(model2.ntest)$call
+scale_coefficients(
+  summary(model2.ntest), 
+  scale_factors.2)$coefficients[,c('Estimate', 'Cluster s.e.')]
+
+summary(model2.72)$call
+scale_coefficients(
+  summary(model2.72), 
+  scale_factors.2)$coefficients[,c('Estimate', 'Cluster s.e.')]
 
 sink()
 
@@ -246,7 +205,7 @@ data <- read_csv('outputs/data/all_clean.csv')
 
 placebo.complaints <- data %>%
   group_by(CHIEF_COMPLAINT) %>%
-  summarise(mean.batch = mean(any.batch), n =n()) %>%
+  summarise(mean.batch = mean(any.batch), n=n()) %>%
   filter(mean.batch <= 0.1) 
 
 placebo.complaints <- placebo.complaints$CHIEF_COMPLAINT
@@ -255,8 +214,9 @@ placebo <- data %>%
   filter(CHIEF_COMPLAINT %in% placebo.complaints)
 
 # The idea here is that we want to show that being a high-batching
-# physician is not associated with other traits of a high-quality
-# physician. We are going to show that for Urinary Complaints,
+# physician is not associated with other physician traits 
+# associated with quality. 
+# We are going to show that for Urinary Complaints,
 # a complaint area where batching is rare, that there are not preferable
 # outcomes associated with being a batcher
 
@@ -267,60 +227,70 @@ placebo <- data %>%
 # Save the results to a .txt file
 sink("outputs/tables/Placebo Check.txt")
 
-placebo1.1 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month_of_year | 0 | ED_PROVIDER, 
-                  data = placebo)
+#
+placebo1.LOS <- felm(
+  ln_ED_LOS ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year |0| ED_PROVIDER, 
+  data = data)
 
-placebo1.2 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-                  data = placebo)
+placebo1.ntest <- felm(
+  nEDTests ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year |0| ED_PROVIDER, 
+  data = data)
 
-placebo1.3 <- felm(ln_ED_LOS ~ batch.tendency + avg_nEDTests | 
-                  dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
-                  data = placebo)
-
-stargazer(list(placebo1.1, placebo1.2, placebo1.3), type = "text", 
-          header = FALSE, title = "Placebo Check", style = 'QJE')
-
-#=========================================================================
-# Number of Tests
-#=========================================================================
-
-placebo2.1 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year | 0 | ED_PROVIDER, 
-                   data = placebo)
-
-placebo2.2 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-                   data = placebo)
-
-placebo2.3 <- felm(nEDTests ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
-                   data = placebo)
+placebo1.72 <- felm(
+  RTN_72_HR ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year |0| ED_PROVIDER, 
+  data = data)
 
 
-stargazer(list(placebo2.1, placebo2.2, placebo2.3), type = "text", 
-          header = FALSE, title = "Placebo Check", style = 'QJE')
-
-#=========================================================================
-# 72 HR Return
-#=========================================================================
-
-placebo3.1 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year | 0 | ED_PROVIDER, 
-                   data = placebo)
-
-placebo3.2 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-                   data = placebo)
-
-placebo3.3 <- felm(RTN_72_HR ~ batch.tendency + avg_nEDTests | 
-                   dayofweekt + month_of_year + complaint_esi + race + GENDER |0| ED_PROVIDER, 
-                   data = placebo)
+stargazer(list(placebo1.LOS,
+               placebo1.ntest,
+               placebo1.72),
+          type = "text", header = FALSE, 
+          title = "First Stage", style = 'QJE')
 
 
-stargazer(list(placebo3.1, placebo3.2, placebo3.3), type = "text", 
-          header = FALSE, title = "Placebo Check", style = 'QJE')
+#
+placebo2.LOS <- felm(
+  ln_ED_LOS ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
+
+placebo2.ntest <- felm(
+  nEDTests ~ batch.tendency + test.inclination | 
+             dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
+
+placebo2.72 <- felm(
+  RTN_72_HR ~ batch.tendency + test.inclination | 
+              dayofweekt + month_of_year + complaint_esi |0| ED_PROVIDER, 
+  data = data)
+
+#
+placebo3.LOS <- felm(
+  ln_ED_LOS ~ batch.tendency + test.inclination + 
+              patients_in_hospital | 
+              dayofweekt + month_of_year + complaint_esi + 
+              race + GENDER |0| ED_PROVIDER, 
+  data = data)
+
+
+placebo3.ntest <- felm(
+  nEDTests ~ batch.tendency + test.inclination + 
+             patients_in_hospital | 
+             dayofweekt + month_of_year + complaint_esi + 
+             race + GENDER |0| ED_PROVIDER, 
+  data = data)
+
+
+placebo3.72 <- felm(
+  RTN_72_HR ~ batch.tendency + test.inclination + 
+              patients_in_hospital | 
+              dayofweekt + month_of_year + complaint_esi + 
+              race + GENDER |0| ED_PROVIDER, 
+  data = data)
+
 
 sink()
 
@@ -476,3 +446,55 @@ analyses <- list(
 
 lapply(analyses, function(x) subgroup_analysis2(x$var, x$caption))
 
+
+
+##########################################################################
+#=========================================================================
+# IV Results ------------------------------------------------------------
+#=========================================================================
+##########################################################################
+
+m1 <- felm(ln_ED_LOS ~ test.inclination |
+              dayofweekt + month_of_year + complaint_esi | 
+              (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
+
+m2 <- felm(nEDTests ~ test.inclination |
+              dayofweekt + month_of_year + complaint_esi | 
+              (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
+       
+m3 <- felm(RTN_72_HR ~ test.inclination |
+             dayofweekt + month_of_year + complaint_esi | 
+             (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
+
+stargazer(list(m1, m2, m3), type = "latex", 
+          header = FALSE, title = "IV Results", style = 'QJE')
+
+
+
+
+##########################################################################
+#=========================================================================
+# Mediation Analysis -----------------------------------------------------
+#=========================================================================
+##########################################################################
+library(mediation)
+
+data$ESI <- as.factor(data$ESI)
+
+reduced.form.LOS.M <- 
+  lm(avg_nEDTests ~ 
+       batch.tendency + dayofweekt + month_of_year + 
+       age_groups + CHIEF_COMPLAINT + ESI, data = data
+  )
+
+reduced.form.LOS.Y <- 
+  lm(ln_ED_LOS ~ 
+       batch.tendency + avg_nEDTests + dayofweekt + 
+       month_of_year + age_groups +  CHIEF_COMPLAINT + ESI, data = data
+  )
+
+mediation <- mediate(reduced.form.LOS.M, reduced.form.LOS.Y,
+                     treat='batch.tendency', mediator='avg_nEDTests',
+                     boot=TRUE, sims=1)
+
+summary(mediation)

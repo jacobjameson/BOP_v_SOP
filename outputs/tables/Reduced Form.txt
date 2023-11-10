@@ -41,142 +41,48 @@ Residual Std. Error (df = 43060)     0.483         0.839        0.186
 Notes:                             ***Significant at the 1 percent level.
                                     **Significant at the 5 percent level.
                                     *Significant at the 10 percent level.
+                                    
+felm(formula = ln_ED_LOS ~ batch.tendency + patients_in_hospital | 
+    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
+    data = data)
+                        Estimate Cluster s.e.
+batch.tendency       0.137501928 0.0471086827
+patients_in_hospital 0.004265857 0.0002266588
 
-Call:
-   felm(formula = ln_ED_LOS ~ batch.tendency + patients_in_hospital |      dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER,      data = data) 
+felm(formula = nEDTests ~ batch.tendency + patients_in_hospital | 
+    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
+    data = data)
+                         Estimate Cluster s.e.
+batch.tendency       0.2697050087 0.0518170041
+patients_in_hospital 0.0004237958 0.0002406918
 
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.1677 -0.2778  0.0198  0.2970  5.3820 
+felm(formula = RTN_72_HR ~ batch.tendency + patients_in_hospital | 
+    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
+    data = data)
+                          Estimate Cluster s.e.
+batch.tendency       -3.936110e-03 2.944565e-03
+patients_in_hospital -3.810553e-06 5.276253e-05
 
-Coefficients:
-                      Estimate Cluster s.e. t value Pr(>|t|)    
-batch.tendency       0.1375019    0.0471087   2.919  0.00352 ** 
-patients_in_hospital 0.0042659    0.0002267  18.821  < 2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+felm(formula = ln_ED_LOS ~ batch.tendency + test.inclination + 
+    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
+    0 | ED_PROVIDER, data = data)
+                        Estimate Cluster s.e.
+batch.tendency       -0.01784650 0.0712960009
+test.inclination      0.59530793 0.2337225445
+patients_in_hospital  0.01211615 0.0005848842
 
-Residual standard error: 0.4855 on 43061 degrees of freedom
-Multiple R-squared(full model): 0.2336   Adjusted R-squared: 0.2289 
-Multiple R-squared(proj model): 0.04028   Adjusted R-squared: 0.03435 
-F-statistic(full model, *iid*):49.35 on 266 and 43061 DF, p-value: < 2.2e-16 
-F-statistic(proj model): 177.6 on 2 and 23 DF, p-value: 1.038e-14 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
+felm(formula = nEDTests ~ batch.tendency + test.inclination + 
+    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
+    0 | ED_PROVIDER, data = data)
+                        Estimate Cluster s.e.
+batch.tendency       0.018781037 0.0073466963
+test.inclination     0.961561273 0.0212279834
+patients_in_hospital 0.001009504 0.0006150197
 
-
-
-Call:
-   felm(formula = nEDTests ~ batch.tendency + patients_in_hospital |      dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER,      data = data) 
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.0763 -0.5219 -0.0349  0.5157  3.9265 
-
-Coefficients:
-                      Estimate Cluster s.e. t value Pr(>|t|)    
-batch.tendency       0.2697050    0.0518170   5.205 1.95e-07 ***
-patients_in_hospital 0.0004238    0.0002407   1.761   0.0783 .  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.8437 on 43061 degrees of freedom
-Multiple R-squared(full model): 0.2611   Adjusted R-squared: 0.2566 
-Multiple R-squared(proj model): 0.01999   Adjusted R-squared: 0.01394 
-F-statistic(full model, *iid*):57.21 on 266 and 43061 DF, p-value: < 2.2e-16 
-F-statistic(proj model): 15.39 on 2 and 23 DF, p-value: 5.721e-05 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
-
-
-
-Call:
-   felm(formula = RTN_72_HR ~ batch.tendency + patients_in_hospital |      dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER,      data = data) 
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.33542 -0.04697 -0.03336 -0.02058  1.00425 
-
-Coefficients:
-                       Estimate Cluster s.e. t value Pr(>|t|)
-batch.tendency       -3.936e-03    2.945e-03  -1.337    0.181
-patients_in_hospital -3.811e-06    5.276e-05  -0.072    0.942
-
-Residual standard error: 0.1863 on 43061 degrees of freedom
-Multiple R-squared(full model): 0.01161   Adjusted R-squared: 0.0055 
-Multiple R-squared(proj model): 8.875e-05   Adjusted R-squared: -0.006088 
-F-statistic(full model, *iid*):1.901 on 266 and 43061 DF, p-value: < 2.2e-16 
-F-statistic(proj model): 0.9301 on 2 and 23 DF, p-value: 0.4089 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
-
-
-
-Call:
-   felm(formula = ln_ED_LOS ~ batch.tendency + test.inclination +      patients_in_hospital | dayofweekt + month_of_year + complaint_esi |      0 | ED_PROVIDER, data = data) 
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.1707 -0.2751  0.0183  0.2955  5.3847 
-
-Coefficients:
-                       Estimate Cluster s.e. t value Pr(>|t|)    
-batch.tendency       -0.0178465    0.0712960  -0.250   0.8023    
-test.inclination      0.5953079    0.2337225   2.547   0.0109 *  
-patients_in_hospital  0.0121161    0.0005849  20.715   <2e-16 ***
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.4825 on 43060 degrees of freedom
-Multiple R-squared(full model): 0.2429   Adjusted R-squared: 0.2382 
-Multiple R-squared(proj model): 0.05183   Adjusted R-squared: 0.04595 
-F-statistic(full model, *iid*):51.73 on 267 and 43060 DF, p-value: < 2.2e-16 
-F-statistic(proj model): 146.5 on 3 and 23 DF, p-value: 3.97e-15 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
-
-
-
-Call:
-   felm(formula = nEDTests ~ batch.tendency + test.inclination +      patients_in_hospital | dayofweekt + month_of_year + complaint_esi |      0 | ED_PROVIDER, data = data) 
-
-Residuals:
-    Min      1Q  Median      3Q     Max 
--3.1316 -0.5284 -0.0326  0.5082  3.8679 
-
-Coefficients:
-                     Estimate Cluster s.e. t value Pr(>|t|)    
-batch.tendency       0.018781     0.007347   2.556   0.0106 *  
-test.inclination     0.961561     0.021228  45.297   <2e-16 ***
-patients_in_hospital 0.001009     0.000615   1.641   0.1007    
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.8393 on 43060 degrees of freedom
-Multiple R-squared(full model): 0.2688   Adjusted R-squared: 0.2643 
-Multiple R-squared(proj model): 0.03018   Adjusted R-squared: 0.02417 
-F-statistic(full model, *iid*):59.29 on 267 and 43060 DF, p-value: < 2.2e-16 
-F-statistic(proj model):  3237 on 3 and 23 DF, p-value: < 2.2e-16 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
-
-
-
-Call:
-   felm(formula = RTN_72_HR ~ batch.tendency + test.inclination +      patients_in_hospital | dayofweekt + month_of_year + complaint_esi |      0 | ED_PROVIDER, data = data) 
-
-Residuals:
-     Min       1Q   Median       3Q      Max 
--0.33479 -0.04706 -0.03341 -0.02047  1.00733 
-
-Coefficients:
-                       Estimate Cluster s.e. t value Pr(>|t|)  
-batch.tendency        3.098e-03    3.272e-03   0.947   0.3437  
-test.inclination     -2.696e-02    1.138e-02  -2.368   0.0179 *
-patients_in_hospital -5.137e-06    1.507e-04  -0.034   0.9728  
----
-Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
-
-Residual standard error: 0.1863 on 43060 degrees of freedom
-Multiple R-squared(full model): 0.01177   Adjusted R-squared: 0.005643 
-Multiple R-squared(proj model): 0.0002563   Adjusted R-squared: -0.005943 
-F-statistic(full model, *iid*):1.921 on 267 and 43060 DF, p-value: < 2.2e-16 
-F-statistic(proj model):  2.22 on 3 and 23 DF, p-value: 0.1131 
-*** Standard errors may be too high due to more than 2 groups and exactDOF=FALSE
-
-
+felm(formula = RTN_72_HR ~ batch.tendency + test.inclination + 
+    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
+    0 | ED_PROVIDER, data = data)
+                          Estimate Cluster s.e.
+batch.tendency        3.098355e-03 0.0032722589
+test.inclination     -2.695665e-02 0.0113816540
+patients_in_hospital -5.136757e-06 0.0001506862
