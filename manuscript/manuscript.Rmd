@@ -45,7 +45,7 @@ One important factor that can impact the speed and effectiveness of diagnosis in
 
 A critical question in this context pertains to whether physicians in the ED should batch order diagnostic tests or order them sequentially. This decision essentially represents a tradeoff between reducing patient length of stay and risk of over-testing. Over-testing, or performing unnecessary tests, can lead to increased costs, unnecessary patient anxiety, and potential harm from follow-up of false-positive results @koch2018. Conversely, keeping a patient for an extended time to perform all possible tests could lead to ED overcrowding, an issue associated with severe consequences, as mentioned earlier. Instead, what is needed is a reasonable balance between the number of diagnostic tests performed and the total time the patient is kept in the ED before either being admitted or discharged. Several studies have demonstrated that optimizing the ED patient flow process can result in significant improvements @saghafian2015, however, research surrounding test ordering strategies to improve the patient flow processes remains limited.
 
-In this paper, we use data from over 41,000 patient visits to the ED that occur during our study period to quantify the benefits and consequences of batching versus sequentially ordering diagnostic tests on patient length of stay, re-admission, and resource utilization. Our empirical strategy exploits random assignment of patients to ED physicians who differ in their propensity to batch-order diagnostic tests. When patients arrive at the ED, they are assigned to a physician based on availability, with no discretion on either side. Thus, patients who arrive at the ED at similar times are randomly assigned to physicians who vary in their willingness to batch order diagnostic tests. We measure physician tendency to batch using a leave-out, residualized measure based on all other patients the physician has seen in the ED in the study period. The tendency measure strongly predicts the ED test batch outcome but is uncorrelated with patient and ED visit characteristics.
+In this paper, we use data from over 45,000 patient visits to the ED that occur during our study period to quantify the benefits and consequences of batching versus sequentially ordering diagnostic tests on patient length of stay, re-admission, and resource utilization. Our empirical strategy exploits random assignment of patients to ED physicians who differ in their propensity to batch-order diagnostic tests. When patients arrive at the ED, they are assigned to a physician based on availability, with no discretion on either side. Thus, patients who arrive at the ED at similar times are randomly assigned to physicians who vary in their willingness to batch order diagnostic tests. We measure physician tendency to batch using a leave-out, residualized measure based on all other patients the physician has seen in the ED in the study period. The tendency measure strongly predicts the ED test batch outcome but is uncorrelated with patient and ED visit characteristics.
 
 We start by evaluating the reduced-form effects of ED provider batch-ordering tendency on downstream patient outcomes and turnaround time. We find that practice variation as captured by physician batch-ordering tendency has large and significant consequences. Being treated by a provider in the top decile of the tendency distribution, compared to being treated by someone in the bottom decile [INSERT RESULTS].
 
@@ -62,19 +62,18 @@ Our analytical lens is focused on the Emergency Department at the Mayo Clinic of
 
 ## Sample Construction 
 
-Our research design focuses on adults who visit the Mayo Clinic of Arizona ED. We observe approximately 45,000 such visits until during the stufy period. To improve power, we drop encounters with rare chief complaints (< 1000 total encounters of this kind) and complaints where a batch order occurs less than 10 percent of the time. Since batch orders are rare for these cases, our physician batch tendency instrument could suffer from a weak instrument problem were we to include them. Example complaints dropped include urinary complaints and _____. Excluding these conditions does not introduce selection bias only if physician test batching tendency is orthogonal to physician diagnosing behavior. While this assumption may be violated if we were to use a very detailed level of chief complaint information upon which to base our exclusion criterion, it is plausibly satisfied when using broad complaint categories\footnote{The idea being that, for a patient who presents with an ankle fracture, different physicians may choose different detailed diagnosis codes within the three-digit ICD-9 824 (“Fracture of ankle”), but are unlikely to disagree at the broader chief complaint cateogry.}.
+Our research design focuses on adults who visit the Mayo Clinic of Arizona ED. We observe approximately 45,000 such visits until during the stufy period. To improve power, we drop encounters with rare chief complaints (< 1000 total encounters of this kind) and complaints where a batch order occurs less than 10 percent of the time. Since batch orders are rare for these cases, our physician batch tendency instrument could suffer from a weak instrument problem were we to include them. Example complaints dropped include urinary complaints and _____. Excluding these conditions does not introduce selection bias only if physician test batching tendency is orthogonal to physician diagnosing behavior. While this assumption may be violated if we were to use a very detailed level of chief complaint information upon which to base our exclusion criterion, it is plausibly satisfied when using broad complaint categories\footnote{The idea being that, for a patient who presents with an ankle fracture, different physicians may choose different detailed diagnosis codes within the three-digit ICD-9 824 (``Fracture of ankle"), but are unlikely to disagree at the broader chief complaint cateogry.}.
 
 
 ## Variable Definitions 
 
 ### Outcomes 
 
-In our instrumental variables (IV) analysis, the key explanatory variable, $Tendency_i$, is an indicator for whether patient $i$ has their tests batch ordered at their ED encounter. This variable is crucial for understanding the causal effects of batch testing on various health outcomes and resource utilization. Below, we detail our main outcomes: (a) ED length of stay (LOS), (b) resource utilization, and (c) 72-hour return.
+In our instrumental variables (IV) analysis, the key explanatory variable, $Batched_i$, is an indicator for whether patient $i$ has their tests batch ordered at their ED encounter. This variable is crucial for understanding the causal effects of batch testing on various patient outcomes and resource utilization. Below, we detail our main outcomes: (a) ED length of stay (LOS), (b) resource utilization, and (c) 72-hour return.
 
 
 
 *ED length of stay (LOS).*-- ED-LOS is a critical measure of efficiency and patient throughput in emergency care settings. It is defined as the duration from a patient's arrival to the ED until their departure, whether by discharge or admission to the hospital. Although literature provides a range for long ED-LOS, for the purpose of this study, we operationalize long ED-LOS as stays exceeding the 75th percentile in our dataset. This approach allows us to contextualize the definition of long stays according to the specific demographics and case mix of the EDs under study.
-
 
 
 *Resource Utilization*-- Resource utilization in the ED context typically refers to the extent of medical services and interventions a patient receives. In this study, we quantify resource utilization by the total number of diagnostic tests ordered per patient during their ED stay. This encompasses both initial and any subsequent tests. The hypothesis is that batch testing may lead to variations in the number of tests ordered, potentially influencing the overall healthcare expenditure and efficiency.
@@ -230,7 +229,7 @@ We document that the Mayo Clinic ED physicians exhibit wide, systematic variatio
 
 \begin{table}[ht]
 \centering
-\caption{First Stage Regression Results}
+\caption{First Stage: Effect of Batch Tendency on Test Batching}
 \label{tab:regression}
 \begin{tabular}{p{9cm}ccc}
 \toprule
@@ -294,13 +293,13 @@ In this section, we examine the causal effects of provider batching tendency. Ou
 
 \begin{table}[htbp]
 \centering
-\caption{Reduced Form Regression Results with Scaled Coefficients}
+\caption{Reduced-Form Results: Length of Stay, Number of Tests, and 72-Hour Return}
 \label{tab:reducedform}
 \begin{tabular}{p{6cm}ccc}
 \toprule
-& \multicolumn{1}{c}{\textbf{Log ED LOS}}
+& \multicolumn{1}{c}{\textbf{Log LOS}}
 & \multicolumn{1}{c}{\textbf{Number of Tests}}
-& \multicolumn{1}{c}{\textbf{72hr Return}} \\
+& \multicolumn{1}{c}{\textbf{72-Hour Return}} \\
 & \multicolumn{1}{c}{(1)}
 & \multicolumn{1}{c}{(2)}
 & \multicolumn{1}{c}{(3)} \\
@@ -354,37 +353,37 @@ To that end, we restrict attention to ED visits for complaints where batching oc
 
 
 
-
 ## Instrumental Variables Results
 
 
+In this section we examine the causal effects of batch ordering in the ED. Mirroring our presentation of the reduced-form results, we turn to presenting effects in Table \ref{tab:2SLS} on our main outcomes of ED LOS, number of tests, and 72-hour return.
+
+
 \begin{table}[!htbp] \centering 
-  \caption{IV Results} 
-  \label{} 
+  \caption{2SLS Results: Length of Stay, Number of Tests, and 72-Hour Return} 
+  \label{tab:2SLS} 
 \begin{tabular}{p{6cm}ccc}
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
-\\[-1.8ex] & ln\_ED\_LOS & RTN\_72\_HR & nEDTests \\ 
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
 \\[-1.8ex] & (1) & (2) & (3)\\ 
 \hline \\[-1.8ex] 
- Batch & $-$0.097 & 0.019 & 0.113$^{***}$ \\ 
-  & (0.435) & (0.020) & (0.043) \\ 
+ Batch & $-$0.086 & 0.135$^{***}$ & 0.018 \\ 
+  & (0.419) & (0.046) & (0.018) \\ 
   & & & \\ 
- Testing Inclination & 0.607$^{**}$ & $-$0.027$^{**}$ & 0.964$^{***}$ \\ 
-  & (0.238) & (0.011) & (0.020) \\ 
+ Testing Inclination & 0.210$^{**}$ & 0.335$^{***}$ & $-$0.009$^{***}$ \\ 
+  & (0.082) & (0.008) & (0.003) \\ 
   & & & \\ 
 Seasonality and shift fixed effects? & Yes & Yes & Yes \\
 Chief Complaint? & Yes & Yes & Yes \\
 Patient observables? & Yes & Yes & Yes \\
 Hospital volume? & Yes & Yes & Yes \\
 \midrule
-\textit{N} & 43,328 & 43,328 & 43,328 \\ 
-R$^{2}$ & 0.195 & 0.009 & 0.306 \\ 
-Adjusted R$^{2}$ & 0.190 & 0.002 & 0.302 \\ 
-Residual Std. Error (df = 43061) & 0.498 & 0.187 & 0.818 \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.199 & 0.312 & 0.008 \\ 
+Adjusted R$^{2}$ & 0.194 & 0.307 & 0.002 \\ 
+Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\ 
 \\
-\midrule
-\midrule
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
@@ -394,10 +393,48 @@ Residual Std. Error (df = 43061) & 0.498 & 0.187 & 0.818 \\
 \end{tablenotes}
 \end{table}
 
+Length of Stay.—We find that batch ordering has no effect on reducing length of stay. This estimate is robust to inclusion and exclusion of controls for baseline characteristics. This implies that the anticipated efficiency gains from ordering tests in a batch, as opposed to waiting for the results of one test to come back before ordering a subsequent test, are likely washed out by the inefficiencies associated with ordering additional unnecessary tests.
+
+
+Number of Tests.—Our 2SLS findings on the resource utilization are presented in column 2 of Table \ref{tab:2SLS}. We find large effects. The effect of tests batching was associated 
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results: Specific Tests} 
+  \label{tab:2SLStests} 
+\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & X-Ray & Ultrasound & Non-Con CT & Con CT & Lab \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4) & (5)\\ 
+\hline \\[-1.8ex] 
+ Batch & 0.288$^{**}$ & $-$0.003 & 0.095 & $-$0.242$^{***}$ & $-$0.003 \\ 
+  & (0.126) & (0.051) & (0.087) & (0.056)  & (0.080) \\ 
+  & & & & &\\ 
+ Testing Inclination & 0.240$^{***}$ & 0.086$^{***}$ & 0.096$^{**}$ & 0.253$^{***}$ & 0.286$^{***}$ \\ 
+  & (0.056) & (0.024) & (0.039) & (0.027) & (0.038) \\ 
+  & & & & & \\ 
+Test Ordering Frequency & 0.47 & 0.11 & 0.21 & 0.19 & 0.77 \\ 
+  & & & & &\\ 
+\textit{N} & 41,929 & 41,929 & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.350 & 0.077 & 0.236 & 0.017 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{Estimates of the IV model are for the baseline sample described in the text. Coefficients on testing inclination are scaled by the difference between testing inclination of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
+\end{table}
+
+
 
 ## Robustness
 
+The 2SLS results presented in the previous sections are robust to several alter- native specifications probing the key identifying assumptions of independence, exclusion, and monotonicity. We describe each robustness check in detail in online Appendix D and provide a brief overview here. To probe the independence assump- tion, we perform two checks. First, we take into account potential endogeneity in diagnosing behavior by no longer excluding any diagnosis from our analysis sample and by replacing the original diagnosis control with the most recent diag- nosis code observed prior to the ED visit (results are presented in online Appendix Table G.8, column 2). Second, we replace the physician leniency instrument with a shift-level instrument that captures the average leniency across all physicians on shift (column 3). To provide robustness checks to potential exclusion restriction violations, we adjust for chief observable margins of care that may be correlated with leniency, namely (i) decision to admit patients to the hospital, (ii) intensity of procedures performed, (iii) quality of care provided, and (iv) amount of opi- oids prescribed—i.e., intensive margin (columns 4–6). To address monotonicity, we construct physician-diagnosis-specific leniency instruments (column 7), and we check whether our instrument has a positive first stage across key demographic- and health-related subsamples (online Appendix Table G.12).
 
+
+Across all robustness checks and main outcomes, we find magnitudes of our estimates broadly unchanged. Precision of estimates remains unchanged for the outcomes of long-term use and opioid-seeking behavior, while estimates for the outcomes of opioid use disorder and opioid overdose mortality become noisier in some specifications.
 
 
 # Conclusion
@@ -484,6 +521,34 @@ Urinary Complaints & Bladder Problem, Blood in Urine, Cystitis, Difficulty Urina
 \hline
 \end{longtable}
 
+\newpage
+
+\begin{table}[htbp]
+\centering
+\caption{First Stage over all Subsamples}
+\label{tab:monotonicitycheck}
+\begin{tabular}{p{7cm}cccc}
+\toprule
+Complaint & \multicolumn{2}{c}{Batch Tendency} & N & R$^2$ \\
+\midrule
+Extremity Complaints & 0.662$^{***}$ & (0.079) & 5,259 & 0.126 \\
+Upper Respiratory Symptoms & 1.205$^{***}$ & (0.445) & 1,915 & 0.262 \\
+Abnormal Test Results & 0.670$^{**}$ & (0.325) & 1,816 & 0.141 \\
+Falls, Motor Vehicle Crashes, and Trauma & 0.640$^{**}$ & (0.264) & 2,381 & 0.220 \\
+Shortness of Breath & 1.574$^{***}$ & (0.468) &  2,963 & 0.147 \\
+Gastrointestinal Issues & 1.080$^{***}$ & (0.241) & 3,323 & 0.094 \\
+Chest Pain & 0.790$^{***}$ & (0.253) & 3,521 & 0.140 \\
+Dizziness/Lightheadedness/Syncope & 1.343$^{***}$ & (0.220) & 1,894 & 0.208 \\
+Back or Flank Pain & 0.859$^{**}$ & (0.385) &  2,550 & 0.123 \\
+Neurological Issue & 0.416$^{*}$ & (0.232) &  3,492 & 0.232 \\
+Fatigue and Weakness & 1.728$^{***}$ & (0.414) & 1,494 & 0.193 \\
+Cardiac Arrhythmias & 2.432$^{***}$ & (0.548) & 1,044 & 0.327 \\
+Abdominal Complaints & 1.775$^{***}$ & (0.350) & 6,231 & 0.086 \\
+Skin Complaints & 0.205 & (0.212) & 2,176 & 0.133 \\
+Fevers, Sweats or Chills & 1.650$^{***}$ & (0.576) &  1,842 & 0.211 \\
+\bottomrule
+\end{tabular}
+\end{table}
 
 :::
 

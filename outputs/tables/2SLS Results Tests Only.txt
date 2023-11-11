@@ -1,0 +1,47 @@
+
+2SLS Results: Specific Tests
+================================================================================
+                                  X-Ray   Ultrasound Non Contrast CT Contrast CT
+                                   (1)       (2)           (3)           (4)    
+--------------------------------------------------------------------------------
+Testing Inclination              0.240***  0.086***      0.096**      0.286***  
+                                 (0.056)   (0.024)       (0.039)       (0.038)  
+                                                                                
+Batch                            0.288**    -0.003        0.095        -0.003   
+                                 (0.126)   (0.051)       (0.087)       (0.080)  
+                                                                                
+N                                 41,929    41,929       41,929        41,929   
+R2                                0.350     0.077         0.236         0.377   
+Adjusted R2                       0.346     0.071         0.231         0.373   
+Residual Std. Error (df = 41667)  0.404     0.308         0.357         0.338   
+================================================================================
+Notes:                                    ***Significant at the 1 percent level.
+                                           **Significant at the 5 percent level.
+                                           *Significant at the 10 percent level.
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results: Specific Tests} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lcccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & X-Ray & Ultrasound & Non Contrast CT & Contrast CT \\ 
+\\[-1.8ex] & (1) & (2) & (3) & (4)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.240$^{***}$ & 0.086$^{***}$ & 0.096$^{**}$ & 0.286$^{***}$ \\ 
+  & (0.056) & (0.024) & (0.039) & (0.038) \\ 
+  & & & & \\ 
+ Batch & 0.288$^{**}$ & $-$0.003 & 0.095 & $-$0.003 \\ 
+  & (0.126) & (0.051) & (0.087) & (0.080) \\ 
+  & & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.350 & 0.077 & 0.236 & 0.377 \\ 
+Adjusted R$^{2}$ & 0.346 & 0.071 & 0.231 & 0.373 \\ 
+Residual Std. Error (df = 41667) & 0.404 & 0.308 & 0.357 & 0.338 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{4}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{4}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{4}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 

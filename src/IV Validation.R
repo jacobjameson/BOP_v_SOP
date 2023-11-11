@@ -216,6 +216,7 @@ sink("outputs/tables/Placebo Check.txt")
 
 #=========================================================================
 # Time controls only
+#=========================================================================
 
 placebo1.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination | 
@@ -241,6 +242,7 @@ stargazer(list(placebo1.LOS,
 
 #=========================================================================
 # Time controls + complaint severity
+#=========================================================================
 
 placebo2.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination | 
@@ -265,6 +267,7 @@ stargazer(list(placebo2.LOS,
 
 #=========================================================================
 # Time controls + complaint + person level + volums
+#=========================================================================
 
 placebo3.LOS <- felm(
   ln_ED_LOS ~ batch.tendency + test.inclination + 
@@ -347,28 +350,170 @@ stargazer(model_results[10:15], type = "text",
 sink()
 
 
+
 ##########################################################################
 #=========================================================================
 # IV Results ------------------------------------------------------------
 #=========================================================================
 ##########################################################################
 
-m1 <- felm(ln_ED_LOS ~ test.inclination |
-              dayofweekt + month_of_year + complaint_esi | 
-              (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
+# Main Results
+model.IV.LOS <- felm(
+  ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+              (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
 
-m2 <- felm(nEDTests ~ test.inclination |
-              dayofweekt + month_of_year + complaint_esi | 
-              (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
+model.IV.ntest <- felm(
+  nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+            (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
        
-m3 <- felm(RTN_72_HR ~ test.inclination |
-             dayofweekt + month_of_year + complaint_esi | 
-             (any.batch ~ batch.tendency + test.inclination)|ED_PROVIDER, data = data)
-
-stargazer(list(m1, m2, m3), type = "latex", 
-          header = FALSE, title = "IV Results", style = 'QJE')
+model.IV.72 <- felm(
+  RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+             (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
 
 
+# Save the results to a .txt file
+sink("outputs/tables/2SLS Results.txt")
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "text", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+sink()
+
+#=========================================================================
+# Exploring which Tests are more likely to be ordered
+#=========================================================================
+
+model.IV.xray <- felm(
+  XR_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.nct <- felm(
+  NON_CON_CT_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.ct <- felm(
+  CON_CT_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.us <- felm(
+  US_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.lab <- felm(
+  LAB_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+# Save the results to a .txt file
+sink("outputs/tables/2SLS Results Tests Only.txt")
+
+stargazer(list(model.IV.xray,
+               model.IV.us,
+               model.IV.nct,
+               model.IV.lab), type = "text", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('X-Ray', 'Ultrasound', 'Non Contrast CT',
+                             'Contrast CT', 'Lab'),
+          header = F, 
+          title = "2SLS Results: Specific Tests", 
+          style = 'QJE')
+
+stargazer(list(model.IV.xray,
+               model.IV.us,
+               model.IV.nct,
+               model.IV.lab), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('X-Ray', 'Ultrasound', 'Non Contrast CT',
+                             'Contrast CT', 'Lab'),
+          header = F, 
+          title = "2SLS Results: Specific Tests", 
+          style = 'QJE')
+
+sink()
+#=========================================================================
+# Specific Types of Test Batching: Lab+Image Batch
+#=========================================================================
+
+model.IV.LOS <- felm(
+  ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.ntest <- felm(
+  nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.72 <- felm(
+  RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+#=========================================================================
+# Specific Types of Test Batching: Image+Image Batch
+#=========================================================================
+
+model.IV.LOS <- felm(
+  ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (image_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.ntest <- felm(
+  nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (image_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.72 <- felm(
+  RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (image_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Image+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+
+
+#=========================================================================
+#=========================================================================
 
 
 ##########################################################################

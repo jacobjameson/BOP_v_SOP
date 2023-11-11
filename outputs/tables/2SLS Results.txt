@@ -1,0 +1,47 @@
+
+2SLS Results: Length of Stay, Number of Tests, and 72-Hour
+=========================================================================
+                                  Log LOS  Number of Tests 72 Hour Return
+                                    (1)          (2)            (3)      
+-------------------------------------------------------------------------
+Testing Inclination               0.601**     0.961***       -0.027***   
+                                  (0.234)      (0.022)        (0.010)    
+                                                                         
+Batch                             -0.086      0.135***         0.018     
+                                  (0.419)      (0.046)        (0.018)    
+                                                                         
+N                                 41,929       41,929          41,929    
+R2                                 0.199        0.312          0.008     
+Adjusted R2                        0.194        0.307          0.002     
+Residual Std. Error (df = 41667)   0.496        0.817          0.184     
+=========================================================================
+Notes:                             ***Significant at the 1 percent level.
+                                    **Significant at the 5 percent level.
+                                    *Significant at the 10 percent level.
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results: Length of Stay, Number of Tests, and 72-Hour} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.601$^{**}$ & 0.961$^{***}$ & $-$0.027$^{***}$ \\ 
+  & (0.234) & (0.022) & (0.010) \\ 
+  & & & \\ 
+ Batch & $-$0.086 & 0.135$^{***}$ & 0.018 \\ 
+  & (0.419) & (0.046) & (0.018) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.199 & 0.312 & 0.008 \\ 
+Adjusted R$^{2}$ & 0.194 & 0.307 & 0.002 \\ 
+Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
