@@ -1,0 +1,94 @@
+
+2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour
+=========================================================================
+                                  Log LOS  Number of Tests 72 Hour Return
+                                    (1)          (2)            (3)      
+-------------------------------------------------------------------------
+Testing Inclination               0.601**     0.960***       -0.027***   
+                                  (0.236)      (0.022)        (0.010)    
+                                                                         
+Batch                             -0.087      0.137***         0.018     
+                                  (0.425)      (0.047)        (0.019)    
+                                                                         
+N                                 41,929       41,929          41,929    
+R2                                 0.199        0.311          0.008     
+Adjusted R2                        0.194        0.306          0.002     
+Residual Std. Error (df = 41667)   0.496        0.817          0.184     
+=========================================================================
+Notes:                             ***Significant at the 1 percent level.
+                                    **Significant at the 5 percent level.
+                                    *Significant at the 10 percent level.
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.601$^{**}$ & 0.960$^{***}$ & $-$0.027$^{***}$ \\ 
+  & (0.236) & (0.022) & (0.010) \\ 
+  & & & \\ 
+ Batch & $-$0.087 & 0.137$^{***}$ & 0.018 \\ 
+  & (0.425) & (0.047) & (0.019) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.199 & 0.311 & 0.008 \\ 
+Adjusted R$^{2}$ & 0.194 & 0.306 & 0.002 \\ 
+Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
+
+2SLS Results for Image+Image Batch: Length of Stay, Number of Tests, and 72-Hour
+=========================================================================
+                                  Log LOS  Number of Tests 72 Hour Return
+                                    (1)          (2)            (3)      
+-------------------------------------------------------------------------
+Testing Inclination               0.633*      0.911***        -0.034*    
+                                  (0.355)      (0.034)        (0.018)    
+                                                                         
+Batch                             -0.530      0.833***         0.110     
+                                  (2.489)      (0.223)        (0.129)    
+                                                                         
+N                                 41,929       41,929          41,929    
+R2                                 0.161        0.323          -0.003    
+Adjusted R2                        0.156        0.319          -0.009    
+Residual Std. Error (df = 41667)   0.507        0.810          0.185     
+=========================================================================
+Notes:                             ***Significant at the 1 percent level.
+                                    **Significant at the 5 percent level.
+                                    *Significant at the 10 percent level.
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results for Image+Image Batch: Length of Stay, Number of Tests, and 72-Hour} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.633$^{*}$ & 0.911$^{***}$ & $-$0.034$^{*}$ \\ 
+  & (0.355) & (0.034) & (0.018) \\ 
+  & & & \\ 
+ Batch & $-$0.530 & 0.833$^{***}$ & 0.110 \\ 
+  & (2.489) & (0.223) & (0.129) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.161 & 0.323 & $-$0.003 \\ 
+Adjusted R$^{2}$ & 0.156 & 0.319 & $-$0.009 \\ 
+Residual Std. Error (df = 41667) & 0.507 & 0.810 & 0.185 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 

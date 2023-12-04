@@ -225,7 +225,7 @@ Tendency_{i,j}^{phys} =
 
 where $\hat{\varepsilon}_{i'} = \hat{Batch}_{i'} - Batch_{i'}$ is the residual from equation (1); $J$ is the set of all ED encounters treated by physician $j$; and $N_{-i,j} = |\{J \backslash i\}|$, the number of cases that physician has seen that year, excluding patient $i$. This leave-out mean eliminates the mechanical bias that stems from patient $i$'s own case entering into the instrument. The measure is interpreted as the average (leave-out) batch rate of patient $i$’s physician, relative to other physicians in that hospital-year-month, hospital-day of week-time of day.
 
-We document that the Mayo Clinic ED physicians exhibit wide, systematic variation in their propensity to batch order diagnostic tests. Figure 2 graphs the histogram of batch-ordering frequency by physician for popular chief complaints, highlighting that the variation in batching differs systematically. \hyperref[tab:regression]{Table 3} presents the ``first stage" in a regression table: being assigned to a 10 pp higher tendency physician is associated with a 5 pp increase in the likelihood of having tests batch-ordered in the ED. The F-statistic is 50 when all controls and fixed effects are included. The coefficient is greater than one because all emergency visits are used to construct the leniency instrument, while the first stage is calculated using the baseline sample only, which excludes the rare complaints.
+We document that the Mayo Clinic ED physicians exhibit wide, systematic variation in their propensity to batch order diagnostic tests. Figure 2 graphs the histogram of batch-ordering frequency by physician for popular chief complaints, highlighting that the variation in batching differs systematically. \hyperref[tab:regression]{Table 3} presents the ``first stage" in a regression table: being assigned to a 10 pp higher tendency physician is associated with a 8 pp increase in the likelihood of having tests batch-ordered in the ED. The F-statistic is 50 when all controls and fixed effects are included. The coefficient is greater than one because all emergency visits are used to construct the leniency instrument, while the first stage is calculated using the baseline sample only, which excludes the rare complaints.
 
 \begin{table}[ht]
 \centering
@@ -235,7 +235,7 @@ We document that the Mayo Clinic ED physicians exhibit wide, systematic variatio
 \toprule
 \textbf{} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} \\
 \midrule
-Batching Tendency & 1.05 *** & 1.04 *** & 1.04 *** \\
+Batching Tendency & 1.06 *** & 1.08 *** & 1.08 *** \\
  & (0.01) & (0.01) & (0.01) \\
 \midrule
 F statistic (full model) & 7.02 & 50.34 & 49.31  \\  
@@ -297,7 +297,7 @@ In this section, we examine the causal effects of provider batching tendency. Ou
 \label{tab:reducedform}
 \begin{tabular}{p{6cm}ccc}
 \toprule
-& \multicolumn{1}{c}{\textbf{Log LOS}}
+& \multicolumn{1}{c}{\textbf{ln(LOS)}}
 & \multicolumn{1}{c}{\textbf{Number of Tests}}
 & \multicolumn{1}{c}{\textbf{72-Hour Return}} \\
 & \multicolumn{1}{c}{(1)}
@@ -337,20 +337,65 @@ Mean number of encounters per physician & 1805.3 &  &  \\
 \end{tablenotes}
 \end{table}
 
-Similar to our method used to measure physician batch tendency, we use the physician's residualized leave-out average test rate to get a measure of a physicians propensity to test (which we call testing inclination). A key consideration in our analysis is the strong positive correlation (r = 0.79) between batch tendency and testing inclination. Such a high degree of correlation raises the concern that physicians with a higher testing inclination may batch more often because as a result of ordering more tests. Failure to control for this inclination could result in biased estimates of the effect of batch tendency. We note this assumption made on the causal pathway and further explore this in the section on mediation analysis.
+Similar to our method used to measure physician batch tendency, we use the physician's residualized leave-out average test rate to get a measure of a physicians propensity to test (which we call testing inclination). A key consideration in our analysis is the strong positive correlation ($r = 0.79$) between batch tendency and testing inclination. Such a high degree of correlation raises the concern that physicians with a higher testing inclination may batch more often because as a result of ordering more tests. Failure to control for this inclination could result in biased estimates of the effect of batch tendency. We note this assumption made on the causal pathway and further explore this in the section on mediation analysis.
 
-In Model 2, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with Log ED LOS diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency—equal to 15.8 pp—for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination—equal to 34.9 pp.
+In Model 2, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with ln(LOS) diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency—equal to 15.8 pp—for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination—equal to 34.9 pp.
 
-Assignment to a physician in the top batching decile (relative to one in the bottom decile) is associated with a 0.2 unit increase in the number of diagnostic tests being ordered per patient encounter, without any additional change in the liklihood of a 72 hour return. With an average of 1,805 patient encounters per physician in our study period, this translates to an additional 8,667 diagnostic tests with no perceived benefit in terms of reducing returns or length of stay. 
+Assignment to a physician in the top batching decile (relative to one in the bottom decile) is associated with a 0.2 unit increase in the number of diagnostic tests being ordered per patient encounter, without any additional change in the likelihood of a 72-hour return. With an average of 1,805 patient encounters per physician in our study period, this translates to an additional 361 diagnostic tests with no perceived benefit in terms of reducing returns or length of stay. 
 
-The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 0.96 unit increase in the number of diagnostic tests being ordered per patient encounter, and -0.03 pp change in the probability of a patient returning within 72 hours. Given the average number of patient encounters per physician in our study period this translates to an additional 1088 patient hours in LOS, 41,594 diagnostic tests, and 47 avoided 72 hour returns. 
+The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 0.96 unit increase in the number of diagnostic tests being ordered per patient encounter, and -0.03 pp change in the probability of a patient returning within 72 hours. Given the average number of patient encounters per physician in our study period this translates to an additional [...] patient hours in LOS, [...] diagnostic tests, and [...] avoided 72-hour returns. 
 
 ## Placebo Check
 
 In this section we investigate whether the reduced-form effects observed in Section 4.1 are due to differences in batch rates across providers or due to other provider differences correlated with batch tendency We start by studying reduced-form effects among patients with complaints that are never batched, as a ``placebo/falsification check.” By way of example, consider a patient who arrives at the ED with a urinary tact infection—a condition for which patients rarely undergo imaging testing. For such patients, we should expect to see no impact of batch tendency only if high batching and low batching physicians do not systematically differ in other dimensions of care relevant to patient outcomes. Conversely, if we do find a reduced-form effect for these patients, then high batch tendency physicians must systematically differ from low batch tendency physicians in other dimensions of care, beyond batching.
 
-To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician prescribing leniency for the subsample, following equation (3). The results of this exercise are displayed in Table __. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
+To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician prescribing leniency for the subsample, following equation (3). The results of this exercise are displayed in Table \ref{tab:placebo_check}. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
 
+
+
+\begin{table}[htbp]
+\centering
+\caption{Placebo Exercise: Reduced-Form Results for Rarely Batched Samples}
+\label{tab:placebo_check}
+\begin{tabular}{p{8cm}ccc}
+\toprule
+& ln(LOS) & Number of Tests & 72 Hour Return \\ 
+& (1) & (2) & (3) \\
+\midrule
+\multicolumn{4}{l}{\textbf{Controls: Time}} \\
+Batch Tendency & $-0.529$ & $-0.760$ & $-0.006$ \\
+& $(0.710)$ & $(0.490)$ & $(0.094)$ \\
+                    &     &     &  \\
+Testing Inclination & $0.812^{**}$ & $0.892^{***}$ & $-0.001$ \\
+& $(0.343)$ & $(0.194)$ & $(0.045)$ \\
+\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{Controls: Time + Complaint}} \\
+Batch Tendency & $-0.517$ & $-0.714$ & $-0.015$ \\
+& $(0.660)$ & $(0.446)$ & $(0.092)$ \\
+                    &     &     &  \\
+Testing Inclination & $0.848^{**}$ & $1.031^{***}$ & $-0.010$ \\
+& $(0.334)$ & $(0.189)$ & $(0.045)$ \\
+\\
+\addlinespace
+\multicolumn{4}{l}{\textbf{Controls: All Controls}} \\
+Batch Tendency & $-0.465$ & $-0.699$ & $-0.011$ \\
+& $(0.645)$ & $(0.427)$ & $(0.095)$ \\
+                    &     &     &  \\
+Testing Inclination & $0.818^{**}$ & $1.011^{***}$ & $-0.009$ \\
+& $(0.322)$ & $(0.183)$ & $(0.046)$ \\
+                    &     &     &  \\
+Observations & & 2,361 & \\
+\addlinespace
+\midrule
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{This table reports the estimated coefficients of a reduced-form regression of our main outcomes on physician batching tendency for samples based on the patient’s chief complaint field. Estimates come from regression on conditions that are batched less than 10 percent of the time. See text for residualization fixed effects and baseline controls. Robust standard errors are clustered at the physician level.}
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
+\end{table}
 
 
 ## Instrumental Variables Results
@@ -365,7 +410,7 @@ In this section we examine the causal effects of batch ordering in the ED. Mirro
 \begin{tabular}{p{6cm}ccc}
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
-\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & ln(LOS) & Number of Tests & 72 Hour Return \\ 
 \\[-1.8ex] & (1) & (2) & (3)\\ 
 \hline \\[-1.8ex] 
  Batch & $-$0.086 & 0.135$^{***}$ & 0.018 \\ 
@@ -393,10 +438,11 @@ Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\
 \end{tablenotes}
 \end{table}
 
-Length of Stay.—We find that batch ordering has no effect on reducing length of stay. This estimate is robust to inclusion and exclusion of controls for baseline characteristics. This implies that the anticipated efficiency gains from ordering tests in a batch, as opposed to waiting for the results of one test to come back before ordering a subsequent test, are likely washed out by the inefficiencies associated with ordering additional unnecessary tests.
 
+*ED length of stay (LOS).*-- Our analysis reveals that batch ordering does not significantly reduce the length of stay in the ED. This finding holds even after accounting for various control variables. Contrary to common assumptions that batching tests could expedite patient throughput, our results suggest that the efficiency gains are offset. A possible explanation lies in the additional time needed to process the increased volume of tests ordered through batching. These findings challenge prevailing perceptions and call for a reevaluation of batching as a time-saving strategy in ED operations.
 
-Number of Tests.—Our 2SLS findings on the resource utilization are presented in column 2 of Table \ref{tab:2SLS}. We find large effects. The effect of tests batching was associated 
+*Resource Utilization.*-- The impact of batching on resource utilization is pronounced. We observe a 0.135 increase in the number of tests ordered due to batching, corresponding to approximately 2,206 additional tests in our dataset. Particularly noteworthy is the substantial rise in X-Ray orders (by 28.8 percentage points), as shown in Table \ref{tab:2SLStests}. This trend towards increased X-Ray orders raises questions about potential over-testing and its implications for healthcare resources and patient care, especially considering the risks associated with unnecessary radiation exposure.
+
 
 \begin{table}[!htbp] \centering 
   \caption{2SLS Results: Specific Tests} 
@@ -428,13 +474,24 @@ R$^{2}$ & 0.350 & 0.077 & 0.236 & 0.017 \\
 \end{table}
 
 
+*72-hour Return*-- Our findings indicate that batch ordering does not significantly impact the likelihood of a 72-hour return. This suggests that despite the increased number of tests, there is no corresponding decrease in short-term readmission rates. This highlights the need for more targeted testing strategies that balance comprehensive assessment with resource efficiency.
+
+
+The instrumental variable analysis presented here underscores the complexities underlying batch ordering practices in the ED. While batching is often seen as a method to enhance efficiency, our findings suggest that it may lead to increased resource utilization without corresponding gains in patient throughput or reductions in short-term return rates. These insights point to the need for a more nuanced approach to test ordering in emergency care, one that carefully weighs the benefits of comprehensive assessment against the risks and costs of potential over-testing.
+
+
+
+## Investigating Mechanisms: Excess X-Rays
+
+
+
 
 ## Robustness
 
-The 2SLS results presented in the previous sections are robust to several alter- native specifications probing the key identifying assumptions of independence, exclusion, and monotonicity. We describe each robustness check in detail in online Appendix D and provide a brief overview here. To probe the independence assump- tion, we perform two checks. First, we take into account potential endogeneity in diagnosing behavior by no longer excluding any diagnosis from our analysis sample and by replacing the original diagnosis control with the most recent diag- nosis code observed prior to the ED visit (results are presented in online Appendix Table G.8, column 2). Second, we replace the physician leniency instrument with a shift-level instrument that captures the average leniency across all physicians on shift (column 3). To provide robustness checks to potential exclusion restriction violations, we adjust for chief observable margins of care that may be correlated with leniency, namely (i) decision to admit patients to the hospital, (ii) intensity of procedures performed, (iii) quality of care provided, and (iv) amount of opi- oids prescribed—i.e., intensive margin (columns 4–6). To address monotonicity, we construct physician-diagnosis-specific leniency instruments (column 7), and we check whether our instrument has a positive first stage across key demographic- and health-related subsamples (online Appendix Table G.12).
+The 2SLS results presented in the previous sections are robust to several alternative specifications probing the key identifying assumptions of independence, exclusion, and monotonicity. We describe each robustness check in detail in Appendix ___ and provide a brief overview here ....
 
 
-Across all robustness checks and main outcomes, we find magnitudes of our estimates broadly unchanged. Precision of estimates remains unchanged for the outcomes of long-term use and opioid-seeking behavior, while estimates for the outcomes of opioid use disorder and opioid overdose mortality become noisier in some specifications.
+Across all robustness checks and main outcomes, we find magnitudes of our estimates broadly unchanged. 
 
 
 # Conclusion
@@ -550,6 +607,63 @@ Fevers, Sweats or Chills & 1.650$^{***}$ & (0.576) &  1,842 & 0.211 \\
 \end{tabular}
 \end{table}
 
+
+
+\begin{table}[!htbp] \centering 
+  \caption{Regression Results by Complaint} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{3}{c}{nEDTests} \\ 
+ & Dizziness/Syncope & Extremity Complaints & Upper Respiratory Symptoms \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 1.156$^{***}$ & 0.901$^{***}$ & 0.516$^{***}$ \\ 
+  & (0.291) & (0.111) & (0.194) \\ 
+  & & & \\ 
+ Batch & 0.655$^{*}$ & 0.479$^{**}$ & 0.501$^{*}$ \\ 
+  & (0.368) & (0.242) & (0.283) \\ 
+  & & & \\ 
+\textit{N} & 1,895 & 5,265 & 1,917 \\ 
+R$^{2}$ & 0.400 & 0.348 & 0.461 \\ 
+Adjusted R$^{2}$ & 0.338 & 0.324 & 0.404 \\ 
+Residual Std. Error & 0.801 (df = 1715) & 0.765 (df = 5079) & 0.741 (df = 1733) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
+
+\begin{table}[!htbp] \centering 
+  \caption{Regression Results by Complaint} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & \multicolumn{3}{c}{nEDTests} \\ 
+ & Abdominal Complaints & Cardiac Arrhythmias & Fatigue and Weakness \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.913$^{***}$ & 0.695$^{***}$ & 0.870$^{***}$ \\ 
+  & (0.068) & (0.180) & (0.195) \\ 
+  & & & \\ 
+ Batch & $-$0.135$^{**}$ & 0.708$^{***}$ & 0.333$^{*}$ \\ 
+  & (0.066) & (0.129) & (0.189) \\ 
+  & & & \\ 
+\textit{N} & 6,232 & 1,045 & 1,494 \\ 
+R$^{2}$ & 0.038 & 0.525 & 0.294 \\ 
+Adjusted R$^{2}$ & 0.009 & 0.428 & 0.203 \\ 
+Residual Std. Error & 0.752 (df = 6046) & 0.595 (df = 866) & 0.828 (df = 1322) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
 :::
 
 

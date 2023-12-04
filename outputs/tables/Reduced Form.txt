@@ -78,5 +78,5 @@ felm(formula = RTN_72_HR ~ batch.tendency + test.inclination +
     0 | ED_PROVIDER, data = data)
                           Estimate Cluster s.e.
 batch.tendency        3.062576e-03 0.0031741909
-test.inclination     -2.758026e-02 0.0106387901
+test.inclination     -2.758026e-02 0.0106387902
 patients_in_hospital -1.643584e-05 0.0001523342

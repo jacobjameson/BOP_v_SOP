@@ -20,7 +20,6 @@ df <- read.csv(paste0(path, 'deidentified_FINAL.csv'))
 test_columns = c("US_PERF", "NON_CON_CT_PERF", "CON_CT_PERF", 
                  "LAB_PERF", "XR_PERF")
 
-
 colnames(df)[colnames(df) == "PLAIN_XRAY"] = "XR_PERF"
 colnames(df)[colnames(df) == "US_ORDER_DTTM_REL"] ="US_ORDER_DTTM_REL"
 colnames(df)[colnames(df) == "CT_WITHOUT_CONTR_ORDER_DTTM_REL"] = "NON_CON_CT_ORDER_REL"

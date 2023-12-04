@@ -432,13 +432,21 @@ sink("outputs/tables/2SLS Results Tests Only.txt")
 stargazer(list(model.IV.xray,
                model.IV.us,
                model.IV.nct,
-               model.IV.lab), type = "text", 
+               model.IV.ct), type = "text", 
           covariate.labels = c('Testing Inclination', 'Batch'),
           dep.var.labels = c('X-Ray', 'Ultrasound', 'Non Contrast CT',
-                             'Contrast CT', 'Lab'),
+                             'Contrast CT'),
           header = F, 
           title = "2SLS Results: Specific Tests", 
           style = 'QJE')
+
+
+stargazer(list(model.IV.lab), type = "text", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          header = F, 
+          title = "2SLS Results: Specific Tests", 
+          style = 'QJE')
+
 
 stargazer(list(model.IV.xray,
                model.IV.us,
@@ -452,9 +460,18 @@ stargazer(list(model.IV.xray,
           style = 'QJE')
 
 sink()
+
+data %>%
+  filter('XR_ORDER_REL' %in% batch) %>%
+  group_by(batch, CHIEF_COMPLAINT) %>%
+  summarize(n = n()) %>%
+  arrange(desc(n))
 #=========================================================================
 # Specific Types of Test Batching: Lab+Image Batch
 #=========================================================================
+
+# Save the results to a .txt file
+sink("outputs/tables/2SLS Results Specific Batch Types.txt")
 
 model.IV.LOS <- felm(
   ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
@@ -470,6 +487,16 @@ model.IV.72 <- felm(
   RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
     (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
   data = data)
+
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "text", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
 
 
 stargazer(list(model.IV.LOS,
@@ -503,7 +530,7 @@ model.IV.72 <- felm(
 
 stargazer(list(model.IV.LOS,
                model.IV.ntest,
-               model.IV.72), type = "latex", 
+               model.IV.72), type = "text", 
           covariate.labels = c('Testing Inclination', 'Batch'),
           dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
           header = F, 
@@ -512,9 +539,160 @@ stargazer(list(model.IV.LOS,
 
 
 
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Image+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+
+sink()
+
 #=========================================================================
+# Specific Chief Complaint Areas
 #=========================================================================
 
+# Save the results to a .txt file
+sink("outputs/tables/2SLS Results Complaint Subgroups.txt")
+
+complaints <- unique(data$CHIEF_COMPLAINT)
+model_results <- list()
+
+for(complaint in complaints) {
+  
+  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
+  
+  model.IV.LOS <- felm(
+    ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + ESI | 
+      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+    data = data_subset)
+  
+  model_results[[complaint]] <- model.IV.LOS
+}
+
+stargazer(model_results[1:3], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[1:3],
+          style = 'QJE')
+
+stargazer(model_results[4:6], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[4:6],
+          style = 'QJE')
+
+stargazer(model_results[7:9], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[7:9],
+          style = 'QJE')
+
+stargazer(model_results[10:12], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[10:12],
+          style = 'QJE')
+
+stargazer(model_results[13:15], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[13:15],
+          style = 'QJE')
+
+model_results <- list()
+for(complaint in complaints) {
+  
+  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
+  
+  model.IV.ntest <- felm(
+    nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+    data = data_subset)
+  
+  model_results[[complaint]] <- model.IV.ntest
+}
+
+stargazer(model_results[1:3], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[1:3],
+          style = 'QJE')
+
+stargazer(model_results[4:6], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[4:6],
+          style = 'QJE')
+
+stargazer(model_results[7:9], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[7:9],
+          style = 'QJE')
+
+stargazer(model_results[10:12], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[10:12],
+          style = 'QJE')
+
+stargazer(model_results[13:15], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[13:15],
+          style = 'QJE')
+
+
+
+model_results <- list()
+for(complaint in complaints) {
+  
+  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
+  
+  model.IV.72 <- felm(
+    RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+    data = data_subset)
+  
+  model_results[[complaint]] <- model.IV.72
+}
+
+stargazer(model_results[1:3], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[1:3],
+          style = 'QJE')
+
+stargazer(model_results[4:6], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[4:6],
+          style = 'QJE')
+
+stargazer(model_results[7:9], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[7:9],
+          style = 'QJE')
+
+stargazer(model_results[10:12], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[10:12],
+          style = 'QJE')
+
+stargazer(model_results[13:15], type = "text", 
+          title = "Regression Results by Complaint",
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          column.labels = complaints[13:15],
+          style = 'QJE')
+
+
+sink()
 
 ##########################################################################
 #=========================================================================
@@ -522,24 +700,7 @@ stargazer(list(model.IV.LOS,
 #=========================================================================
 ##########################################################################
 
-library(mediation)
 
-data$ESI <- as.factor(data$ESI)
 
-reduced.form.LOS.M <- 
-  lm(avg_nEDTests ~ 
-       batch.tendency + dayofweekt + month_of_year + 
-       age_groups + CHIEF_COMPLAINT + ESI, data = data
-  )
 
-reduced.form.LOS.Y <- 
-  lm(ln_ED_LOS ~ 
-       batch.tendency + avg_nEDTests + dayofweekt + 
-       month_of_year + age_groups +  CHIEF_COMPLAINT + ESI, data = data
-  )
 
-mediation <- mediate(reduced.form.LOS.M, reduced.form.LOS.Y,
-                     treat='batch.tendency', mediator='avg_nEDTests',
-                     boot=TRUE, sims=1)
-
-summary(mediation)
