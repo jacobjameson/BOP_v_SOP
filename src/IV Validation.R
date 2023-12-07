@@ -373,15 +373,21 @@ model.IV.72 <- felm(
              (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
   data = data)
 
+model.IV.admit <- felm(
+  admit ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
 
 # Save the results to a .txt file
 sink("outputs/tables/2SLS Results.txt")
 
 stargazer(list(model.IV.LOS,
                model.IV.ntest,
-               model.IV.72), type = "text", 
+               model.IV.72, 
+               model.IV.admit), type = "text", 
           covariate.labels = c('Testing Inclination', 'Batch'),
-          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return',
+                             'Admission'),
           header = F, 
           title = "2SLS Results: Length of Stay, Number of Tests, and 72-Hour", 
           style = 'QJE')

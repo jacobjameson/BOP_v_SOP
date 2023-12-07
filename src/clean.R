@@ -576,7 +576,8 @@ final <- final %>%
   ungroup()
 
 final$residual_batch <- resid(
-  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi + test.inclination, data=final))
+  felm(any.batch ~ 0 | dayofweekt + month_of_year + 
+         complaint_esi + test.inclination, data=final))
 
 final <- final %>%
   group_by(ED_PROVIDER) %>%
