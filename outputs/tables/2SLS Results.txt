@@ -1,23 +1,23 @@
 
 2SLS Results: Length of Stay, Number of Tests, and 72-Hour
-=========================================================================
-                                  Log LOS  Number of Tests 72 Hour Return
-                                    (1)          (2)            (3)      
--------------------------------------------------------------------------
-Testing Inclination               0.601**     0.961***       -0.027***   
-                                  (0.234)      (0.022)        (0.010)    
-                                                                         
-Batch                             -0.086      0.135***         0.018     
-                                  (0.419)      (0.046)        (0.018)    
-                                                                         
-N                                 41,929       41,929          41,929    
-R2                                 0.199        0.312          0.008     
-Adjusted R2                        0.194        0.307          0.002     
-Residual Std. Error (df = 41667)   0.496        0.817          0.184     
-=========================================================================
-Notes:                             ***Significant at the 1 percent level.
-                                    **Significant at the 5 percent level.
-                                    *Significant at the 10 percent level.
+=================================================================================
+                                 Log LOS Number of Tests 72 Hour Return Admission
+                                   (1)         (2)            (3)          (4)   
+---------------------------------------------------------------------------------
+Testing Inclination              0.601**    0.961***       -0.027***      0.059  
+                                 (0.234)     (0.022)        (0.010)      (0.054) 
+                                                                                 
+Batch                            -0.086     0.135***         0.018       0.232*  
+                                 (0.419)     (0.046)        (0.018)      (0.135) 
+                                                                                 
+N                                41,929      41,929          41,929      41,929  
+R2                                0.199       0.312          0.008        0.160  
+Adjusted R2                       0.194       0.307          0.002        0.154  
+Residual Std. Error (df = 41667)  0.496       0.817          0.184        0.370  
+=================================================================================
+Notes:                                     ***Significant at the 1 percent level.
+                                            **Significant at the 5 percent level.
+                                            *Significant at the 10 percent level.
 
 \begin{table}[!htbp] \centering 
   \caption{2SLS Results: Length of Stay, Number of Tests, and 72-Hour} 

@@ -1,0 +1,100 @@
+
+2SLS Results for Musculoskeletal/Extremity Issues : Length of Stay, Number of Tests, and 72-Hour
+=================================================================================
+                                 Log LOS Number of Tests 72 Hour Return Admission
+                                   (1)         (2)            (3)          (4)   
+---------------------------------------------------------------------------------
+Testing Inclination              0.828**    0.917***         -0.030       0.022  
+                                 (0.337)     (0.091)        (0.040)      (0.059) 
+                                                                                 
+Batch                            -0.385      0.476**         0.079        0.221  
+                                 (0.795)     (0.235)        (0.104)      (0.143) 
+                                                                                 
+N                                10,190      10,190          10,190      10,190  
+R2                               -0.027       0.349          -0.008       0.072  
+Adjusted R2                      -0.046       0.337          -0.027       0.055  
+Residual Std. Error (df = 10005)  0.572       0.791          0.180        0.282  
+=================================================================================
+Notes:                                     ***Significant at the 1 percent level.
+                                            **Significant at the 5 percent level.
+                                            *Significant at the 10 percent level.
+
+2SLS Results for Cardiac/Chest-Related Issues : Length of Stay, Number of Tests, and 72-Hour
+================================================================================
+                                Log LOS Number of Tests 72 Hour Return Admission
+                                  (1)         (2)            (3)          (4)   
+--------------------------------------------------------------------------------
+Testing Inclination             0.462**    0.679***         -0.012       0.097  
+                                (0.221)     (0.115)        (0.020)      (0.081) 
+                                                                                
+Batch                            0.174       0.204          0.001        0.155  
+                                (0.314)     (0.181)        (0.027)      (0.154) 
+                                                                                
+N                                9,443       9,443          9,443        9,443  
+R2                               0.221       0.232          0.026        0.126  
+Adjusted R2                      0.206       0.217          0.007        0.109  
+Residual Std. Error (df = 9258)  0.478       0.756          0.167        0.400  
+================================================================================
+Notes:                                    ***Significant at the 1 percent level.
+                                           **Significant at the 5 percent level.
+                                           *Significant at the 10 percent level.
+
+2SLS Results for General/Other Symptoms : Length of Stay, Number of Tests, and 72-Hour
+================================================================================
+                                Log LOS Number of Tests 72 Hour Return Admission
+                                  (1)         (2)            (3)          (4)   
+--------------------------------------------------------------------------------
+Testing Inclination             0.554**    0.870***        -0.032*       0.119  
+                                (0.244)     (0.096)        (0.018)      (0.079) 
+                                                                                
+Batch                           -0.172       0.179          0.007        0.212  
+                                (0.459)     (0.207)        (0.033)      (0.209) 
+                                                                                
+N                                7,328       7,328          7,328        7,328  
+R2                               0.221       0.350          0.033        0.202  
+Adjusted R2                      0.201       0.334          0.008        0.182  
+Residual Std. Error (df = 7143)  0.544       0.917          0.193        0.409  
+================================================================================
+Notes:                                    ***Significant at the 1 percent level.
+                                           **Significant at the 5 percent level.
+                                           *Significant at the 10 percent level.
+
+2SLS Results for Gastrointestinal/Abdominal Issues : Length of Stay, Number of Tests, and 72-Hour
+=================================================================================
+                                Log LOS  Number of Tests 72 Hour Return Admission
+                                  (1)          (2)            (3)          (4)   
+---------------------------------------------------------------------------------
+Testing Inclination             0.523***    1.016***       -0.047***      0.061  
+                                (0.163)      (0.079)        (0.012)      (0.040) 
+                                                                                 
+Batch                            -0.054      -0.092          -0.006       0.191  
+                                (0.254)      (0.128)        (0.021)      (0.135) 
+                                                                                 
+N                                9,554        9,554          9,554        9,554  
+R2                               0.104        0.053          0.025        0.093  
+Adjusted R2                      0.087        0.035          0.006        0.075  
+Residual Std. Error (df = 9369)  0.454        0.809          0.206        0.402  
+=================================================================================
+Notes:                                     ***Significant at the 1 percent level.
+                                            **Significant at the 5 percent level.
+                                            *Significant at the 10 percent level.
+
+2SLS Results for Neurological/Syncope Issues : Length of Stay, Number of Tests, and 72-Hour
+================================================================================
+                                Log LOS Number of Tests 72 Hour Return Admission
+                                  (1)         (2)            (3)          (4)   
+--------------------------------------------------------------------------------
+Testing Inclination              0.792     1.481***         -0.052      -0.040  
+                                (0.506)     (0.333)        (0.032)      (0.097) 
+                                                                                
+Batch                           -0.356      -0.080          0.060      0.460*** 
+                                (0.793)     (0.493)        (0.047)      (0.132) 
+                                                                                
+N                                5,386       5,386          5,386        5,386  
+R2                              -0.025       0.187          -0.003       0.049  
+Adjusted R2                     -0.061       0.159          -0.038       0.016  
+Residual Std. Error (df = 5201)  0.546       0.993          0.171        0.398  
+================================================================================
+Notes:                                    ***Significant at the 1 percent level.
+                                           **Significant at the 5 percent level.
+                                           *Significant at the 10 percent level.

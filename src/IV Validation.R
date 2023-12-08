@@ -403,6 +403,62 @@ stargazer(list(model.IV.LOS,
 
 sink()
 
+
+#=========================================================================
+# Exploring certain subgroups
+#=========================================================================
+
+# Function to map specific complaints to general categories
+map_complaints <- function(complaint) {
+  if (complaint %in% c('Abdominal Complaints', 'Gastrointestinal Issues')) {
+    return('Gastrointestinal/Abdominal Issues')
+  } else if (complaint %in% c('Chest Pain', 'Cardiac Arrhythmias', 'Shortness of Breath', 'Upper Respiratory Symptoms')) {
+    return('Cardiac/Chest-Related Issues')
+  } else if (complaint %in% c('Neurological Issue', 'Dizziness/Lightheadedness/Syncope')) {
+    return('Neurological/Syncope Issues')
+  } else if (complaint %in% c('Extremity Complaints', 'Back or Flank Pain', 'Falls, Motor Vehicle Crashes, Assaults, and Trauma')) {
+    return('Musculoskeletal/Extremity Issues')
+  } else {
+    return('General/Other Symptoms')
+  }
+}
+
+# Apply the function to create a new column for grouped complaints
+data$GROUPED_COMPLAINT <- sapply(data$CHIEF_COMPLAINT, map_complaints)
+
+# Check the new grouping
+table(data$GROUPED_COMPLAINT)
+
+# Unique chief complaints
+unique_complaints <- unique(data$GROUPED_COMPLAINT)
+
+
+# Save the results to a .txt file
+sink("outputs/tables/2SLS Results Complaints.txt")
+
+# Loop over each unique complaint
+for(complaint in unique_complaints) {
+  # Create a subset for the current complaint
+  subset <- filter(data, GROUPED_COMPLAINT == complaint)
+  
+  # Run your regression models on this subset
+  model.IV.LOS <- felm(ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  model.IV.ntest <- felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  model.IV.72 <- felm(RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  model.IV.admit <- felm(admit ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  
+  # Generate and print the stargazer table for the current complaint
+  stargazer(list(model.IV.LOS, model.IV.ntest, model.IV.72, model.IV.admit), 
+            type = "text", 
+            covariate.labels = c('Testing Inclination', 'Batch'),
+            dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return', 'Admission'),
+            header = F, 
+            title = paste("2SLS Results for", complaint, ": Length of Stay, Number of Tests, and 72-Hour"), 
+            style = 'QJE')
+}
+
+sink()
+
 #=========================================================================
 # Exploring which Tests are more likely to be ordered
 #=========================================================================
@@ -556,157 +612,3 @@ stargazer(list(model.IV.LOS,
 
 
 sink()
-
-#=========================================================================
-# Specific Chief Complaint Areas
-#=========================================================================
-
-# Save the results to a .txt file
-sink("outputs/tables/2SLS Results Complaint Subgroups.txt")
-
-complaints <- unique(data$CHIEF_COMPLAINT)
-model_results <- list()
-
-for(complaint in complaints) {
-  
-  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
-  
-  model.IV.LOS <- felm(
-    ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + ESI | 
-      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-    data = data_subset)
-  
-  model_results[[complaint]] <- model.IV.LOS
-}
-
-stargazer(model_results[1:3], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[1:3],
-          style = 'QJE')
-
-stargazer(model_results[4:6], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[4:6],
-          style = 'QJE')
-
-stargazer(model_results[7:9], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[7:9],
-          style = 'QJE')
-
-stargazer(model_results[10:12], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[10:12],
-          style = 'QJE')
-
-stargazer(model_results[13:15], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[13:15],
-          style = 'QJE')
-
-model_results <- list()
-for(complaint in complaints) {
-  
-  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
-  
-  model.IV.ntest <- felm(
-    nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-    data = data_subset)
-  
-  model_results[[complaint]] <- model.IV.ntest
-}
-
-stargazer(model_results[1:3], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[1:3],
-          style = 'QJE')
-
-stargazer(model_results[4:6], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[4:6],
-          style = 'QJE')
-
-stargazer(model_results[7:9], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[7:9],
-          style = 'QJE')
-
-stargazer(model_results[10:12], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[10:12],
-          style = 'QJE')
-
-stargazer(model_results[13:15], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[13:15],
-          style = 'QJE')
-
-
-
-model_results <- list()
-for(complaint in complaints) {
-  
-  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
-  
-  model.IV.72 <- felm(
-    RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-      (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-    data = data_subset)
-  
-  model_results[[complaint]] <- model.IV.72
-}
-
-stargazer(model_results[1:3], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[1:3],
-          style = 'QJE')
-
-stargazer(model_results[4:6], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[4:6],
-          style = 'QJE')
-
-stargazer(model_results[7:9], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[7:9],
-          style = 'QJE')
-
-stargazer(model_results[10:12], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[10:12],
-          style = 'QJE')
-
-stargazer(model_results[13:15], type = "text", 
-          title = "Regression Results by Complaint",
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          column.labels = complaints[13:15],
-          style = 'QJE')
-
-
-sink()
-
-##########################################################################
-#=========================================================================
-# Mediation Analysis -----------------------------------------------------
-#=========================================================================
-##########################################################################
-
-
-
-
-
