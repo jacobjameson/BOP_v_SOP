@@ -674,14 +674,34 @@ measures (i.e., by complaint category) in Section 4.4.
 \hypertarget{reduced-form-results}{%
 \subsection{Reduced-Form Results}\label{reduced-form-results}}
 
-In this section, we examine the causal effects of provider batching
-tendency. Our reduced form regression results, as presented in Table
-\ref{tab:reducedform}, indicate that the physician's batch tendency is
-associated with longer emergency department length of stay (ED LOS), a
-greater number of tests ordered, and does not significantly influence
-the likelihood of a 72-hour return. However, the relationship between
-batch tendency and our outcomes of interest is nuanced by the presence
-of testing inclination among physicians.
+In this section, we explore the causal influence of physician batch
+tendency on patient outcomes in the emergency department. Our reduced
+form regression results, as presented in Model 1 of Table
+\ref{tab:reducedform}, reveal that batch tendency correlates with
+prolonged ED length of stay (LOS), increased diagnostic test ordering,
+and does not materially alter the likelihood of a 72-hour return.
+Notably, these associations are nuanced by an underlying factor: the
+physician's testing inclination.
+
+We construct a physician's testing inclination using the same method
+used to measure physician batch tendency, but instead we use the
+physician's residualized leave-out average test rate to get a measure of
+a physicians propensity to test. A key consideration in our analysis is
+the strong positive correlation (\(r = 0.79\)) between batch tendency
+and testing inclination. Such a high degree of correlation raises the
+concern that physicians with a higher testing inclination may batch more
+often because as a result of ordering more tests. Failure to control for
+this inclination could result in biased estimates of the effect of batch
+tendency.
+
+The introduction of a Directed Acyclic Graph (Figure \ref{fig:DAG})
+elucidates the interconnected pathways between batch tendency, batch
+ordering, and primary outcomes. We posit that while batch tendency
+directly influences the practice of batch ordering tests, batch tendency
+and batch ordering are concurrently influenced by testing inclination.
+This is critical as testing inclination has a direct effect on primary
+outcomes, necessitating its inclusion as a control variable to
+disentangle its confounding effects.
 
 \begin{table}[htbp]
 \centering
@@ -723,35 +743,34 @@ Mean number of encounters per physician & 1805.3 &  &  \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
+\tiny
 \item \textit{Estimates of the reduced form are for the baseline sample described in the text. Coefficients on batch tendency and testing inclination are scaled by the difference between batch tendency and testing inclination respectively of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
 \item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
 \end{tablenotes}
 \end{table}
 
-Similar to our method used to measure physician batch tendency, we use
-the physician's residualized leave-out average test rate to get a
-measure of a physicians propensity to test (which we call testing
-inclination). A key consideration in our analysis is the strong positive
-correlation (\(r = 0.79\)) between batch tendency and testing
-inclination. Such a high degree of correlation raises the concern that
-physicians with a higher testing inclination may batch more often
-because as a result of ordering more tests. Failure to control for this
-inclination could result in biased estimates of the effect of batch
-tendency. We note this assumption made on the causal pathway and further
-explore this in the section on mediation analysis.
+\begin{figure}[h]
+  \centering
+  \includegraphics[width=4in]{../outputs/figures/DAG.png}
+\begin{tablenotes}
+\small
+\item \textit{}
+\end{tablenotes}  
+  \caption{Directed Acyclic Graph}
+  \label{fig:DAG}
+\end{figure}
 
-In Model 2, we control for testing inclination and observe notable
-changes in the coefficients for batch tendency. The previously
-significant positive association with ln(LOS) diminishes, suggesting
-that the initial estimate may have been capturing the combined effects
-of batching and testing inclination. Estimated coefficients for batch
-tendency are scaled by the difference in batch tendency going from the
-ninetieth to tenth percentile in physician batch tendency---equal to
-15.8 pp---for interpretability, and coefficients for testing inclination
-are scaled by the difference in testing inclination going from the
-ninetieth to tenth percentile in physician testing inclination---equal
-to 34.9 pp.
+In Model 2 of Table \ref{tab:reducedform}, we control for testing
+inclination and observe notable changes in the coefficients for batch
+tendency. The previously significant positive association with ln(LOS)
+diminishes, suggesting that the initial estimate may have been capturing
+the combined effects of batching and testing inclination. Estimated
+coefficients for batch tendency are scaled by the difference in batch
+tendency going from the ninetieth to tenth percentile in physician batch
+tendency---equal to 15.8 pp---for interpretability, and coefficients for
+testing inclination are scaled by the difference in testing inclination
+going from the ninetieth to tenth percentile in physician testing
+inclination---equal to 34.9 pp.
 
 Assignment to a physician in the top batching decile (relative to one in
 the bottom decile) is associated with a 0.2 unit increase in the number
@@ -777,7 +796,7 @@ returns.
 
 In this section we investigate whether the reduced-form effects observed
 in Section 4.1 are due to differences in batch rates across providers or
-due to other provider differences correlated with batch tendency We
+due to other provider differences correlated with batch tendency. We
 start by studying reduced-form effects among patients with complaints
 that are never batched, as a ``placebo/falsification check.'' By way of
 example, consider a patient who arrives at the ED with a urinary tact
@@ -840,7 +859,7 @@ Observations & & 2,361 & \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
+\tiny
 \item \textit{This table reports the estimated coefficients of a reduced-form regression of our main outcomes on physician batching tendency for samples based on the patient’s chief complaint field. Estimates come from regression on conditions that are batched less than 10 percent of the time. See text for residualization fixed effects and baseline controls. Robust standard errors are clustered at the physician level.}
 \item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
 \end{tablenotes}
@@ -858,7 +877,7 @@ LOS, number of tests, and 72-hour return.
 \begin{table}[!htbp] \centering 
   \caption{2SLS Results: Length of Stay, Number of Tests, and 72-Hour Return} 
   \label{tab:2SLS} 
-\begin{tabular}{p{6cm}ccc}
+\begin{tabular}{p{7cm}ccc}
 \\[-1.8ex]\hline 
 \hline \\[-1.8ex] 
 \\[-1.8ex] & ln(LOS) & Number of Tests & 72 Hour Return \\ 
@@ -883,7 +902,7 @@ Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\
 \bottomrule
 \end{tabular}
 \begin{tablenotes}
-\small
+\tiny
 \item \textit{Estimates of the IV model are for the baseline sample described in the text. Coefficients on testing inclination are scaled by the difference between testing inclination of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
 \item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
 \end{tablenotes}
@@ -891,52 +910,21 @@ Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\
 
 \emph{ED length of stay (LOS).}-- Our analysis reveals that batch
 ordering does not significantly reduce the length of stay in the ED.
-This finding holds even after accounting for various control variables.
-Contrary to common assumptions that batching tests could expedite
-patient throughput, our results suggest that the efficiency gains are
-offset. A possible explanation lies in the additional time needed to
-process the increased volume of tests ordered through batching. These
-findings challenge prevailing perceptions and call for a reevaluation of
-batching as a time-saving strategy in ED operations.
+This finding holds even after accounting for various control variables,
+including ED volume and patient acuity. Contrary to common assumptions
+that batching tests could expedite patient throughput, our results
+suggest that the efficiency gains could be offset. A possible
+explanation lies in excess tests being ordered due to batching, which
+could lead to increased wait times for patients. This is consistent with
+our finding that batching increases the number of tests ordered.
 
 \emph{Resource Utilization.}-- The impact of batching on resource
 utilization is pronounced. We observe a 0.135 increase in the number of
 tests ordered due to batching, corresponding to approximately 2,206
-additional tests in our dataset. Particularly noteworthy is the
-substantial rise in X-Ray orders (by 28.8 percentage points), as shown
-in Table \ref{tab:2SLStests}. This trend towards increased X-Ray orders
-raises questions about potential over-testing and its implications for
-healthcare resources and patient care, especially considering the risks
-associated with unnecessary radiation exposure.
-
-\begin{table}[!htbp] \centering 
-  \caption{2SLS Results: Specific Tests} 
-  \label{tab:2SLStests} 
-\begin{tabular}{@{\extracolsep{5pt}}lccccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
-\\[-1.8ex] & X-Ray & Ultrasound & Non-Con CT & Con CT & Lab \\ 
-\\[-1.8ex] & (1) & (2) & (3) & (4) & (5)\\ 
-\hline \\[-1.8ex] 
- Batch & 0.288$^{**}$ & $-$0.003 & 0.095 & $-$0.242$^{***}$ & $-$0.003 \\ 
-  & (0.126) & (0.051) & (0.087) & (0.056)  & (0.080) \\ 
-  & & & & &\\ 
- Testing Inclination & 0.240$^{***}$ & 0.086$^{***}$ & 0.096$^{**}$ & 0.253$^{***}$ & 0.286$^{***}$ \\ 
-  & (0.056) & (0.024) & (0.039) & (0.027) & (0.038) \\ 
-  & & & & & \\ 
-Test Ordering Frequency & 0.47 & 0.11 & 0.21 & 0.19 & 0.77 \\ 
-  & & & & &\\ 
-\textit{N} & 41,929 & 41,929 & 41,929 & 41,929 & 41,929 \\ 
-R$^{2}$ & 0.350 & 0.077 & 0.236 & 0.017 \\ 
-\hline 
-\hline \\[-1.8ex] 
-\end{tabular}
-\begin{tablenotes}
-\small
-\item \textit{Estimates of the IV model are for the baseline sample described in the text. Coefficients on testing inclination are scaled by the difference between testing inclination of the ninetieth and tenth percentile physicians for interpretability. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Patient observables include sex dummy, race/ethnicity, and age bins. Robust standard errors are clustered at the physician level.}
-\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
-\end{tablenotes}
-\end{table}
+additional tests during our study period. This is likely due to the
+information gain that occurs from sequential test ordering, where a
+physician may order additional tests after receiving the results of the
+first test.
 
 \emph{72-hour Return}-- Our findings indicate that batch ordering does
 not significantly impact the likelihood of a 72-hour return. This
@@ -947,17 +935,13 @@ assessment with resource efficiency.
 
 The instrumental variable analysis presented here underscores the
 complexities underlying batch ordering practices in the ED. While
-batching is often seen as a method to enhance efficiency, our findings
-suggest that it may lead to increased resource utilization without
-corresponding gains in patient throughput or reductions in short-term
-return rates. These insights point to the need for a more nuanced
-approach to test ordering in emergency care, one that carefully weighs
-the benefits of comprehensive assessment against the risks and costs of
-potential over-testing.
-
-\hypertarget{investigating-mechanisms-excess-x-rays}{%
-\subsection{Investigating Mechanisms: Excess
-X-Rays}\label{investigating-mechanisms-excess-x-rays}}
+batching is often seen by physicians as a method to enhance efficiency,
+our findings suggest that it may lead to increased resource utilization
+without corresponding gains in patient throughput or reductions in
+short-term return rates. These insights point to the need for a more
+nuanced approach to test ordering in emergency care, one that carefully
+weighs the benefits of comprehensive assessment against the risks and
+costs of potential over-testing.
 
 \hypertarget{robustness}{%
 \subsection{Robustness}\label{robustness}}

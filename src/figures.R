@@ -9,12 +9,14 @@ library(lmtest)
 library(sandwich)
 library(ggsci)
 library(xtable) # Output to LaTeX table format
+library(ggdag)
+library(ggplot2)
+theme_set(theme_dag())
 
 data <- read_csv('outputs/data/final.csv')
 
 
 ##########################################################################
-
 
 library(ggplot2)
 library(lfe)
