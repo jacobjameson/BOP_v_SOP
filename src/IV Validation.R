@@ -317,9 +317,12 @@ complaints <- unique(data$CHIEF_COMPLAINT)
 
 model_results <- list()
 # Iterate through each complaint and run the regression
+
 for(complaint in complaints) {
   
-  data_subset <- data %>% filter(CHIEF_COMPLAINT == complaint)
+  data_subset <- data %>% 
+    filter(CHIEF_COMPLAINT == complaint)
+  
   model <- felm(
     any.batch ~ batch.tendency + test.inclination | 
                 dayofweekt + month_of_year + age_groups + ESI | 0 | ED_PROVIDER,
@@ -348,6 +351,23 @@ stargazer(model_results[10:15], type = "text",
 
 
 sink()
+
+#=========================================================================
+
+data.temp <- data
+
+data.temp$residual_batch <- resid(
+  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=data.temp))
+
+# Step 2: get batch tendency for each provider
+table(data.temp$CHIEF_COMPLAINT, data.temp$any.batch)
+
+data.temp <- data.temp %>%
+  group_by(ED_PROVIDER) %>%
+  mutate(Sum_Resid=sum(residual_batch, na.rm=T),
+         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>%
+  
+  ungroup()
 
 
 
