@@ -12,8 +12,7 @@ library(lubridate)
 #=========================================================================
 # Determine test times
 #=========================================================================
-
-path <- '~/Dropbox/Batch vs sequential testing/Data/'
+path <- '~/Sue Goldie Dropbox/Jacob Jameson/Batch vs sequential testing/Data/'
 
 df <- read.csv(paste0(path, 'deidentified_FINAL.csv'))
 
@@ -436,6 +435,7 @@ complaints <- list(
       'Voiding Dysfunction',"Hesitancy Urinary")
 )
 
+df$complaint <- df$CHIEF_COMPLAINT
 
 for (i in seq(1,length(complaints))){
   name <- names(complaints[i])

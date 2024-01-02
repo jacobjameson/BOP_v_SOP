@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.12.13)  30 DEC 2023 15:09
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.12.13)  2 JAN 2024 14:32
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -408,11 +408,7 @@ LaTeX Info: Redefining \cite on input line 694.
 File: l3backend-pdftex.def 2023-11-09 L3 backend support: PDF output (pdfTeX)
 \l__color_backend_stack_int=\count346
 \l__pdf_internal_box=\box71
-) (./manuscript.aux
-
-LaTeX Warning: Label `' multiply defined.
-
-)
+) (./manuscript.aux)
 \openout1 = `manuscript.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 61.
@@ -446,20 +442,65 @@ Package hyperref Info: Link coloring OFF on input line 61.
 
 [1
 
-{/Users/jacobjameson/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] [2] [3] [4]
-<../outputs/figures/Lab and Image Batch Rates.png, id=127, 1589.94pt x 578.16pt>
+{/Users/jacobjameson/Library/TinyTeX/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[2]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[3]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[4]
+<../outputs/figures/Lab and Image Batch Rates.png, id=123, 1589.94pt x 578.16pt>
 File: ../outputs/figures/Lab and Image Batch Rates.png Graphic file (type png)
 <use ../outputs/figures/Lab and Image Batch Rates.png>
-Package pdftex.def Info: ../outputs/figures/Lab and Image Batch Rates.png  used on input line 347.
+Package pdftex.def Info: ../outputs/figures/Lab and Image Batch Rates.png  used on input line 349.
 (pdftex.def)             Requested size: 469.75499pt x 170.82037pt.
-[5 <../outputs/figures/Lab and Image Batch Rates.png>] [6] [7]
-<../outputs/figures/Figure 2.png, id=170, 1011.78pt x 361.35pt>
+
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[5 <../outputs/figures/Lab and Image Batch Rates.png>]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[6]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[7]
+<../outputs/figures/Figure 2.png, id=166, 1011.78pt x 361.35pt>
 File: ../outputs/figures/Figure 2.png Graphic file (type png)
 <use ../outputs/figures/Figure 2.png>
-Package pdftex.def Info: ../outputs/figures/Figure 2.png  used on input line 569.
+Package pdftex.def Info: ../outputs/figures/Figure 2.png  used on input line 571.
 (pdftex.def)             Requested size: 469.75499pt x 167.77238pt.
-[8] [9 <../outputs/figures/Figure 2.png>] [10]
-<../outputs/figures/DAG.png, id=201, 442.7742pt x 252.945pt>
+
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[8]
+Overfull \hbox (145.61382pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[9 <../outputs/figures/Figure 2.png>]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[10]
+<../outputs/figures/DAG.png, id=198, 442.7742pt x 252.945pt>
 File: ../outputs/figures/DAG.png Graphic file (type png)
 <use ../outputs/figures/DAG.png>
 Package pdftex.def Info: ../outputs/figures/DAG.png  used on input line 764.
@@ -467,63 +508,137 @@ Package pdftex.def Info: ../outputs/figures/DAG.png  used on input line 764.
 
 LaTeX Warning: `h' float specifier changed to `ht'.
 
-[11] [12 <../outputs/figures/DAG.png>]
-LaTeX Font Info:    Trying to load font information for OML+cmr on input line 822.
+
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[11]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[12 <../outputs/figures/DAG.png>]
+LaTeX Font Info:    Trying to load font information for OML+cmr on input line 817.
 (/Users/jacobjameson/Library/TinyTeX/texmf-dist/tex/latex/base/omlcmr.fd
 File: omlcmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OML/cmr/m/n' in size <11> not available
-(Font)              Font shape `OML/cmm/m/it' tried instead on input line 822.
-[13] [14] [15] [16]
-Underfull \hbox (badness 2384) in paragraph at lines 1055--1055
+(Font)              Font shape `OML/cmm/m/it' tried instead on input line 817.
+
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[13]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[14]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[15]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[16]
+Underfull \hbox (badness 2384) in paragraph at lines 1015--1015
 []|\OT1/cmr/m/n/10 Falls, Motor Vehi-cle Crashes,
  []
 
 
-Underfull \hbox (badness 2469) in paragraph at lines 1067--1067
+Underfull \hbox (badness 2469) in paragraph at lines 1027--1027
 []|\OT1/cmr/m/n/10 Medical Device or Treat-ment
  []
 
-LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1083.
+LaTeX Font Info:    Trying to load font information for OMS+cmr on input line 1043.
 (/Users/jacobjameson/Library/TinyTeX/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2023/04/13 v2.5m Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1083.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 1043.
 
-Overfull \hbox (31.14183pt too wide) in alignment at lines 1024--1095
+Overfull \hbox (31.14183pt too wide) in alignment at lines 984--1055
  [] [] 
+ []
+
+
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
  []
 
 [17
 
-] [18] [19]
-Overfull \hbox (7.56276pt too wide) in paragraph at lines 1129--1152
+]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[18]
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[19]
+Overfull \hbox (25.53767pt too wide) in paragraph at lines 1063--1086
  [][] 
  []
 
-(./manuscript.bbl [20]
 
 LaTeX Font Warning: Font shape `OML/cmm/m/it' in size <6.5> not available
-(Font)              size <6> substituted on input line 19.
+(Font)              size <6> substituted on input line 1088.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/m/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 19.
+(Font)              size <6> substituted on input line 1088.
 
 
 LaTeX Font Warning: Font shape `OT1/cmr/bx/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 19.
+(Font)              size <6> substituted on input line 1088.
 
 
 LaTeX Font Warning: Font shape `OML/cmm/b/it' in size <6.5> not available
-(Font)              size <6> substituted on input line 19.
+(Font)              size <6> substituted on input line 1088.
 
 
 LaTeX Font Warning: Font shape `OMS/cmsy/b/n' in size <6.5> not available
-(Font)              size <6> substituted on input line 19.
+(Font)              size <6> substituted on input line 1088.
 
-[21]) [22] (./manuscript.aux)
+
+Underfull \hbox (badness 10000) in paragraph at lines 1097--1097
+[]|\OT1/cmr/m/n/10 Gastrointestinal/Abdominal
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 1101--1101
+[]|\OT1/cmr/m/n/10 Musculoskeletal/Extremity
+ []
+
+
+Overfull \hbox (31.14183pt too wide) in alignment at lines 1092--1107
+ [] [] 
+ []
+
+
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[20] (./manuscript.bbl
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[21])
+Overfull \hbox (150.61383pt too wide) has occurred while \output is active
+[] [] 
+ []
+
+[22] (./manuscript.aux)
  ***********
 LaTeX2e <2023-11-01>
 L3 programming layer <2023-12-11>
@@ -532,25 +647,22 @@ L3 programming layer <2023-12-11>
 LaTeX Font Warning: Size substitutions with differences
 (Font)              up to 0.5pt have occurred.
 
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `manuscript.out' has not changed.
-(rerunfilecheck)             Checksum: 03BF5417B4C65238A4E87F1111306F10;2775.
+(rerunfilecheck)             Checksum: 4CD48F1336F918F34D1637421DC586BE;2663.
  ) 
 Here is how much of TeX's memory you used:
- 14433 strings out of 476135
- 263180 string characters out of 5793583
+ 14427 strings out of 476135
+ 263094 string characters out of 5793583
  1973457 words of memory out of 5000000
- 36216 multiletter control sequences out of 15000+600000
+ 36213 multiletter control sequences out of 15000+600000
  579701 words of font info for 115 fonts, out of 8000000 for 9000
  14 hyphenation exceptions out of 8191
- 75i,15n,79p,1326b,1056s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,15n,79p,1326b,1058s stack positions out of 10000i,1000n,20000p,200000b,200000s
  </Users/jacobjameson/Library/TinyTeX/texmf-var/fonts/pk/ljfour/jknappen/ec/tcrm1095.600pk></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmr9.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmssbx10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy5.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti7.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmti9.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></Users/jacobjameson/Library/TinyTeX/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on manuscript.pdf (22 pages, 873111 bytes).
+Output written on manuscript.pdf (22 pages, 874039 bytes).
 PDF statistics:
- 394 PDF objects out of 1000 (max. 8388607)
- 319 compressed objects within 4 object streams
- 86 named destinations out of 1000 (max. 500000)
- 152 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 388 PDF objects out of 1000 (max. 8388607)
+ 313 compressed objects within 4 object streams
+ 83 named destinations out of 1000 (max. 500000)
+ 144 words of extra memory for PDF output out of 10000 (max. 10000000)
 

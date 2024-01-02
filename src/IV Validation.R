@@ -324,8 +324,8 @@ for(complaint in complaints) {
     filter(CHIEF_COMPLAINT == complaint)
   
   model <- felm(
-    any.batch ~ batch.tendency + test.inclination | 
-                dayofweekt + month_of_year + age_groups + ESI | 0 | ED_PROVIDER,
+    any.batch ~ batch.tendency | 
+                dayofweekt + month_of_year + ESI | 0 | ED_PROVIDER,
     data = data_subset
   )
   model_results[[complaint]] <- model
@@ -333,6 +333,9 @@ for(complaint in complaints) {
 
 # Save the results to a .txt file
 sink("outputs/tables/Monotonicity.txt")
+
+print("first stage should be weakly positive for 
+      all subsamples (Dobbie, Goldin, and Yang 2018)")
 
 stargazer(model_results[1:5], type = "text", 
           title = "Regression Results by Complaint",
@@ -350,26 +353,50 @@ stargazer(model_results[10:15], type = "text",
           style = 'QJE')
 
 
-sink()
+model_results <- list()
 
-#=========================================================================
-
-data.temp <- data
-
-data.temp$residual_batch <- resid(
-  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=data.temp))
-
-# Step 2: get batch tendency for each provider
-table(data.temp$CHIEF_COMPLAINT, data.temp$any.batch)
-
-data.temp <- data.temp %>%
-  group_by(ED_PROVIDER) %>%
-  mutate(Sum_Resid=sum(residual_batch, na.rm=T),
-         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>%
+for(complaint in complaints) {
   
-  ungroup()
+  data_subset <- data %>% 
+    filter(CHIEF_COMPLAINT == complaint)
+  
+  data_subset$residual_batch <- resid(
+    felm(any.batch ~ 0 | dayofweekt + month_of_year, data=data_subset))
+  
+  data_subset <- data_subset %>%
+    group_by(ED_PROVIDER) %>%
+    mutate(Sum_Resid=sum(residual_batch, na.rm=T),
+           batch.tendency = (Sum_Resid - residual_batch) / (n() - 1))
+  
+  model <- felm(
+    any.batch ~ batch.tendency | 
+      dayofweekt + month_of_year + ESI | 0 | ED_PROVIDER,
+    data = data_subset
+  )
+  model_results[[complaint]] <- model
+}
+
+print("instrument constructed by leaving out a particular subsample
+      has predictive power over that same left-out subsample 
+      (Bhuller et al. 2020).")
 
 
+stargazer(model_results[1:5], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[1:5],
+          style = 'QJE')
+
+stargazer(model_results[5:10], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[5:10],
+          style = 'QJE')
+
+stargazer(model_results[10:15], type = "text", 
+          title = "Regression Results by Complaint",
+          column.labels = complaints[10:15],
+          style = 'QJE')
+
+sink()
 
 ##########################################################################
 #=========================================================================
@@ -393,18 +420,13 @@ model.IV.72 <- felm(
              (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
   data = data)
 
-model.IV.admit <- felm(
-  admit ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
 
 # Save the results to a .txt file
 sink("outputs/tables/2SLS Results.txt")
 
 stargazer(list(model.IV.LOS,
                model.IV.ntest,
-               model.IV.72, 
-               model.IV.admit), type = "text", 
+               model.IV.72), type = "text", 
           covariate.labels = c('Testing Inclination', 'Batch'),
           dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return',
                              'Admission'),
@@ -432,17 +454,21 @@ sink()
 map_complaints <- function(complaint) {
   if (complaint %in% c('Abdominal Complaints', 'Gastrointestinal Issues')) {
     return('Gastrointestinal/Abdominal Issues')
-  } else if (complaint %in% c('Chest Pain', 'Cardiac Arrhythmias', 'Shortness of Breath', 'Upper Respiratory Symptoms')) {
+  } else if (complaint %in% c('Chest Pain', 'Cardiac Arrhythmias')) {
     return('Cardiac/Chest-Related Issues')
+  } else if (complaint %in% c('Shortness of Breath', 'Upper Respiratory Symptoms')) {
+    return('Respiratory-Related Issues')
   } else if (complaint %in% c('Neurological Issue', 'Dizziness/Lightheadedness/Syncope')) {
     return('Neurological/Syncope Issues')
-  } else if (complaint %in% c('Extremity Complaints', 'Back or Flank Pain', 'Falls, Motor Vehicle Crashes, Assaults, and Trauma')) {
+  } else if (complaint %in% c('Extremity Complaints', 'Back or Flank Pain', 
+                              'Falls, Motor Vehicle Crashes, Assaults, and Trauma')) {
     return('Musculoskeletal/Extremity Issues')
   } else {
     return('General/Other Symptoms')
   }
 }
 
+table(data$CHIEF_COMPLAINT)
 # Apply the function to create a new column for grouped complaints
 data$GROUPED_COMPLAINT <- sapply(data$CHIEF_COMPLAINT, map_complaints)
 
@@ -451,6 +477,10 @@ table(data$GROUPED_COMPLAINT)
 
 # Unique chief complaints
 unique_complaints <- unique(data$GROUPED_COMPLAINT)
+ data %>%
+   filter(GROUPED_COMPLAINT == 'Musculoskeletal/Extremity Issues') %>%
+   group_by(batch, sequenced, any.batch) %>%
+   summarize(n = n()) %>% view()
 
 
 # Save the results to a .txt file
@@ -458,20 +488,24 @@ sink("outputs/tables/2SLS Results Complaints.txt")
 
 # Loop over each unique complaint
 for(complaint in unique_complaints) {
-  # Create a subset for the current complaint
+  
   subset <- filter(data, GROUPED_COMPLAINT == complaint)
   
   # Run your regression models on this subset
-  model.IV.LOS <- felm(ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
-  model.IV.ntest <- felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
-  model.IV.72 <- felm(RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
-  model.IV.admit <- felm(admit ~ test.inclination | dayofweekt + month_of_year + ESI | (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  model.IV.LOS <- felm(ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + ESI | 
+                         (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
   
+  model.IV.ntest <- felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + ESI | 
+                           (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+  
+  model.IV.72 <- felm(RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + ESI | 
+                        (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, data = subset)
+
   # Generate and print the stargazer table for the current complaint
-  stargazer(list(model.IV.LOS, model.IV.ntest, model.IV.72, model.IV.admit), 
+  stargazer(list(model.IV.LOS, model.IV.ntest, model.IV.72), 
             type = "text", 
             covariate.labels = c('Testing Inclination', 'Batch'),
-            dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return', 'Admission'),
+            dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
             header = F, 
             title = paste("2SLS Results for", complaint, ": Length of Stay, Number of Tests, and 72-Hour"), 
             style = 'QJE')
@@ -479,75 +513,6 @@ for(complaint in unique_complaints) {
 
 sink()
 
-#=========================================================================
-# Exploring which Tests are more likely to be ordered
-#=========================================================================
-
-model.IV.xray <- felm(
-  XR_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
-
-model.IV.nct <- felm(
-  NON_CON_CT_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
-
-model.IV.ct <- felm(
-  CON_CT_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
-
-model.IV.us <- felm(
-  US_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
-
-model.IV.lab <- felm(
-  LAB_PERF ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
-    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
-  data = data)
-
-# Save the results to a .txt file
-sink("outputs/tables/2SLS Results Tests Only.txt")
-
-stargazer(list(model.IV.xray,
-               model.IV.us,
-               model.IV.nct,
-               model.IV.ct), type = "text", 
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          dep.var.labels = c('X-Ray', 'Ultrasound', 'Non Contrast CT',
-                             'Contrast CT'),
-          header = F, 
-          title = "2SLS Results: Specific Tests", 
-          style = 'QJE')
-
-
-stargazer(list(model.IV.lab), type = "text", 
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          header = F, 
-          title = "2SLS Results: Specific Tests", 
-          style = 'QJE')
-
-
-stargazer(list(model.IV.xray,
-               model.IV.us,
-               model.IV.nct,
-               model.IV.lab), type = "latex", 
-          covariate.labels = c('Testing Inclination', 'Batch'),
-          dep.var.labels = c('X-Ray', 'Ultrasound', 'Non Contrast CT',
-                             'Contrast CT', 'Lab'),
-          header = F, 
-          title = "2SLS Results: Specific Tests", 
-          style = 'QJE')
-
-sink()
-
-data %>%
-  filter('XR_ORDER_REL' %in% batch) %>%
-  group_by(batch, CHIEF_COMPLAINT) %>%
-  summarize(n = n()) %>%
-  arrange(desc(n))
 #=========================================================================
 # Specific Types of Test Batching: Lab+Image Batch
 #=========================================================================
@@ -630,5 +595,41 @@ stargazer(list(model.IV.LOS,
           title = "2SLS Results for Image+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
           style = 'QJE')
 
+
+
+model.IV.LOS <- felm(
+  ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.ntest <- felm(
+  nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.72 <- felm(
+  RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (lab_image_batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "text", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Testing Inclination', 'Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return'),
+          header = F, 
+          title = "2SLS Results for Lab+Image Batch: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
 
 sink()

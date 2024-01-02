@@ -1,6 +1,5 @@
 ---
-title: "I Got 99 Problems, But a Batch Ain't One"
-subtitle: "Sequential vs. Batched Testing Strategies in the ED"
+title: "To Batch or Not to Batch: Test-Ordering Variability in the Emergency Department and the Impact on Care Delivery"
 authors:
 - familyname: Jameson
   othernames: Jacob
@@ -230,8 +229,8 @@ We document that the Mayo Clinic ED physicians exhibit wide, systematic variatio
 
 \begin{figure}[h]
   \centering
-  \label{fig:physician_batching}
   \caption{Batch Frequency by Physician for High Volume Complaints}
+  \label{fig:physician_batching}
   \includegraphics[width=1\textwidth]{../outputs/figures/Figure 2.png}
 \begin{tablenotes}
 \tiny
@@ -247,7 +246,7 @@ We document that the Mayo Clinic ED physicians exhibit wide, systematic variatio
 \label{tab:regression}
 \begin{tabular}{p{9cm}ccc}
 \toprule
-\textbf{} & \textbf{Model 1} & \textbf{Model 2} & \textbf{Model 3} \\
+\textbf{} & Model 1 & Model 2 & Model 3 \\
 \midrule
 Batching Tendency & 1.06 *** & 1.08 *** & 1.08 *** \\
  & (0.01) & (0.01) & (0.01) \\
@@ -295,7 +294,7 @@ The reduced-form approach delivers an unbiased estimate of the causal effect of 
 
 Our instrumental variable approach, which aims to recover the causal effect of having diagnostic tests batch ordered, relies on three additional assumptions: relevance, exclusion, and monotonicity. We reported a strong first stage (i.e., relevance) at the end of the previous Section. The exclusion restriction requires that the instrument must influence the outcome of interest only through its effect on test batching. This is perhaps our strongest assumption and is at its core, untestable. However, several features of the ED setting suggest that such violation may likely only have a small impact and may be less concerning than in other health care settings. First, unlike in primary care settings, where the patient and primary care provider have many repeat encounters, the scope of what the emergency physician can do to impact medium-term outcomes is limited and well-observed by the researcher. Second, any violation of the exclusion restriction needs to directly affect the specific outcome of interest. The channel by which ED physicians can influence length of stay relative outcomes is likely through testing and diagnosis. Nevertheless, we take this assumption seriously and perform a placebo check in Section 4.2 as well as various robustness checks in Section 4.4.
 
-Finally, the monotonicity assumption is necessary for interpreting the coefficient estimates obtained from the IV approach as Local Average Treatment Effects (LATEs) if there are heterogeneous treatment effects. It requires that any patient who is (not) batched by a sequencer (batcher) would also (not) be batched by a batcher (sequencer) physician. The literature leveraging the judges design typically performs two informal tests for its implications. The first one provides that the first stage should be weakly positive for all subsamples (@dobbie2018effects). The second implication asserts that the instrument constructed by leaving out a particular subsample has predictive power over that same left-out subsample (@bhuller2020incarceration). Appendix Table [...] presents both of these tests in the two columns for various subsamples of interest. Finally, we check whether our main results hold using differential, mutually exclusive leniency measures (i.e., by complaint category) in Section 4.4.
+Finally, the monotonicity assumption is necessary for interpreting the coefficient estimates obtained from the IV approach as Local Average Treatment Effects (LATEs) if there are heterogeneous treatment effects. It requires that any patient who is (not) batched by a sequencer (batcher) would also (not) be batched by a batcher (sequencer) physician. The literature leveraging the judges design typically performs two informal tests for its implications. The first one provides that the first stage should be weakly positive for all subsamples (@dobbie2018effects). The second implication asserts that the instrument constructed by leaving out a particular subsample has predictive power over that same left-out subsample (@bhuller2020incarceration). Appendix Table  \ref{tab:monotonicity} presents both of these tests in the two columns for various subsamples of interest. 
 
 
 # Results {#sec:4}
@@ -310,9 +309,9 @@ In this section, we explore the causal influence of physician batch tendency on 
 \label{tab:reducedform}
 \begin{tabular}{p{6.5cm}ccc}
 \toprule
-& \multicolumn{1}{c}{\textbf{ln(LOS)}}
-& \multicolumn{1}{c}{\textbf{Number of Tests}}
-& \multicolumn{1}{c}{\textbf{72-Hour Return}} \\
+& \multicolumn{1}{c}{ln(LOS)}
+& \multicolumn{1}{c}{Number of Tests}
+& \multicolumn{1}{c}{72-Hour Return} \\
 & \multicolumn{1}{c}{(1)}
 & \multicolumn{1}{c}{(2)}
 & \multicolumn{1}{c}{(3)} \\
@@ -364,11 +363,11 @@ The introduction of a Directed Acyclic Graph (Figure \ref{fig:DAG}) elucidates t
 \end{tablenotes}  
 \end{figure}
 
-In Model 2 of Table \ref{tab:reducedform}, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with ln(LOS) diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination—equal to 34.9 pp.
+In Model 2 of Table \ref{tab:reducedform}, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with ln(LOS) diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination.
 
 Assignment to a physician in the top batching decile (relative to one in the bottom decile) is associated with a 0.2 unit increase in the number of diagnostic tests being ordered per patient encounter, without any additional change in the likelihood of a 72-hour return. With an average of 1,805 patient encounters per physician in our study period, this translates to an additional 361 diagnostic tests with no perceived benefit in terms of reducing returns or length of stay. 
 
-The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 0.96 unit increase in the number of diagnostic tests being ordered per patient encounter, and -0.03 pp change in the probability of a patient returning within 72 hours. Given the average number of patient encounters per physician in our study period this translates to an additional [...] patient hours in LOS, [...] diagnostic tests, and [...] avoided 72-hour returns. 
+The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 0.96 unit increase in the number of diagnostic tests being ordered per patient encounter, and -0.03 pp change in the probability of a patient returning within 72 hours. 
 
 
 
@@ -389,30 +388,15 @@ To that end, we restrict attention to ED visits for complaints where batching oc
 & ln(LOS) & Number of Tests & 72 Hour Return \\ 
 & (1) & (2) & (3) \\
 \midrule
-\multicolumn{4}{l}{\textbf{Controls: Time}} \\
-Batch Tendency & $-0.529$ & $-0.760$ & $-0.006$ \\
-& $(0.710)$ & $(0.490)$ & $(0.094)$ \\
-                    &     &     &  \\
-Testing Inclination & $0.812^{**}$ & $0.892^{***}$ & $-0.001$ \\
-& $(0.343)$ & $(0.194)$ & $(0.045)$ \\
-\\
-\addlinespace
-\multicolumn{4}{l}{\textbf{Controls: Time + Complaint}} \\
-Batch Tendency & $-0.517$ & $-0.714$ & $-0.015$ \\
-& $(0.660)$ & $(0.446)$ & $(0.092)$ \\
-                    &     &     &  \\
-Testing Inclination & $0.848^{**}$ & $1.031^{***}$ & $-0.010$ \\
-& $(0.334)$ & $(0.189)$ & $(0.045)$ \\
-\\
-\addlinespace
-\multicolumn{4}{l}{\textbf{Controls: All Controls}} \\
 Batch Tendency & $-0.465$ & $-0.699$ & $-0.011$ \\
 & $(0.645)$ & $(0.427)$ & $(0.095)$ \\
                     &     &     &  \\
-Testing Inclination & $0.818^{**}$ & $1.011^{***}$ & $-0.009$ \\
-& $(0.322)$ & $(0.183)$ & $(0.046)$ \\
+Seasonality and shift fixed effects? & Yes & Yes & Yes \\
+Chief Complaint? & Yes & Yes & Yes \\
+Patient observables? & Yes & Yes & Yes \\
+Testing inclination? & Yes & Yes & Yes \\
                     &     &     &  \\
-Observations & & 2,361 & \\
+N & 2,361 & 2,361 & 2,361 \\
 \addlinespace
 \midrule
 \bottomrule
@@ -479,28 +463,19 @@ The instrumental variable analysis presented here underscores the complexities u
 ## Investigating Mechanisms: Excess Testing
 
 
-In the context of our study's findings, particularly the pronounced impact of batching on resource utilization, it is essential to condense and ground our discussion in the observed data. We reported a significant increase of 0.135 in the number of tests ordered due to batching, translating to roughly 13.5 excess tests per 100 batch orders. Here, an 'excess test' is defined as one that likely would not have been ordered if the physician had chosen sequential test ordering. This suggests that the information gain from sequential testing, where the need for additional tests is informed by the results of earlier tests, could lead to more efficient and targeted use of diagnostic resources.
+In the previous section we find a particularly pronounced impact of batching on resource utilization. We reported a significant coefficient of 0.135 in the number of tests ordered due to batching, translating to 13.5 excess tests per 100 batch orders. Here, an ``excess test" is defined as one that would not have been ordered if the physician had chosen to order tests sequentially. This suggests that the information gain from sequential testing, where the need for additional tests is informed by the results of earlier tests, could lead to more efficient and targeted use of diagnostic resources.
 
 To further understand this phenomenon, we probe into high-volume complaint areas in the ED. By focusing on these areas, we can discern which specific complaints are more likely to lead to excess testing under a batch ordering system. This analysis is crucial as it sheds light on the causal effect of batching in different clinical scenarios.
 
-For instance, let's consider complaints like chest pain, abdominal pain, and shortness of breath – common high-volume areas in the ED. In cases of chest pain, batch ordering might lead to simultaneous orders for ECGs, blood tests, and imaging, potentially resulting in unnecessary tests if the initial ECG provides clear diagnostic information. In contrast, a sequential approach could have deferred or eliminated the need for some of these tests based on initial findings.
 
-Similarly, in patients presenting with abdominal pain, batched orders for a combination of imaging and laboratory tests might be common. However, if initial lab results indicate a clear diagnosis, further imaging may not be necessary, highlighting the potential for excess testing through batching.
-
-Analyzing these high-volume complaint areas allows us to identify patterns in testing practices and their implications. It becomes evident that batch ordering, while perhaps intended to expedite diagnosis, may inadvertently lead to the over-utilization of tests. This not only has implications for resource utilization but also for patient experience and overall ED efficiency.
-
-In conclusion, our investigation into the mechanisms behind excess testing due to batching reveals a nuanced picture. While batching might seem efficient at a glance, the lack of information gain compared to sequential testing leads to a significant increase in the number of tests ordered, particularly in high-volume complaint areas. This insight is vital for formulating more effective testing strategies in emergency care, highlighting the need for careful consideration of when to employ batching versus sequential testing approaches.
+We consider the top 5 most common broad complaints in the ED, which account for 82% of all visits. Appendix table [...] . These include Cardiac/Chest-Related Issues, Gastrointestinal/Abdominal Issues, Respiratory-Related Issues, Neurological/Syncope Issues, and Musculoskeletal/Extremity Issues. We then examine the impact of batching on the number of tests ordered for each of these complaints.
 
 
-## Robustness
-
-The 2SLS results presented in the previous sections are robust to several alternative specifications probing the key identifying assumptions of independence, exclusion, and monotonicity. We describe each robustness check in detail in Appendix ___ and provide a brief overview here ....
-
-
-Across all robustness checks and main outcomes, we find magnitudes of our estimates broadly unchanged. 
-
+[...]
 
 # Conclusion
+
+Our results highlight that changes in resource utilization and costs can arise as a consequence of small variations in physician test ordering strategies in a single medical encounter, at the emergency department. Our instrumental variable approach suggests that the causal effects of batching are substantial: 13.5 excess tests arise per 100 batched orders. This is particularly pronounced in high-volume complaint areas, where batching leads to a significant increase in the number of tests ordered. However, we find no significant impact of batching on ED length of stay or 72-hour return rates. This suggests that despite the increased number of tests, there is no corresponding decrease in short-term readmission rates. This highlights the need for more targeted testing strategies that balance comprehensive assessment with resource efficiency.
 
 
 
@@ -586,90 +561,59 @@ Urinary Complaints & Bladder Problem, Blood in Urine, Cystitis, Difficulty Urina
 
 \newpage
 
-\begin{table}[htbp]
-\centering
-\caption{First Stage over all Subsamples}
-\label{tab:monotonicitycheck}
-\begin{tabular}{p{7cm}cccc}
-\toprule
-Complaint & \multicolumn{2}{c}{Batch Tendency} & N & R$^2$ \\
-\midrule
-Extremity Complaints & 0.662$^{***}$ & (0.079) & 5,259 & 0.126 \\
-Upper Respiratory Symptoms & 1.205$^{***}$ & (0.445) & 1,915 & 0.262 \\
-Abnormal Test Results & 0.670$^{**}$ & (0.325) & 1,816 & 0.141 \\
-Falls, Motor Vehicle Crashes, and Trauma & 0.640$^{**}$ & (0.264) & 2,381 & 0.220 \\
-Shortness of Breath & 1.574$^{***}$ & (0.468) &  2,963 & 0.147 \\
-Gastrointestinal Issues & 1.080$^{***}$ & (0.241) & 3,323 & 0.094 \\
-Chest Pain & 0.790$^{***}$ & (0.253) & 3,521 & 0.140 \\
-Dizziness/Lightheadedness/Syncope & 1.343$^{***}$ & (0.220) & 1,894 & 0.208 \\
-Back or Flank Pain & 0.859$^{**}$ & (0.385) &  2,550 & 0.123 \\
-Neurological Issue & 0.416$^{*}$ & (0.232) &  3,492 & 0.232 \\
-Fatigue and Weakness & 1.728$^{***}$ & (0.414) & 1,494 & 0.193 \\
-Cardiac Arrhythmias & 2.432$^{***}$ & (0.548) & 1,044 & 0.327 \\
-Abdominal Complaints & 1.775$^{***}$ & (0.350) & 6,231 & 0.086 \\
-Skin Complaints & 0.205 & (0.212) & 2,176 & 0.133 \\
-Fevers, Sweats or Chills & 1.650$^{***}$ & (0.576) &  1,842 & 0.211 \\
-\bottomrule
-\end{tabular}
+
+
+\begin{table}[!htbp]
+\centering 
+  \caption{Testing the Monotonicity Assumption} 
+\label{tab:monotonicity}
+\begin{tabular}{@{\extracolsep{5.5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+Sub-sample margin & Baseline Tendency  & Reverse-Sample Tendency \\ 
+\hline \\[-1.8ex] 
+Extremity Complaints & 0.864$^{***}$ (0.128) & 0.893$^{***}$ (0.068) \\ 
+Upper Respiratory Symptoms & 1.235$^{***}$ (0.247) & 0.953$^{***}$ (0.038) \\ 
+Abnormal Test Results & 0.980$^{***}$ (0.219) & 0.766$^{***}$ (0.111) \\
+Falls, Motor Vehicle Crashes, Assaults, and Trauma & 1.061$^{***}$ (0.167) & 0.784$^{***}$ (0.103) \\
+Shortness of Breath & 1.204$^{***}$ (0.232) & 0.944$^{***}$ (0.047) \\
+Gastrointestinal Issues & 1.049$^{***}$ (0.140) & 0.929$^{***}$ (0.052) \\
+Chest Pain & 1.073$^{***}$ (0.223) & 0.943$^{***}$ (0.048) \\
+Dizziness/Lightheadedness/Syncope & 1.899$^{***}$ (0.171) & 0.930$^{***}$ (0.042) \\
+Back or Flank Pain & 0.657$^{***}$ (0.180) & 0.718$^{***}$ (0.106) \\
+Neurological Issue & 0.970$^{***}$ (0.191) & 0.835$^{***}$ (0.067) \\
+Fatigue and Weakness & 1.698$^{***}$ (0.230) & 0.938$^{***}$ (0.058) \\
+Cardiac Arrhythmias & 2.571$^{***}$ (0.243) & 1.107$^{***}$ (0.059) \\
+Abdominal Complaints & 0.903$^{***}$ (0.275) & 0.971$^{***}$ (0.019) \\
+Skin Complaints & 0.448$^{***}$ (0.098) & 0.584$^{***}$ (0.108) \\
+Fevers, Sweats or Chills & 1.033$^{***}$ (0.305) & 0.888$^{***}$ (0.084) \\
+\hline \\[-1.8ex] 
+\end{tabular} 
+\begin{tablenotes}
+\small
+\item \textit{Column 1 displays the first stage coefficient of batched on the baseline physician batch tendency instrument for the corresponding sub-sample. Column 2 constructs a new physician batch tendency instrument using all emergency visits, excluding the corresponding sub-sample (``reverse-sample"), and displays the coefficient of the first stage regression back on that sub-sample. Robust standard errors are clustered at the physician level.}
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
 \end{table}
 
 
+\begin{longtable}{|p{5cm}|p{12cm}|}
+\caption{Condensed Complaints} \\
+\hline
+\textbf{Condensed Complaint Area} & \textbf{Complaints} \\
+\hline
+Gastrointestinal/Abdominal Issues & Abdominal Cramping, Abdominal Distention, Dyspepsia, Abdominal Pain, Ascites, Hernia, Abdominal Aortic Aneurysm, Abdominal Injury, Pancreatitis, Umbilical Hernia, Anal Fissure, Black or Bloody Stool, Constipation, GERD, Anal Fistula, Diarrhea, Dysphagia, Fecal Impaction, Fistula Follow Up, GIbleeding, GI Problem, Hemorrhoids, Morning Sickness, Nausea, Ostomy Care, Rectal Bleeding, Rectal Pain, Vomiting, Vomiting Blood, Vomiting During Pregnancy, GI Bleeding, Fecal Incontinence, Bloated, Hematochezia, Urine Leakage, Heartburn, Rectal Discharge, Urolithiasis, Ulcerative Colitis, Irritable Bowel Syndrome, Rectal Prolapse, Fistula Evaluation, Rectal Problems, Perianal Abscess, Fisula Evaluation, Stoma Dysfunction \\
+\hline
+Cardiac/Chest-Related Issues & Atrial Fibrillation, Atrial Flutter, Cardiac Valve Problem, Bradycardia, Irregular Heart Beat, Palpitations, POTS, Ventricular Tachycardia, Rapid Heart Rate, Heart Problem, Cardiac Arrest, Congestive Heart Failure, Circulatory Problem, Transient Ischemic Attack, Ventricular Tachycardia, Chest Injury, Chest Pain, Chest Wall Pain, Angina, Collarbone Injury, Rib Injury, Heart Pain \\
+\hline
+Musculoskeletal/Extremity Issues & Ankle Injury, Ankle Pain, Arm Injury, Arm Pain, Cold Extremity, Arm Swelling, Arthritis, Elbow Injury, Elbow Pain, Pseudogout, Extremity Pain, Extremity Weakness, Finger Injury, Hip Injury, Extremity Weakness, Finger Injury, Finger Pain, Dislocation, Foot Infection, Foot Injury, Foot Numbness, Foot Pain, Foot Swelling, Foot Ulcer, Foot Wound Check, Hand Injury, Hand Pain, Back Pain, Back Problem, Flank Pain, Sciatica, Back Injury, Disc Disorder, Assault Victim, Concussion, Facial Injury, Fall, Nasal Trauma, Head Injury, Head Laceration, Motor Vehicle Crash, Puncture Wound, Sexual Assault, Trauma, Domestic Violence, Gun Shot Wound, Work Related Injury, Motorcycle Crash, Injury, Bicycle Accident, Near Drowning, Lip Laceration \\
+\hline
+Neurological/Syncope Issues & Altered Mental Status, Cognitive Concerns, Facial Droop, Pre Syncope, Focal Weakness, Headache, Memory Loss, Migraine, Dementia, Dysphasia, Neuro Problem, Numbness, Paralysis, Seizures, Slurred Speech, Spasms, Stroke Like Symptoms, Tingling, Tremors, Trigeminal Neuralgia, Unable to Speak, Seizure Disorder, Insomnia, Parkinson's Disease, Loss of Consciousness, Neuropathy, Ataxia, Unable to speak, Peripheral Neuropathy, Stroke, Cerebrovascular Accident, Speech Problem, Acute Neurological Problem, Flashes, Light, Unresponsive, Multiple Sclerosis, Parkinson's Disease, Febrile Seizure, Paresthesia, Peripheral Neuropathy, Hydrocephalus, Spasticity, Neuroendocrine Tumor, Dizziness, Near Syncope, Syncope, Vertigo, Spells, Hypotension, Paroxysmal Positional Vertigo, Paroxysmal Positional Vertigo \\
+\hline
+Respiratory-Related Issues & Airway Obstruction, Aspiration, Pain With Breathing, Near Drowning, Respiratory Distress, Shortness of Breath, Wheezing, Increased Work Of Breathing, Difficulty Breathing, Choking, Oxygen Dependence, Hyperventilating, Orthopnea, Congestion, Cough, Coughing Up Blood, Flu Symptoms, Enlarged Tonsils, Peritonsillar Abscess, Nasal Congestion, Sinus Symptoms, Sinusitis, Sore Throat, Hoarseness, Throat Problem, Upper Respiratory Infection, Influenza, Laryngitis, Respiratory Arrest, Pneumonia, Pleural Effusion, Asthma, Croup, URI, Peritonsillar Abscess\\
+\hline
+\end{longtable}
 
-\begin{table}[!htbp] \centering 
-  \caption{Regression Results by Complaint} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
-\\[-1.8ex] & \multicolumn{3}{c}{nEDTests} \\ 
- & Dizziness/Syncope & Extremity Complaints & Upper Respiratory Symptoms \\ 
-\\[-1.8ex] & (1) & (2) & (3)\\ 
-\hline \\[-1.8ex] 
- Testing Inclination & 1.156$^{***}$ & 0.901$^{***}$ & 0.516$^{***}$ \\ 
-  & (0.291) & (0.111) & (0.194) \\ 
-  & & & \\ 
- Batch & 0.655$^{*}$ & 0.479$^{**}$ & 0.501$^{*}$ \\ 
-  & (0.368) & (0.242) & (0.283) \\ 
-  & & & \\ 
-\textit{N} & 1,895 & 5,265 & 1,917 \\ 
-R$^{2}$ & 0.400 & 0.348 & 0.461 \\ 
-Adjusted R$^{2}$ & 0.338 & 0.324 & 0.404 \\ 
-Residual Std. Error & 0.801 (df = 1715) & 0.765 (df = 5079) & 0.741 (df = 1733) \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
- & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
- & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
-\end{tabular} 
-\end{table} 
-
-\begin{table}[!htbp] \centering 
-  \caption{Regression Results by Complaint} 
-  \label{} 
-\begin{tabular}{@{\extracolsep{5pt}}lccc} 
-\\[-1.8ex]\hline 
-\hline \\[-1.8ex] 
-\\[-1.8ex] & \multicolumn{3}{c}{nEDTests} \\ 
- & Abdominal Complaints & Cardiac Arrhythmias & Fatigue and Weakness \\ 
-\\[-1.8ex] & (1) & (2) & (3)\\ 
-\hline \\[-1.8ex] 
- Testing Inclination & 0.913$^{***}$ & 0.695$^{***}$ & 0.870$^{***}$ \\ 
-  & (0.068) & (0.180) & (0.195) \\ 
-  & & & \\ 
- Batch & $-$0.135$^{**}$ & 0.708$^{***}$ & 0.333$^{*}$ \\ 
-  & (0.066) & (0.129) & (0.189) \\ 
-  & & & \\ 
-\textit{N} & 6,232 & 1,045 & 1,494 \\ 
-R$^{2}$ & 0.038 & 0.525 & 0.294 \\ 
-Adjusted R$^{2}$ & 0.009 & 0.428 & 0.203 \\ 
-Residual Std. Error & 0.752 (df = 6046) & 0.595 (df = 866) & 0.828 (df = 1322) \\ 
-\hline 
-\hline \\[-1.8ex] 
-\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
- & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
- & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
-\end{tabular} 
-\end{table} 
 :::
 
 
