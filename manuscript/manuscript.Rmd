@@ -1,5 +1,5 @@
 ---
-title: "To Batch or Not to Batch: Test-Ordering Variability in the Emergency Department and the Impact on Care Delivery"
+title: "To Batch or Not to Batch: Test-Ordering Variabilityin the ED"
 authors:
 - familyname: Jameson
   othernames: Jacob
@@ -41,13 +41,18 @@ header-includes:
 
 Healthcare delivery, particularly in the emergency department (ED), is a delicate balance that involves ensuring optimal patient outcomes while optimizing resource utilization. Achieving these twin goals requires timely and accurate diagnosis, which in turn enables prompt and appropriate treatment, consequently improving patient prognosis and reducing the likelihood of adverse events. Furthermore, efficient patient discharge from the ED can help alleviate overcrowding, a severe issue with potential consequences including higher complication rates and increased mortality @bernstein2009.
 
-One important factor that can impact the speed and effectiveness of diagnosis in the ED is the availability and performance of diagnostic tests @naseim2015. A variety of diagnostic tests are used in the ED, including laboratory tests, imaging studies, and specialized tests such as electrocardiograms (ECGs) and point-of-care (POC) testing. These tests can provide valuable information about a patient’s condition and help to guide treatment decisions.
+One important factor that can impact the speed and effectiveness of diagnosis in the ED is the availability and performance of diagnostic tests @naseim2015. A variety of diagnostic tests are used in the ED, including laboratory tests, imaging studies, and specialized tests. These tests can provide valuable information about a patient’s condition and help to guide treatment decisions.
 
 A critical question in this context pertains to whether physicians in the ED should batch order diagnostic tests or order them sequentially. This decision essentially represents a tradeoff between reducing patient length of stay and risk of over-testing. Over-testing, or performing unnecessary tests, can lead to increased costs, unnecessary patient anxiety, and potential harm from follow-up of false-positive results @koch2018. Conversely, keeping a patient for an extended time to perform all possible tests could lead to ED overcrowding, an issue associated with severe consequences, as mentioned earlier. Instead, what is needed is a reasonable balance between the number of diagnostic tests performed and the total time the patient is kept in the ED before either being admitted or discharged. Several studies have demonstrated that optimizing the ED patient flow process can result in significant improvements @saghafian2015, however, research surrounding test ordering strategies to improve the patient flow processes remains limited.
 
 In this paper, we use data from over 45,000 patient visits to the ED that occur during our study period to quantify the benefits and consequences of batching versus sequentially ordering diagnostic tests on patient length of stay, re-admission, and resource utilization. Our empirical strategy exploits random assignment of patients to ED physicians who differ in their propensity to batch-order diagnostic tests. When patients arrive at the ED, they are assigned to a physician based on availability, with no discretion on either side. Thus, patients who arrive at the ED at similar times are randomly assigned to physicians who vary in their willingness to batch order diagnostic tests. We measure physician tendency to batch using a leave-out, residualized measure based on all other patients the physician has seen in the ED in the study period. The tendency measure strongly predicts the ED test batch outcome but is uncorrelated with patient and ED visit characteristics.
 
-We start by evaluating the reduced-form effects of ED provider batch-ordering tendency on downstream patient outcomes and turnaround time. We find that practice variation as captured by physician batch-ordering tendency has large and significant consequences. Being treated by a provider in the top decile of the tendency distribution, compared to being treated by someone in the bottom decile [INSERT RESULTS].
+We start by evaluating the reduced-form effects of ED provider batch-ordering tendency on downstream patient outcomes and turnaround time. We find that practice variation as captured by physician batch-ordering tendency has large and significant consequences. Being treated by a provider in the top decile of the tendency distribution, compared to being treated by someone in the bottom decile results in an additional 2 diagnostic test per 100 patient encounters after controlling for the physician's underlying propensity to test.
+
+Physician care takes on multiple dimensions besides the decision to batch order diagnostic tests. Employing a placebo exercise, we find evidence that that excess testing occurs after having seen a high-batching physician is due to batching from this physician, as opposed to other differences across physician in care that correlate with batching tendency: we find no effects of physician batch tendency on key outcomes for a ``placebo sample" of patients who visit the ED for conditions that rarely result in batched orders.
+
+
+With the caveat that other unobserved dimensions of physician care may impact patient outcomes, we employ physician batch tendency as an instrumental variable for having tests batch ordered in the ED to quantify the effect of batching directly. We find that being treated by a top decile batching physician, compared to a bottom decile batching physician, results in an additional 13.5 tests per 100 patient encounters. We find no evidence that batch-ordering reduces ED length of stay or 72-hour return rates. These results suggest that the benefits of batch-ordering are limited, and that the practice may be associated with significant costs. Our findings are robust to analyses probing the key assumptions of our batching definition. 
 
 Because of the institutional features of the ED, our research design closely approximates an RCT that assigns patients to batch-ordering or sequential-ordering arm. In the ED, patients have no discretion over choosing providers, and in our specific ED, physicians have discretion over choosing patients, alleviating major selection issues present in other health care settings. Furthermore, physicians exhibit wide variation in practice behavior in batch-ordering, even within the same hospital, while following the same guidelines. Finally, patient-physician interactions in the ED are typically well documented, short, and one-off, constraining physician decision-making to a more limited, better-observed choice set than present in settings such as specialty or primary care.
 
@@ -58,55 +63,38 @@ The remainder of this paper is structured as follows. The next section describes
 
 # Data and Definitions {#sec:II}
 
-Our analytical lens is focused on the Emergency Department at the Mayo Clinic of Arizona, a distinguished tertiary care establishment. During the timeframe of our study, the ED recorded an annual visitation of approximately 45,000 patients. The department is singularly staffed by board-eligible or board-certified emergency physicians, abstaining from the services of nurse practitioners or physician assistants. A notable observation was that residents in rotation oversaw a low fraction, roughly 10%, of the patient volume. Comprehensive patient data, encompassing demographics, chief complaints, vital signs, emergency severity, length of stay, and resource utilization metrics, were meticulously logged during the study period.
+Our study was conducted in the Emergency Department (ED) of the Mayo Clinic of Arizona, a tertiary care hospital without obstetrical services, an inpatient pediatrics unit, or a trauma designation. During the study period, the ED recorded approximately 43,000 visits per year, managed across 26 treatment rooms and up to 9 hallway spaces. The department is exclusively staffed by board-eligible or board-certified emergency physicians (EPs), with rotating residents overseeing about 10% of patient volume. Physicians operate in a unique workflow that includes staggered 8.5-hour shifts and a rotational patient assignment system, minimizing potential selection bias in patient encounters.
+
+We conducted a retrospective review of comprehensive ED operational data from 10/6/2018 through 12/31/2019, coinciding with the initiation of a new electronic medical record. The dataset includes detailed patient demographics, chief complaints, vital signs, emergency severity index (ESI), length of stay (LOS), and resource utilization metrics. This period was chosen to provide a robust data set while excluding the influence of the coronavirus pandemic.
 
 ## Sample Construction 
 
-Our research design focuses on adults who visit the Mayo Clinic of Arizona ED. We observe approximately $48,000$ such visits until during the study period. To improve power, we drop encounters with rare chief complaints ($<1000$ total encounters of this kind) and complaints where a batch order occurs less than $10$ percent of the time. Since batch orders are rare for these cases, our physician batch tendency instrument could suffer from a weak instrument problem if we included them. Examples of complaints dropped include urinary complaints and allergic reactions. Excluding these conditions does not introduce selection bias unless physician test batching tendency is orthogonal to physician diagnosing behavior. While this assumption may be violated if we were to use a very detailed level of chief complaint information upon which to base our exclusion criterion, it is plausibly satisfied when using broad complaint categories\footnote{The idea being that, for a patient who presents with an ankle fracture, different physicians may choose different detailed diagnosis codes within the three-digit ICD-9 824 (``Fracture of ankle"), but are unlikely to disagree at the broader chief complaint category (``Extremetiy Complaint").}. In order to estimate a precise measure of physician-level batch tendency, we further restrict our sample to the $42,000$ encounters involving physicians who treat over 500 ED cases per year. 
+Our research design focuses on adults who visit the Mayo Clinic of Arizona ED. We observe approximately $48,000$ such visits during the study period. To improve power, we drop encounters with rare chief complaints ($<1000$ total encounters of this kind) and complaints where a batch order occurs less than $10$ percent of the time. Since batch orders are rare for these cases, our physician batch tendency instrument could suffer from a weak instrument problem if we included them. Examples of complaints dropped include urinary complaints and allergic reactions. Excluding these conditions does not introduce selection bias unless physician test batching tendency is orthogonal to physician diagnosing behavior. While this assumption may be violated if we were to use a very detailed level of chief complaint information upon which to base our exclusion criterion, it is plausibly satisfied when using broad complaint categories\footnote{The idea being that, for a patient who presents with an ankle fracture, different physicians may choose different detailed diagnosis codes within the three-digit ICD-9 824 (``Fracture of ankle"), but are unlikely to disagree at the broader chief complaint category (``Extremetiy Complaint").}. In order to estimate a precise measure of physician-level batch tendency, we further restrict our sample to the $42,000$ encounters involving physicians who treat over 500 ED cases per year. 
 
 
 ## Variable Definitions 
 
 
-Our explanatory variable in the IV analysis, $Batched_i$, is an indicator for whether patient $i$ has their tests batch-ordered at their ED encounter. While the patient could decide not to undergo the tests ordered by the physician, this is rare in practice, where we observe that approximately 97(?) percent of all tests ordered are conducted. Below, we detail our primary outcomes: (a) ED length of stay (LOS), (b) resource utilization, and (c) 72-hour return.
+Our explanatory variable in the IV analysis, $Batched_i$, is an indicator for whether patient $i$ has their tests batch-ordered at their ED encounter. While the patient could decide not to undergo the tests ordered by the physician, this is rare in practice. Below, we detail our primary outcomes: (a) ED length of stay (LOS), (b) resource utilization, and (c) 72-hour return.
 
 
 
-  *(a) ED length of stay (LOS).*-- ED-LOS is a critical measure of efficiency and patient throughput in emergency care settings. It is defined as the duration from a patient's arrival to the ED until their departure, whether by discharge or admission to the hospital. Although the literature provides a range for long ED-LOS, we operationalize long ED-LOS as stays exceeding the 75th percentile in our dataset for this study. This approach allows us to contextualize the definition of extended stays according to the specific demographics and case mix of the ED under study.
+  *(a) ED length of stay (LOS).*-- ED-LOS is a critical measure of efficiency and patient throughput in emergency care settings. It is defined as the duration from a patient's arrival to the ED until their departure, whether by discharge or admission to the hospital. The hypothesis is that batch testing may lead to shorter ED-LOS, potentially improving patient throughput and reducing crowding.
 
 
-  *(b) Resource Utilization*-- Resource utilization in the ED typically refers to the extent of medical services and interventions a patient receives. In this study, we quantify resource utilization by the total number of diagnostic tests ordered per patient during their ED stay. This encompasses both initial and subsequent tests. The hypothesis is that batch testing may lead to variations in the number of tests ordered, potentially influencing the overall healthcare expenditure and efficiency.
+  *(b) Resource Utilization*-- Resource utilization in the ED typically refers to the extent of medical services and interventions a patient receives. In this study, we quantify resource utilization by the total number of distinct diagnostic tests ordered per patient during their ED stay. This encompasses both initial and subsequent tests. The hypothesis is that batch testing may lead to variations in the number of tests ordered, potentially influencing the overall healthcare expenditure and efficiency.
 
 
-  *(c) 72-hour return*-- The rate of patients returning to the ED within 72 hours of their initial visit is a proxy for the quality of care received. A high 72-hour return rate might indicate inadequate treatment or diagnostic oversight during the initial visit. We measure this outcome as the proportion of patients with a subsequent ED visit within 72 hours post-initial discharge.
+  *(c) 72-hour return*-- The rate of patients returning to the ED within 72 hours of their initial visit is a proxy for the quality of care received. A high 72-hour return rate might indicate inadequate treatment or diagnostic oversight during the initial visit. We measure this outcome as the proportion of patients with a subsequent ED visit within 72 hours post-initial discharge. The hypothesis is that batch testing may lead to variations in the 72-hour return rate, potentially influencing the quality of care received.
 
 
 ### Batching 
 
-In the context of our study, batching in diagnostic test ordering is defined as placing multiple test orders for a single patient within a 5-minute interval. To ensure the robustness of our analysis, sensitivity tests were conducted on this cutoff point, affirming that our results are consistent and reliable, irrespective of minor variations in the batching definition.
+We define ``batching" in line with standard emergency medicine practices. It involves a physician ordering a comprehensive set of diagnostic tests at once, typically covering a broad range of potential diagnoses. This contrasts with non-batching, where tests are ordered more selectively based on the information available at the time, with additional tests potentially ordered later as needed.
 
-Our study identifies and differentiates between two distinct strategies of batching:
+We operationalize batching as the ordering of multiple diagnostic tests within a 5-minute window. Sensitivity analyses on this cutoff point showed that our results are robust to this definition. This operational definition aligns with the concept of batching as a single comprehensive effort. For our analysis, all lab-based testing ordered in this timeframe are categorized as one distinct type of testing (lab). In contrast, each imaging test (e.g., X-ray, CT scan) are considered a separate distinct test. Therefore, a batch in our study is defined as consisting of two or more distinct diagnostic tests, which could be a combination of lab and imaging tests or multiple imaging tests.
 
-* Lab + Image Batch: This category of batch order includes instances where a patient’s batched diagnostic tests comprise a combination of at least one imaging test (such as a contrasted CT scan, non-contrasted CT scan, X-ray, or ultrasound) and one laboratory test. This mix is fascinating as it suggests a comprehensive diagnostic approach, possibly catering to complex medical cases.
-
-
-* Image + Image Batch: This category encompasses batch orders where a patient’s diagnostic tests consist of two or more distinct imaging tests. The reliance solely on imaging in these batches may indicate specific diagnostic pathways or a focus on conditions that primarily require visual diagnostic methods.
-
-
-It is important to note the differing implications of these batching strategies. While lab tests often can be processed concurrently with imaging tests, causing minimal additional waiting time, a batch of multiple imaging tests requires the patient’s presence for each test, potentially leading to significant increases in waiting time. Thus, the composition of a batch order can provide valuable insights into the physician’s decision-making process, particularly in balancing between patient waiting times and diagnostic uncertainty. This balance can be especially crucial in the context of varying complexity levels of patient encounters.
-
-Figure 1 illustrates the occurrence rates of each batching type across the top ten most frequently reported chief complaints, providing a visual representation of how batching practices vary with different patient presentations.
-
-
-\begin{figure}[h]
-  \centering
-  \caption{Batch Frequency by Chief Complaint}
-  \includegraphics[width=1\textwidth]{../outputs/figures/Lab and Image Batch Rates.png}
-\begin{tablenotes}
-\tiny
-\item \textit{Figure 1 displays two statistics for the ten most common major chief complaint categories observed in our ED visit sample: the unadjusted batching rate for lab-image batching and image-image batching.}
-\end{tablenotes}  
-\end{figure}
+This approach reflects the realistic diagnostic strategies in an ED setting and allows for a clear distinction between batching and non-batching behaviors. The differentiation between lab tests as one collective unit and imaging tests as individual units is based on their operational impact in the ED, particularly regarding patient waiting time and processing queues.
 
 
 
@@ -174,29 +162,32 @@ Our empirical strategy closely follows the literature that relies on quasi-rando
 
 Contrary to most healthcare settings where patients exhibit choice, they are predominantly passive in their physician assignment in the ED. In most EDs, however, physicians have discretion in picking their patients. In contrast, patients arriving at the Mayo Clinic ED are randomly assigned to physicians via a rotational patient assignment algorithm @traub2016emergency, which removes potential selection bias concerns for our analyses. In essence, barring arrival time and shift-level variation, the physician-to-patient matching can be deemed random. Table \ref{tab:wald_test} displays that patient encounters (regarding chief complaints and emergency severity) are equitably distributed across physicians within our study's cohort.
 
+
+
+
 \begin{table}[htbp]
     \centering
     \caption{Balancing Test: Wald Test for Equality of Means}
     \label{tab:wald_test}
-    \begin{tabular}{p{11cm}cc}
+    \begin{tabular}{p{10cm}cccc}
         \toprule
-        Chief Complaints & F-Statistic & $Pr(> F)$ \\
+        Chief Complaints & Frequency & F-Statistic & $Pr(> F)$ \\
         \midrule
-        Abdominal Complaints & 1.37 & 0.106 \\
-        Back or Flank Pain & 1.00 & 0.451 \\
-        Chest Pain & 0.98 & 0.476 \\
-        Extremity Complaints & 0.97 & 0.495 \\
-        Falls, Motor Vehicle Crashes, Assaults, and Trauma & 0.73 & 0.812 \\
-        Gastrointestinal Issues & 0.98 & 0.480 \\
-        Neurological Issue & 0.75 & 0.793 \\
-        Shortness of Breath & 1.23 & 0.199 \\
-        Skin Complaints & 1.05 & 0.388 \\
-        Upper Respiratory Symptoms & 1.21 & 0.218 \\
+        Abdominal Complaints & 6232 & 2.587 & 0.108 \\ 
+        Back or Flank Pain & 2552 & 1.637 & 0.201 \\ 
+        Chest Pain & 3525 & 0.407 & 0.524 \\ 
+        Extremity Complaints & 5265 & 1.847 & 0.174 \\ 
+        Falls, Motor Vehicle Crashes, Assaults, and Trauma & 2381 & 0.023 & 0.880 \\ 
+        Gastrointestinal Issues & 3323 & 0.105 & 0.746 \\ 
+        Neurological Issue & 3495 & 0.135 & 0.713 \\ 
+        Shortness of Breath & 2966 & 1.324 & 0.250 \\ 
+        Skin Complaints & 2178 & 0.383 & 0.536 \\ 
+        Upper Respiratory Symptoms & 1917 & 0.017 & 0.896 \\ 
         \midrule
-        Emergency Severity & F-Statistic & $Pr(> F)$ \\
+        Emergency Severity & Frequency & F-Statistic & $Pr(> F)$ \\
         \midrule
-        ESI 1 or 2 & 1.09 & 0.346 \\
-        ESI 3, 4, or 5 & 1.24 & 0.196 \\
+        ESI 1 or 2 & 13914 & 0.011 & 0.915 \\ 
+        ESI 3, 4, or 5 & 29386 & 0.010 & 0.921 \\ 
         \bottomrule
     \end{tabular}
 \begin{tablenotes}
@@ -215,7 +206,7 @@ Batched_{i,t} = \alpha_0 + \alpha_{ym} + \alpha_{dt} + \alpha_{complaint} + \var
 
 Where $Batched_{i,t}$ is a dummy variable equal to one if patient $i$ had their diagnostic tests batched on encounter that took place on date $t$. Fixed effects include year-month fixed effects, $\alpha_{ym}$, to control for time and seasonal variation in batching, such as hospital-specific policies (e.g. initiatives to eliminate excess testing) or seasonality in ED visits. We also control for ``shift-level" variations that include both physician scheduling and patient arrival with day of week-time of day fixed effects, $\alpha_{dt}$. Chief complaint by severity fixed effects, $\alpha_{complaint}$, were also included to increase precision. As stated earlier, these controls are what is required for our quasi-random assignment assumption. Under the assumption that we have captured the observables under which quasi-random assignment occurs in the ED, the unexplained variation-- the physician’s contribution-- resides in the error term, $\varepsilon_{i,t}$. 
 
-In step two, the leniency measure for patient $i$ seen by physician $j$ is computed as the average residual across all other patients seen by the physician that year:
+In step two, the tendency measure for patient $i$ seen by physician $j$ is computed as the average residual across all other patients seen by the physician that year:
 
 \begin{equation}
 Tendency_{i,j}^{phys} =
@@ -224,7 +215,7 @@ Tendency_{i,j}^{phys} =
 
 where $\hat{\varepsilon}_{i'} = \hat{Batch}_{i'} - Batch_{i'}$ is the residual from equation (1); $J$ is the set of all ED encounters treated by physician $j$; and $N_{-i,j} = |\{J \backslash i\}|$, the number of cases that physician has seen that year, excluding patient $i$. This leave-out mean eliminates the mechanical bias that stems from patient $i$'s own case entering into the instrument. The measure is interpreted as the average (leave-out) batch rate of patient $i$’s physician, relative to other physicians in that hospital-year-month, hospital-day of week-time of day.
 
-We document that the Mayo Clinic ED physicians exhibit wide, systematic variation in their propensity to batch order diagnostic tests. Figure \ref{fig:physician_batching} graphs the histogram of batch-ordering frequency by physician for popular chief complaints, highlighting that the variation in batching differs systematically. \hyperref[tab:regression]{Table 3} presents the ``first stage" in a regression table: being assigned to a $10$pp higher batch-tendency physician is associated with a $8$pp increase in the likelihood of having tests batch-ordered in the ED. The F-statistic is 50 when all controls and fixed effects are included. The coefficient is greater than one because all emergency visits are used to construct the leniency instrument, while the first stage is calculated using the baseline sample only, which excludes the rare complaints.
+We document that the Mayo Clinic ED physicians exhibit wide, systematic variation in their propensity to batch order diagnostic tests. Figure \ref{fig:physician_batching} graphs the histogram of batch-ordering frequency by physician for popular chief complaints, highlighting that the variation in batching differs systematically. \hyperref[tab:regression]{Table 3} presents the ``first stage" in a regression table: being assigned to a $10$pp higher batch-tendency physician is associated with a $8$pp increase in the likelihood of having tests batch-ordered in the ED. The F-statistic is 50 when all controls and fixed effects are included. The coefficient is greater than one because all emergency visits are used to construct the tendency instrument, while the first stage is calculated using the baseline sample only, which excludes the rare complaints.
 
 
 \begin{figure}[h]
@@ -363,11 +354,9 @@ The introduction of a Directed Acyclic Graph (Figure \ref{fig:DAG}) elucidates t
 \end{tablenotes}  
 \end{figure}
 
-In Model 2 of Table \ref{tab:reducedform}, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with ln(LOS) diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination.
+In Model 2 of Table \ref{tab:reducedform}, we control for testing inclination and observe notable changes in the coefficients for batch tendency. The previously significant positive association with ln(LOS) diminishes, suggesting that the initial estimate may have been capturing the combined effects of batching and testing inclination. Estimated coefficients for batch tendency are scaled by the difference in batch tendency going from the ninetieth to tenth percentile in physician batch tendency for interpretability, and coefficients for testing inclination are scaled by the difference in testing inclination going from the ninetieth to tenth percentile in physician testing inclination. Assignment to a physician in the top batching decile (relative to one in the bottom decile) is associated with a 0.2 unit increase in the number of diagnostic tests being ordered per patient encounter, without any additional change in the likelihood of a 72-hour return. 
 
-Assignment to a physician in the top batching decile (relative to one in the bottom decile) is associated with a 0.2 unit increase in the number of diagnostic tests being ordered per patient encounter, without any additional change in the likelihood of a 72-hour return. With an average of 1,805 patient encounters per physician in our study period, this translates to an additional 361 diagnostic tests with no perceived benefit in terms of reducing returns or length of stay. 
-
-The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 0.96 unit increase in the number of diagnostic tests being ordered per patient encounter, and -0.03 pp change in the probability of a patient returning within 72 hours. 
+The effects of testing inclination are also striking. We find that a movement from a physician in the top testing decile (relative to one in the bottom decile) is associated with 0.6% change in the length of stay in the emergency department, a 9.6 excess diagnostic tests being ordered per 100 patient encounters, and -0.03 pp change in the probability of a patient returning within 72 hours. 
 
 
 
@@ -375,7 +364,7 @@ The effects of testing inclination are also striking. We find that a movement fr
 
 In this section we investigate whether the reduced-form effects observed in Section 4.1 are due to differences in batch rates across providers or due to other provider differences correlated with batch tendency. We start by studying reduced-form effects among patients with complaints that are never batched, as a ``placebo/falsification check.” By way of example, consider a patient who arrives at the ED with a urinary tact infection—a condition for which patients rarely undergo imaging testing. For such patients, we should expect to see no impact of batch tendency only if high batching and low batching physicians do not systematically differ in other dimensions of care relevant to patient outcomes. Conversely, if we do find a reduced-form effect for these patients, then high batch tendency physicians must systematically differ from low batch tendency physicians in other dimensions of care, beyond batching.
 
-To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician prescribing leniency for the subsample, following equation (3). The results of this exercise are displayed in Table \ref{tab:placebo_check}. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
+To that end, we restrict attention to ED visits for complaints where batching occurs no more than 10 percent of the time (recall that our baseline sample only includes complaints with a >10 percent batching rate). We estimate a reduced-form regression of each main outcome on physician batch tendency for the subsample, following equation (3). The results of this exercise are displayed in Table \ref{tab:placebo_check}. They show that in contrast to results for our main sample, the association between physician tendency to batch and a given outcome is statistically indistinguishable from zero and much smaller in magnitude for the samples of patients who visit the ED with health conditions that are rarely batched.
 
 
 
@@ -459,19 +448,19 @@ Residual Std. Error (df = 41667) & 0.496 & 0.817 & 0.184 \\
 
 The instrumental variable analysis presented here underscores the complexities underlying batch ordering practices in the ED. While batching is often seen by physicians as a method to enhance efficiency, our findings suggest that it may lead to increased resource utilization without corresponding gains in patient throughput or reductions in short-term return rates. These insights point to the need for a more nuanced approach to test ordering in emergency care, one that carefully weighs the benefits of comprehensive assessment against the risks and costs of potential over-testing.
 
+## Robustness
 
-## Investigating Mechanisms: Excess Testing
+The 2SLS results presented in the previous sections are robust to several alternative specifications probing the key batching definition. Our primary definition operationalizes batching as the ordering of multiple diagnostic tests within a 5-minute window. This approach is grounded in standard emergency medicine practices and offers a clear distinction between batching and non-batching behaviors. To ensure the robustness of our findings, we performed several sensitivity analyses.
 
+(1) Variation in the Time Window for Batching: Firstly, we varied the time window for what constitutes a batch. The original 5-minute window was extended and contracted to understand its impact on the study's outcomes. Specifically, we considered scenarios where a batch is defined as two or more tests ordered within windows of 1 minute to 10 minutes. This range allowed us to capture a broader spectrum of batching behaviors and test the sensitivity of our results to different batching definitions.
 
-In the previous section we find a particularly pronounced impact of batching on resource utilization. We reported a significant coefficient of 0.135 in the number of tests ordered due to batching, translating to 13.5 excess tests per 100 batch orders. Here, an ``excess test" is defined as one that would not have been ordered if the physician had chosen to order tests sequentially. This suggests that the information gain from sequential testing, where the need for additional tests is informed by the results of earlier tests, could lead to more efficient and targeted use of diagnostic resources.
-
-To further understand this phenomenon, we probe into high-volume complaint areas in the ED. By focusing on these areas, we can discern which specific complaints are more likely to lead to excess testing under a batch ordering system. This analysis is crucial as it sheds light on the causal effect of batching in different clinical scenarios.
-
-
-We consider the top 5 most common broad complaints in the ED, which account for 82% of all visits. Appendix table [...] . These include Cardiac/Chest-Related Issues, Gastrointestinal/Abdominal Issues, Respiratory-Related Issues, Neurological/Syncope Issues, and Musculoskeletal/Extremity Issues. We then examine the impact of batching on the number of tests ordered for each of these complaints.
+(2) Refinement of Batching Definition: Secondly, we refined our batching definition based on the sequence and timing of test orders. In the initial analysis, if two tests were ordered upfront and another test ordered later, it was counted as a batch. We modified this definition to consider a set of tests as a batch only if all tests ordered during a patient encounter came from that initial batch order. This adjustment ensures that our batching definition more accurately reflects a comprehensive diagnostic effort at the outset of patient care, rather than incremental decision-making.
 
 
-[...]
+The key finding from these robustness checks is the consistent impact of batching on key outcomes across all variations. As seen in Table \ref{tab:robustness_batching} and \ref{tab:robustness_batching2}, altering the time window for batching, whether narrowing it to as little as 1 minute or expanding it to 10 minutes, did not qualitatively change the results. Similarly, refining the definition of batching to consider only those tests ordered in the initial batch also had negligible impact on the study's main findings. These results lend further credibility to our initial findings, demonstrating that our conclusions about the impact of batching on patient outcomes in the ED are not sensitive to the specific operational definition of batching.
+
+
+
 
 # Conclusion
 
@@ -562,7 +551,6 @@ Urinary Complaints & Bladder Problem, Blood in Urine, Cystitis, Difficulty Urina
 \newpage
 
 
-
 \begin{table}[!htbp]
 \centering 
   \caption{Testing the Monotonicity Assumption} 
@@ -590,31 +578,93 @@ Fevers, Sweats or Chills & 1.033$^{***}$ (0.305) & 0.888$^{***}$ (0.084) \\
 \hline \\[-1.8ex] 
 \end{tabular} 
 \begin{tablenotes}
-\small
+\tiny
 \item \textit{Column 1 displays the first stage coefficient of batched on the baseline physician batch tendency instrument for the corresponding sub-sample. Column 2 constructs a new physician batch tendency instrument using all emergency visits, excluding the corresponding sub-sample (``reverse-sample"), and displays the coefficient of the first stage regression back on that sub-sample. Robust standard errors are clustered at the physician level.}
 \item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
 \end{tablenotes}
 \end{table}
 
+\newpage
 
-\begin{longtable}{|p{5cm}|p{12cm}|}
-\caption{Condensed Complaints} \\
-\hline
-\textbf{Condensed Complaint Area} & \textbf{Complaints} \\
-\hline
-Gastrointestinal/Abdominal Issues & Abdominal Cramping, Abdominal Distention, Dyspepsia, Abdominal Pain, Ascites, Hernia, Abdominal Aortic Aneurysm, Abdominal Injury, Pancreatitis, Umbilical Hernia, Anal Fissure, Black or Bloody Stool, Constipation, GERD, Anal Fistula, Diarrhea, Dysphagia, Fecal Impaction, Fistula Follow Up, GIbleeding, GI Problem, Hemorrhoids, Morning Sickness, Nausea, Ostomy Care, Rectal Bleeding, Rectal Pain, Vomiting, Vomiting Blood, Vomiting During Pregnancy, GI Bleeding, Fecal Incontinence, Bloated, Hematochezia, Urine Leakage, Heartburn, Rectal Discharge, Urolithiasis, Ulcerative Colitis, Irritable Bowel Syndrome, Rectal Prolapse, Fistula Evaluation, Rectal Problems, Perianal Abscess, Fisula Evaluation, Stoma Dysfunction \\
-\hline
-Cardiac/Chest-Related Issues & Atrial Fibrillation, Atrial Flutter, Cardiac Valve Problem, Bradycardia, Irregular Heart Beat, Palpitations, POTS, Ventricular Tachycardia, Rapid Heart Rate, Heart Problem, Cardiac Arrest, Congestive Heart Failure, Circulatory Problem, Transient Ischemic Attack, Ventricular Tachycardia, Chest Injury, Chest Pain, Chest Wall Pain, Angina, Collarbone Injury, Rib Injury, Heart Pain \\
-\hline
-Musculoskeletal/Extremity Issues & Ankle Injury, Ankle Pain, Arm Injury, Arm Pain, Cold Extremity, Arm Swelling, Arthritis, Elbow Injury, Elbow Pain, Pseudogout, Extremity Pain, Extremity Weakness, Finger Injury, Hip Injury, Extremity Weakness, Finger Injury, Finger Pain, Dislocation, Foot Infection, Foot Injury, Foot Numbness, Foot Pain, Foot Swelling, Foot Ulcer, Foot Wound Check, Hand Injury, Hand Pain, Back Pain, Back Problem, Flank Pain, Sciatica, Back Injury, Disc Disorder, Assault Victim, Concussion, Facial Injury, Fall, Nasal Trauma, Head Injury, Head Laceration, Motor Vehicle Crash, Puncture Wound, Sexual Assault, Trauma, Domestic Violence, Gun Shot Wound, Work Related Injury, Motorcycle Crash, Injury, Bicycle Accident, Near Drowning, Lip Laceration \\
-\hline
-Neurological/Syncope Issues & Altered Mental Status, Cognitive Concerns, Facial Droop, Pre Syncope, Focal Weakness, Headache, Memory Loss, Migraine, Dementia, Dysphasia, Neuro Problem, Numbness, Paralysis, Seizures, Slurred Speech, Spasms, Stroke Like Symptoms, Tingling, Tremors, Trigeminal Neuralgia, Unable to Speak, Seizure Disorder, Insomnia, Parkinson's Disease, Loss of Consciousness, Neuropathy, Ataxia, Unable to speak, Peripheral Neuropathy, Stroke, Cerebrovascular Accident, Speech Problem, Acute Neurological Problem, Flashes, Light, Unresponsive, Multiple Sclerosis, Parkinson's Disease, Febrile Seizure, Paresthesia, Peripheral Neuropathy, Hydrocephalus, Spasticity, Neuroendocrine Tumor, Dizziness, Near Syncope, Syncope, Vertigo, Spells, Hypotension, Paroxysmal Positional Vertigo, Paroxysmal Positional Vertigo \\
-\hline
-Respiratory-Related Issues & Airway Obstruction, Aspiration, Pain With Breathing, Near Drowning, Respiratory Distress, Shortness of Breath, Wheezing, Increased Work Of Breathing, Difficulty Breathing, Choking, Oxygen Dependence, Hyperventilating, Orthopnea, Congestion, Cough, Coughing Up Blood, Flu Symptoms, Enlarged Tonsils, Peritonsillar Abscess, Nasal Congestion, Sinus Symptoms, Sinusitis, Sore Throat, Hoarseness, Throat Problem, Upper Respiratory Infection, Influenza, Laryngitis, Respiratory Arrest, Pneumonia, Pleural Effusion, Asthma, Croup, URI, Peritonsillar Abscess\\
-\hline
-\end{longtable}
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results: Robustness to Batching Definition (1-minute and 10-minute windows)} 
+  \label{tab:robustness_batching} 
 
+\begin{tabular}{@{\extracolsep{10pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & \multicolumn{3}{c}{\textbf{1-minute window}} \\
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.592$^{***}$ & 0.975$^{***}$ & $-$0.025$^{***}$ \\ 
+  & (0.203) & (0.018) & (0.009) \\ 
+  & & & \\ 
+ Batch & $-$0.101 & 0.159$^{***}$ & 0.021 \\ 
+  & (0.496) & (0.054) & (0.023) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.209 & 0.278 & 0.009 \\ 
+Adjusted R$^{2}$ & 0.204 & 0.274 & 0.003 \\ 
+Residual Std. Error & 0.492 & 0.836 & 0.184 \\ 
+\hline 
+\\[-1.8ex] & \multicolumn{3}{c}{\textbf{10-minute window}} \\
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Testing Inclination & 0.650$^{***}$ & 0.957$^{***}$ & $-$0.027$^{**}$ \\ 
+  & (0.241) & (0.022) & (0.011) \\ 
+  & & & \\ 
+ Batch & $-$0.205 & 0.141$^{***}$ & 0.017 \\ 
+  & (0.438) & (0.045) & (0.018) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.146 & 0.315 & 0.009 \\ 
+Adjusted R$^{2}$ & 0.141 & 0.311 & 0.003 \\ 
+Residual Std. Error & 0.512 & 0.814 & 0.184 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\end{tabular}
+\begin{tablenotes}
+\tiny
+\item $*** p < 0.001$, $** p < 0.01$, $* p < 0.05$.
+\end{tablenotes}
+\end{table}
+
+\newpage
+
+
+\begin{table}[!htbp] \centering 
+  \caption{2SLS Results: Robustness to Batching Definition (all tests at once)} 
+  \label{tab:robustness_batching2} 
+  
+\begin{tabular}{@{\extracolsep{5pt}}lccc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+\\[-1.8ex] & Log LOS & Number of Tests & 72 Hour Return \\ 
+\\[-1.8ex] & (1) & (2) & (3)\\ 
+\hline \\[-1.8ex] 
+ Batch & 0.592$^{***}$ & 0.975$^{***}$ & $-$0.025$^{***}$ \\ 
+  & (0.203) & (0.018) & (0.009) \\ 
+  & & & \\ 
+ `any.batch(fit)` & $-$0.101 & 0.159$^{***}$ & 0.021 \\ 
+  & (0.496) & (0.054) & (0.023) \\ 
+  & & & \\ 
+\textit{N} & 41,929 & 41,929 & 41,929 \\ 
+R$^{2}$ & 0.209 & 0.278 & 0.009 \\ 
+Adjusted R$^{2}$ & 0.204 & 0.274 & 0.003 \\ 
+Residual Std. Error (df = 41667) & 0.492 & 0.836 & 0.184 \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{3}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{3}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
+
+\newpage
 :::
+
 
 
 

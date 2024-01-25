@@ -513,6 +513,32 @@ for(complaint in unique_complaints) {
 
 sink()
 
+unique_complaints[1]
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+       (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+       data = subset(data, GROUPED_COMPLAINT == unique_complaints[1])))
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+             data = subset(data, GROUPED_COMPLAINT == unique_complaints[2])))
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+             data = subset(data, GROUPED_COMPLAINT == unique_complaints[3])))
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+             data = subset(data, GROUPED_COMPLAINT == unique_complaints[4])))
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+             data = subset(data, GROUPED_COMPLAINT == unique_complaints[5])))
+
+summary(felm(nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+               (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+             data = subset(data, GROUPED_COMPLAINT == unique_complaints[6])))
+
 #=========================================================================
 # Specific Types of Test Batching: Lab+Image Batch
 #=========================================================================
@@ -633,3 +659,49 @@ stargazer(list(model.IV.LOS,
           style = 'QJE')
 
 sink()
+
+#=========================================================================
+# Robustness, Change definition of batching
+#=========================================================================
+
+data$any.batch[!is.na(data$sequenced)] <- 0
+
+data$residual_batch <- resid(
+  felm(any.batch ~ 0 | dayofweekt + month_of_year + complaint_esi, data=final))
+
+
+data <- data %>%
+  group_by(ED_PROVIDER) %>%
+  mutate(Sum_Resid=sum(residual_batch, na.rm=T),
+         batch.tendency = (Sum_Resid - residual_batch) / (n() - 1)) %>%
+  ungroup()
+
+
+# Main Results
+model.IV.LOS <- felm(
+  ln_ED_LOS ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.ntest <- felm(
+  nEDTests ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+model.IV.72 <- felm(
+  RTN_72_HR ~ test.inclination | dayofweekt + month_of_year + complaint_esi | 
+    (any.batch ~ batch.tendency + test.inclination)| ED_PROVIDER, 
+  data = data)
+
+
+stargazer(list(model.IV.LOS,
+               model.IV.ntest,
+               model.IV.72), type = "latex", 
+          covariate.labels = c('Batch'),
+          dep.var.labels = c('Log LOS', 'Number of Tests', '72 Hour Return',
+                             'Admission'),
+          header = F, 
+          title = "2SLS Results: Length of Stay, Number of Tests, and 72-Hour", 
+          style = 'QJE')
+
+
