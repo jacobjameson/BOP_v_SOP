@@ -1,19 +1,16 @@
 
 Reduced Form
 =========================================================================
-                                   ln_ED_LOS      nEDTests    RTN_72_HR  
-                                      (1)           (2)          (3)     
+                                  RTN_72_HR_ADMIT   ln_ED_LOS   imgTests 
+                                        (1)            (2)        (3)    
 -------------------------------------------------------------------------
-batch.tendency                      0.871***      1.733***      -0.026   
-                                    (0.298)       (0.329)      (0.018)   
+batch.tendency                       -0.072***       2.033**    3.357*** 
+                                      (0.015)        (0.954)    (0.390)  
                                                                          
-patients_in_hospital                0.012***       0.001*      -0.00002  
-                                    (0.001)       (0.001)      (0.0002)  
-                                                                         
-N                                    41,929        41,929       41,929   
-R2                                   0.234         0.260        0.011    
-Adjusted R2                          0.230         0.255        0.005    
-Residual Std. Error (df = 41667)     0.484         0.847        0.184    
+N                                     48,849         48,849      48,849  
+R2                                     0.005          0.350      0.275   
+Adjusted R2                            0.002          0.347      0.272   
+Residual Std. Error (df = 48668)       0.115          0.466      0.661   
 =========================================================================
 Notes:                             ***Significant at the 1 percent level.
                                     **Significant at the 5 percent level.
@@ -21,62 +18,70 @@ Notes:                             ***Significant at the 1 percent level.
 
 Reduced Form
 =========================================================================
-                                   ln_ED_LOS      nEDTests    RTN_72_HR  
-                                      (1)           (2)          (3)     
+                                  RTN_72_HR_ADMIT   ln_ED_LOS   imgTests 
+                                        (1)            (2)        (3)    
 -------------------------------------------------------------------------
-batch.tendency                       -0.107       0.146***      0.019    
-                                    (0.448)       (0.052)      (0.020)   
+batch.tendency                       -0.074**        -0.837     0.178**  
+                                      (0.035)        (2.357)    (0.083)  
                                                                          
-test.inclination                    0.590**       0.957***    -0.028***  
-                                    (0.231)       (0.024)      (0.011)   
+test.inclination                       0.001          0.860     0.953*** 
+                                      (0.011)        (0.601)    (0.020)  
                                                                          
-patients_in_hospital                0.012***       0.001       -0.00002  
-                                    (0.001)       (0.001)      (0.0002)  
-                                                                         
-N                                    41,929        41,929       41,929   
-R2                                   0.244         0.267        0.011    
-Adjusted R2                          0.239         0.263        0.005    
-Residual Std. Error (df = 41666)     0.482         0.842        0.184    
+N                                     48,849         48,849      48,849  
+R2                                     0.005          0.354      0.278   
+Adjusted R2                            0.002          0.351      0.275   
+Residual Std. Error (df = 48667)       0.115          0.464      0.660   
 =========================================================================
 Notes:                             ***Significant at the 1 percent level.
                                     **Significant at the 5 percent level.
                                     *Significant at the 10 percent level.
-felm(formula = ln_ED_LOS ~ batch.tendency + patients_in_hospital | 
-    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-    data = data)
-                        Estimate Cluster s.e.
-batch.tendency       0.137190164 0.0470177247
-patients_in_hospital 0.004288168 0.0002330106
-felm(formula = nEDTests ~ batch.tendency + patients_in_hospital | 
-    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-    data = data)
-                         Estimate Cluster s.e.
-batch.tendency       0.2730854606 0.0519089398
-patients_in_hospital 0.0004249243 0.0002481019
-felm(formula = RTN_72_HR ~ batch.tendency + patients_in_hospital | 
-    dayofweekt + month_of_year + complaint_esi | 0 | ED_PROVIDER, 
-    data = data)
-                          Estimate Cluster s.e.
-batch.tendency       -4.139965e-03 2.820977e-03
-patients_in_hospital -7.775343e-06 5.333933e-05
-felm(formula = ln_ED_LOS ~ batch.tendency + test.inclination + 
-    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
-    0 | ED_PROVIDER, data = data)
-                        Estimate Cluster s.e.
-batch.tendency       -0.01682447 0.0706579683
-test.inclination      0.58975903 0.2314335875
-patients_in_hospital  0.01216907 0.0006069262
-felm(formula = nEDTests ~ batch.tendency + test.inclination + 
-    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
-    0 | ED_PROVIDER, data = data)
-                        Estimate Cluster s.e.
-batch.tendency       0.023076731 0.0081641438
-test.inclination     0.957343465 0.0235953158
-patients_in_hospital 0.001014991 0.0006396313
-felm(formula = RTN_72_HR ~ batch.tendency + test.inclination + 
-    patients_in_hospital | dayofweekt + month_of_year + complaint_esi | 
-    0 | ED_PROVIDER, data = data)
-                          Estimate Cluster s.e.
-batch.tendency        3.062576e-03 0.0031741909
-test.inclination     -2.758026e-02 0.0106387902
-patients_in_hospital -1.643584e-05 0.0001523342
+[1] "Mediation Analysis of Reduced Form"
+[1] "Outcome: ln_ED_LOS"
+lm(formula = ln_ED_LOS ~ batch.tendency + imgTests + dayofweekt + 
+    month_of_year + complaint_esi + LAB_PERF, data = data)
+[1] "Mediator: imgTests"
+lm(formula = imgTests ~ batch.tendency + dayofweekt + month_of_year + 
+    complaint_esi + LAB_PERF, data = data)
+
+Causal Mediation Analysis 
+
+Quasi-Bayesian Confidence Intervals
+
+               Estimate 95% CI Lower 95% CI Upper p-value    
+ACME              0.709        0.539         0.88  <2e-16 ***
+ADE               1.405       -0.407         3.31   0.128    
+Total Effect      2.114        0.315         4.06   0.016 *  
+Prop. Mediated    0.337        0.175         1.63   0.016 *  
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Sample Size Used: 48849 
+
+
+Simulations: 1000 
+
+[1] "Mediation Analysis of Reduced Form"
+[1] "Outcome: RTN_72_HR_ADMIT"
+lm(formula = ln_ED_LOS ~ batch.tendency + imgTests + dayofweekt + 
+    month_of_year + complaint_esi + LAB_PERF, data = data)
+[1] "Mediator: imgTests"
+lm(formula = imgTests ~ batch.tendency + dayofweekt + month_of_year + 
+    complaint_esi + LAB_PERF, data = data)
+
+Causal Mediation Analysis 
+
+Quasi-Bayesian Confidence Intervals
+
+               Estimate 95% CI Lower 95% CI Upper p-value    
+ACME           -0.00799     -0.01247         0.00  <2e-16 ***
+ADE            -0.06345     -0.09173        -0.03  <2e-16 ***
+Total Effect   -0.07144     -0.10037        -0.04  <2e-16 ***
+Prop. Mediated  0.11015      0.05537         0.20  <2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+Sample Size Used: 48849 
+
+
+Simulations: 1000 
+

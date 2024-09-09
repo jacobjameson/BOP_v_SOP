@@ -1,23 +1,25 @@
 Category	Variable	Mean	Q1	Median	Q3
-Emergency Department Characteristics	Patients in ED	24.1762832348597	15	25	32
-Emergency Department Characteristics	Tachycardic	0.193108382570162	NA	NA	NA
-Emergency Department Characteristics	Tachypneic	0.09238829394387	NA	NA	NA
-Emergency Department Characteristics	Febrile	0.0235644387001477	NA	NA	NA
-Emergency Department Characteristics	Hypotensive	0.0149326070901034	NA	NA	NA
-Emergency Department Characteristics	ESI	2.78009237875289	2	3	3
-Emergency Department Characteristics	Complaint:  Abdominal Complaints	0.143833087149188	NA	NA	NA
-Emergency Department Characteristics	Complaint:  Extremity Complaints	0.121514955686854	NA	NA	NA
-Emergency Department Characteristics	Complaint:  Chest Pain	0.0813561669128508	NA	NA	NA
-Emergency Department Characteristics	Complaint:  Neurological Issue	0.0806637740029542	NA	NA	NA
-Emergency Department Characteristics	Complaint:  Gastrointestinal Issues	0.0766940546528804	NA	NA	NA
-Patient Characteristics	Race: White	0.886586041358936	NA	NA	NA
-Patient Characteristics	Race: Black	0.0406203840472674	NA	NA	NA
-Patient Characteristics	Race: Asian	0.0299575332348597	NA	NA	NA
-Patient Characteristics	Gender: Female	0.535635155096012	NA	NA	NA
-Patient Characteristics	Arrival Age	58.3264401772526	44	62	75
-Tests	X-Ray	0.465888109305761	NA	NA	NA
-Tests	Ultrasound	0.114014032496307	NA	NA	NA
-Tests	Non-Contrast CT	0.20721011816839	NA	NA	NA
-Tests	Contrast CT	0.18821547267356	NA	NA	NA
-Tests	Lab	0.765855797636632	NA	NA	NA
-Tests	Tests were Batch Ordered	0.379108197932053	NA	NA	NA
+Emergency Department Characteristics	Patients in ED	24.1801783074649	15	25	32
+Emergency Department Characteristics	Tachycardic	0.193066334072424	NA	NA	NA
+Emergency Department Characteristics	Tachypneic	0.0922949002217284	NA	NA	NA
+Emergency Department Characteristics	Febrile	0.0235818551367333	NA	NA	NA
+Emergency Department Characteristics	Hypotensive	0.0148512564671098	NA	NA	NA
+Emergency Department Characteristics	ESI	2.78004896526238	2	3	3
+Emergency Department Characteristics	Complaint:  Abdominal Complaints	0.143893200295639	NA	NA	NA
+Emergency Department Characteristics	Complaint:  Extremity Complaints	0.121466186252772	NA	NA	NA
+Emergency Department Characteristics	Complaint:  Chest Pain	0.0813239098300074	NA	NA	NA
+Emergency Department Characteristics	Complaint:  Neurological Issue	0.0806310051736881	NA	NA	NA
+Emergency Department Characteristics	Complaint:  Gastrointestinal Issues	0.0767507390983001	NA	NA	NA
+Patient Characteristics	Race: White	0.886663895048041	NA	NA	NA
+Patient Characteristics	Race: Black	0.0406042128603104	NA	NA	NA
+Patient Characteristics	Race: Asian	0.0299565779748707	NA	NA	NA
+Patient Characteristics	Gender: Female	0.535730783444198	NA	NA	NA
+Patient Characteristics	Arrival Age	58.3241177014045	44	62	75
+Tests	X-Ray	0.465885994087212	NA	NA	NA
+Tests	Ultrasound	0.1140059127864	NA	NA	NA
+Tests	Non-Contrast CT	0.207270879526978	NA	NA	NA
+Tests	Contrast CT	0.188262195121948	NA	NA	NA
+Tests	Lab	0.765867516629704	NA	NA	NA
+Tests	Imaging ordered	0.727434405025872	NA	NA	NA
+Tests	Tests were Batch Ordered	0.0559174057649661	NA	NA	NA
+Tests	Tests were Ordered After Initial Non-Batched Imaging	0.270963747678339	0	0	0

@@ -1,0 +1,346 @@
+---
+journal: mnsc
+title: "Image Batching: Batch Ordering Advanced Imaging Tests in the Emergency Department"
+shorttitle: "Image Batching"
+authors:
+- familyname: Jameson
+  othernames: Jacob
+  affiliation: Harvard Kennedy School, Harvard University
+  email: jacobjameson@g.harvard.edu
+- familyname: Soroush
+  othernames: Saghafian
+  affiliation: Harvard Kennedy School, Harvard University
+- familyname: Huckman
+  othernames:  Robert
+  affiliation: Harvard Business School, Harvard University
+- familyname: Hodgson
+  othernames:  Nicole
+  affiliation: Mayo Clinic, Emergency Department
+keywords:
+  - 3 to 6 keywords
+  - that do not appear in the title
+abstract: |
+  Abstract goes here
+acknowledgment: |
+  The authors would like to thank ...
+bibliography: references.bib
+blind: false
+output: rticles::informs_article
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{tabularx}
+  - \usepackage{graphicx}
+  - \usepackage{tikz}
+  - \usepackage{siunitx}
+  - \usepackage{tablefootnote}
+  - \usepackage{longtable}
+  - \usepackage{threeparttable}
+  - \usepackage{natbib}
+  - \usepackage{caption}
+  - \usepackage{adjustbox}
+  - \usepackage{multirow}
+---
+
+# Introduction
+
+Emergency departments (EDs) are high-pressure environments which globally face escalating challenges such as overcrowding, resource limitations, and increasing patient volumes [@mostafa2024strategies, @Sorup2013evaluation]. These challenges can often be exacerbated by the need to provide timely and accurate diagnoses to patients, which often requires the use of advanced imaging tests such as computed tomography (CT) scans, ultrasound, X-ray, and magnetic resonance imaging (MRI) [@waheed2022impact]. The management of diagnostic testing is a critical component of operational performance in EDs, where timely and accurate diagnoses can significantly impact patient outcomes [@committee2015improving]. In many EDs, however, physicians have considerable discretion over how they order these tests, particularly with regard to advanced imaging [@valtchinov2019use]. Yet little is known about the factors driving physicians' decisions to exercise such discretion and how test ordering should be managed when this discretion exists. In this paper, we explore the causal effects of batch ordering advanced imaging tests, a practice in which physicians order multiple tests simultaneously, on operational performance and patient outcomes in the ED.
+
+Worker discretion can improve system performance, but can sometimes enable workers to "choose the 'wrong' task (operationally)" [@vanDonselaar2010ordering]. We consider the physician's decision to order imaging tests for their patient as an optimization problem, where the physician must balance the trade-offs between the benefits of ordering multiple tests simultaneously at the start of the patient encounter, which may expedite the diagnostic process if the tests are necessary for diagnosis and disposition, and the costs of ordering multiple tests simultaneously, which may increase the total time spent in the ED and the resource utilization of the department. Batching stands in contrast to the more common practice of ordering tests sequentially, where physicians order one test at a time, review the results, and then decide whether to order additional tests. The decision to batch order imaging tests is a form of discretion that physicians can exercise in the ED.
+
+We address two research questions. First, what are the drivers of physician variation in the decision to batch order imaging tests? Second, what are the performance implications of batch ordering imaging tests? To identify the drivers of physician variation in the ordering of imaging tests, we consider the circumstances under which physicians are more likely to batch order imaging tests. We posit that the ability of physicians to identify an alternative test ordering strategy that they perceive as superior to the standard strategy will depend on the characteristics of the physician as well as the characteristics of the patient. With respect to the physician, we examine the role of physician experience. As for patient characteristics, we examine whether a patient has a complex chief complaint or a high acuity level, which may require additional diagnostic testing.
+
+
+We investigate these questions using operational data from two large EDs in the United States. We focus on imaging tests, which are commonly ordered in the ED and are associated with significant resource utilization. We use a unique dataset that contains detailed information on the timing of test orders, the timing of test results, and the timing of patient disposition. We exploit the random assignment of patients to physicians to identify the causal effects of batch ordering imaging tests on operational performance and patient outcomes. We find that physicians deviate from the standard test ordering strategy 42% of the time. We show that physicians are more likely to batch order imaging tests when they are more experienced, when there is an opportunity to follow a superior test ordering strategy by deviating, and when there is an opportunity to batch by deviating. When physicians deviate from the standard test ordering strategy, their average time to disposition increases by 13%. Other performance dimensions, including resource utilization and patient outcomes, are mostly unaffected. Our calculations suggest that forgoing deviations would have led to faster time to disposition, which could have saved 2,494 hours per year, increasing annual profits by 3%.
+
+
+We also find that the 
+
+
+# Related Literature
+
+
+# Batch Ordering Advanced Imaging
+
+## Drivers of Image Batching
+
+## Implications for Emergency Department Operations and Patient Outcomes
+
+## Hetereogeneity in Orderging Strategy
+
+# Setting, Data, and Models
+
+## Empirical Setting
+
+Our study uses data from two large U.S. emergency departments (EDs): the Mayo Clinic of Arizona and Massachusetts General Hospital (MGH). The MGH dataset, which includes 129,489 patient encounters from November 10, 2021 through December 10, 2022, provides a robust sample for validating the generalizability of our findings. However, our primary analysis focuses on the Mayo Clinic data due to its unique feature of random patient-physician assignment, which allows for stronger causal inference. The data contain information on the timing of test orders, the timing of test results, and the timing of patient disposition, among various other important triage metrics and demographic features. We focus on imaging tests (x-rays, contrast CT, non-contrast CT, ultrasound) because unlike laboratory tests, imaging tests cannot be run simultaneously. Therefore, the operational implications of batch ordering imaging tests are more pronounced. 
+
+
+## Data
+
+
+Our primary dataset comes from the ED of the Mayo Clinic of Arizona, a tertiary care hospital without obstetrical services, an inpatient pediatrics unit, or a trauma designation. During the study period from October 6, 2018, through December 31, 2019, the ED recorded 48,854 visits per year, managed across 26 treatment rooms and up to 9 hallway spaces. The department is exclusively staffed by board-eligible or board-certified emergency physicians (EPs), with rotating residents overseeing about 10% of patient volume. The data is summarized in Table \ref{tab:summary_stats}.
+
+\begin{table}[ht]
+\centering
+\caption{Summary Statistics of Mayo Clinic Emergency Department Encounters}
+\label{tab:summary_stats}
+\begin{threeparttable}
+\begin{tabular}{lccccc}
+\toprule
+Variable &  & {Mean} & {Q1} & {Median} & {Q3} \\
+\midrule
+\textbf{Emergency Department Characteristics} & & & & & \\
+Total Patients & & {48,854} & {-} & {-} & {-} \\
+Patients Admitted & & {18.7\%} & {-} & {-} & {-} \\
+Patients Revisited within 72 Hours & & {3.81\%} & {-} & {-} & {-} \\
+Patients with IV Fluids & & {35.7\%} & {-} & {-} & {-} \\
+Patients with IV Meds & & {17.9\%} & {-} & {-} & {-} \\
+Patients in ED & & {24.1} & {-} & {-} & {-} \\
+Tachycardic & & {19.2\%} & {-} & {-} & {-} \\
+Tachypneic & & {8.82\%} & {-} & {-} & {-} \\
+Febrile & & {2.16\%} & {-} & {-} & {-} \\
+Hypotensive & & {1.42\%} & {-} & {-} & {-} \\
+ESI & & {2.81} & {-} & {-} & {-} \\
+Time from Arrival to Triage (mins) & & {8.03} & {4} & {6} & {10} \\
+Time from Triage to First Contact (mins) & & {80.2} & {11} & {29} & {61} \\
+Average ED LOS (min) & & {246} & {-} & {-} & {-} \\
+\midrule
+\textbf{Patient Demographics} & & & & & \\
+Percent Male & & {46.5\%} & {-} & {-} & {-} \\
+Race: White & & {88.4\%} & {-} & {-} & {-} \\
+Race: Black & & {4.17\%} & {-} & {-} & {-} \\
+Race: Asian & & {3.05\%} & {-} & {-} & {-} \\
+Gender: Female & & {53.5\%} & {-} & {-} & {-} \\
+Arrival Age & & {57.7} & {43} & {61} & {74} \\
+\midrule
+\textbf{Diagnostic Tests and Outcomes} & & & & & \\
+X-Rays Performed & & {43.3\%} & {-} & {-} & {-} \\
+Ultrasounds Performed & & {11.3\%} & {-} & {-} & {-} \\
+CTs Performed & & {35.5\%} & {-} & {-} & {-} \\
+Labs Ordered & & {73.7\%} & {-} & {-} & {-} \\
+Patients Discharged & & {66.8\%} & {-} & {-} & {-} \\
+Patients Admitted & & {18.7\%} & {-} & {-} & {-} \\
+Contrast CT Performed & & {17.7\%} & {-} & {-} & {-} \\
+Time to Result: X-Ray (mins) & & {67.2} & {36} & {54} & {79} \\
+Time to Result: Ultrasound (mins) & & {165} & {71} & {101} & {150} \\
+Time to Result: Contrast CT (mins) & & {142} & {86} & {115} & {153} \\
+Time to Result: Non-Contrast CT (mins) & & {89.7} & {50} & {70} & {102} \\
+Time to Result: Lab (mins) & & {46.1} & {25} & {35} & {49} \\
+\bottomrule
+\end{tabular}
+\begin{tablenotes}
+\small
+\item \textit{This table reports summary statistics for the baseline sample of emergency department visits during the study period described in the text. Vital signs were categorized as follows: tachycardia (pulse more significant than $100$), tachypnea (respiratory rate greater than $20$), fever (temperature greater than $38^\circ C$), and hypotension (systolic blood pressure less than $90$).}
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+A key feature of the Mayo Clinic ED is its rotational patient assignment system, in which patients arriving at the Mayo Clinic ED are randomly assigned to physicians via a rotational patient assignment algorithm @traub2016emergency, which removes potential selection bias concerns for our analyses. In essence, barring arrival time and shift-level variation, the physician-to-patient matching can be deemed random. Table \ref{tab:wald_test} displays that patient encounters (regarding chief complaints and emergency severity) are equitably distributed across physicians within our study's cohort.
+
+\begin{table}[ht]
+    \centering
+    \caption{Balancing Test: Wald Test for Equality of Means}
+    \label{tab:wald_test}
+    \begin{threeparttable}
+    \begin{tabular}{lcccc}
+        \toprule
+        Chief Complaints & Frequency & F-Statistic & $Pr(> F)$ \\
+        \midrule
+        Abdominal Complaints & 6,232 & 2.587 & 0.108 \\ 
+        Back or Flank Pain & 2,552 & 1.637 & 0.201 \\ 
+        Chest Pain & 3,525 & 0.407 & 0.524 \\ 
+        Extremity Complaints & 5,265 & 1.847 & 0.174 \\ 
+        Falls, Motor Vehicle Crashes, Assaults, and Trauma & 2,381 & 0.023 & 0.880 \\ 
+        Gastrointestinal Issues & 3,323 & 0.105 & 0.746 \\ 
+        Neurological Issue & 3,495 & 0.135 & 0.713 \\ 
+        Shortness of Breath & 2,966 & 1.324 & 0.250 \\ 
+        Skin Complaints & 2,178 & 0.383 & 0.536 \\ 
+        Upper Respiratory Symptoms & 1917 & 0.017 & 0.896 \\ 
+        \midrule
+        Emergency Severity & Frequency & F-Statistic & $Pr(> F)$ \\
+        \midrule
+        ESI 1 or 2 & 13,914 & 0.011 & 0.915 \\ 
+        ESI 3, 4, or 5 & 29,386 & 0.010 & 0.921 \\ 
+        \bottomrule
+    \end{tabular}
+\begin{tablenotes}
+\item \textit{Table \ref{tab:wald_test} reports the results of a Wald test which was conducted to assess the balance of chief complaints across providers in our dataset. A balanced distribution implies that complaints and severity are evenly distributed across providers, which we expect to be the case due to randomization. The Wald F-statistic and p-value are reported. Robust standard errors (type HC1) were used to account for potential heteroscedasticity in the data.}
+\end{tablenotes}
+\end{threeparttable}
+\end{table}
+
+We conducted a retrospective review of comprehensive ED operational data, coinciding with the initiation of a new electronic medical record. The dataset includes detailed patient demographics, chief complaints, vital signs, emergency severity index (ESI), length of stay (LOS), and resource utilization metrics. This period was chosen to provide a robust data set while excluding the influence of the coronavirus pandemic.
+
+Our research design focuses on adults who visit the Mayo Clinic of Arizona ED. We observe $48,854$ such visits during the study period. To improve power, we drop encounters with rare "reasons for visit" (RVF) ($<1000$ total encounters of this kind) and complaints where a batch order occurs less than $5\%$ of the time. Since batch orders are rare for these cases, our physician batch tendency instrument could suffer from a weak instrument problem if we included them. Examples of complaints dropped include Skin Complaints and Urinary Complaints, as well as other complaints where multiple modalities of imaging is unlikely to occur. Excluding these conditions does not introduce selection bias unless physician test batching tendency is orthogonal to physician diagnosing behavior. While this assumption may be violated if we were to use a very detailed level of chief complaint information upon which to base our exclusion criterion, it is plausibly satisfied when using broad complaint categories as we do. In order to estimate a precise measure of physician-level batch tendency, we further restrict our sample to the $15,821$ encounters involving full-time physicians who treat over 500 ED cases per year. 
+
+### Instrumental Variable
+
+\
+Our explanatory variable in the IV analysis, $Batched_i$, is an indicator for whether patient $i$ has their tests batch ordered during their ED encounter. We define "batching" in line with standard emergency medicine practices. Batching occurs when a physician simultaneously orders a comprehensive set of diagnostic tests, typically covering a broad range of potential diagnoses. This contrasts with sequential ordering, where tests are ordered sequentially based on the information obtained from each test as needed.
+
+We operationalize batching as occurring when multiple diagnostic imaging tests are ordered within a 5-minute window. In Section 5.6, sensitivity analyses on this cutoff point showed that our results are robust to this definition. Each imaging test (e.g., X-ray, Contrast CT scan, Non-Contrast CT scan,  Ultrasound) is considered a separate, distinct test for our study. Therefore, a batch in our study consists of two or more distinct imaging tests.
+
+### Dependent Variables  
+
+\
+\textit{Logarithm of Emergency Department Length of Stay (LOS)}: ED LOS is a key performance metric for ED operations. It is defined as the time from patient arrival to the ED to the time of discharge from the ED. We use this metric to evaluate the impact of batch ordering on ED efficiency. This variable is measured in minutes and in our sample is right-skewed. We log-transform this variable to normalize its distribution to meet the assumptions of linear regression.
+
+\textit{Logarithm of Time to Last Result}: Time to result is defined as the time from when a diagnostic test is ordered to when the result is available in the electronic medical record. The time stamps are at the minute level; that is, for each case, we know the minute in which a test is ordered by the physician and the minute in which the result is available. In order to fully capture the impact of batch ordering on the efficiency of diagnostic testing, we define time to last result (TIME TO RESULT) as the time from when the first image test is ordered to the the time when the last image test result is available. Time to result as a dependent variable is an understudied metric in the literature, and we believe it may capture a less noisy signal of the efficiency of diagnostic testing than LOS in certain circumstances. This variable is also right-skewed in our sample, so we log-transform it to normalize its distribution.
+
+\textit{Total Imaging Tests Ordered}: Total imaging tests ordered (NUM_IMAGES) is a count of the number of distinct imaging tests ordered for a patient during the ED encounter. We use this variable to evaluate the impact of batch ordering on the number of imaging tests ordered. 
+
+\textit{72 Hour Return with Admission}: 72 Hour Return with Admission (72HRA) is a binary variable indicating whether a patient returns to the ED within 72 hours of their initial visit and is admitted to the hospital. This variable is used to evaluate the impact of batch ordering on patient outcomes.
+
+
+## Identification Strategy
+
+Our empirical strategy closely follows the literature that relies on quasi-random assignment of agents to cases, often referred to as the “judges design.” Papers in this literature typically exploit variation in the sentencing leniency of judges who work in the same court. Similarly, we explore batching variation across physicians who work in the same emergency department. In its reduced form, under the assumption of quasi-random assignment, this approach allows researchers to identify the causal effect of being assigned to different types of physicians (i.e. physiancs with a higher or lower tendency to batch order imaging). Under additional assumptions, an instrumental variable approach identifies the causal effect of a given clincal decision. 
+
+
+To measure physician batch tendency, we use the physician's residualized leave-out average batch rate. This measure is derived from two steps following the approaches taken by @doyle2015measuring, @dobbie2018effects, and @eichmeyer2022pathways. First, we obtain residuals from a regression model, which includes all ED encounters in our sample period.
+
+\begin{equation}
+Batched_{i,t} = \alpha_0 + \alpha_{ym} + \alpha_{dt} + \alpha_{complaint\_esi} + \alpha_{lab} + \varepsilon_{i,t}
+\end{equation}
+
+Where $Batched_{i,t}$ is a dummy variable equal to one if patient $i$ had their imaging tests batch ordered on encounter that took place on date $t$. Fixed effects include year-month fixed effects, $\alpha_{ym}$, to control for time and seasonal variation in batching, such as hospital-specific policies (e.g. initiatives to eliminate excess testing) or seasonality in ED visits. We also control for ``shift-level" variations that include both physician scheduling and patient arrival with day of week-time of day fixed effects, $\alpha_{dt}$. Chief complaint by severity fixed effects, $\alpha_{complaint}$, were also included to increase precision. Finally, a binary variable for whether or not laboratory tests were ordered, $\alpha_{lab}$, was included to account for the complexity of the case. As stated earlier, these controls are more than what is required for our quasi-random assignment assumption. Under the assumption that we have captured the observables under which quasi-random assignment occurs in the ED, the unexplained variation-- the physician’s contribution-- resides in the error term, $\varepsilon_{i,t}$. 
+
+In step two, the tendency measure for patient $i$ seen by physician $j$ is computed as the average residual across all other patients seen by the physician that year:
+
+\begin{equation}
+Tendency_{i,j}^{phys} =
+\frac{1}{N_{-i,j}} \sum_{i' \in \{J \backslash i\}}\hat{\varepsilon}_{i'}
+\end{equation}
+
+where $\hat{\varepsilon}_{i'} = \hat{Batch}_{i'} - Batch_{i'}$ is the residual from equation (1); $J$ is the set of all ED encounters treated by physician $j$; and $N_{-i,j} = |\{J \backslash i\}|$, the number of cases that physician has seen that year, excluding patient $i$. This leave-out mean eliminates the mechanical bias that stems from patient $i$'s own case entering into the instrument. The measure is interpreted as the average (leave-out) batch rate of patient $i$’s physician, relative to other physicians in that hospital-year-month, hospital-day of week-time of day.
+
+We document that the Mayo Clinic ED physicians exhibit wide, systematic variation in their propensity to batch order imaging tests. Table \ref{table:first_stage} presents the ``first stage" in a regression table: being assigned to a $10$pp higher batch-tendency physician is associated with a $6$pp increase in the likelihood of having tests batch-ordered in the ED. The F-statistic is 94 when all controls and fixed effects are included. The coefficient is greater than one because all emergency visits are used to construct the tendency instrument, while the first stage is calculated using the baseline sample only, which excludes the rare complaints.
+
+
+\begin{table}[!htbp] \centering 
+  \caption{Comparison of First Stage Estimates}
+  \label{table:first_stage}
+  \begin{tabularx}{5.5in}{Xccc} % 'X' for the first column and 'c' for the others
+  \toprule
+   & \multicolumn{3}{c}{Coeffecient} \\
+  \cmidrule{2-4}
+   & (1) & (2) & (3) \\
+  \midrule
+  Batch Tendency & 1.92$^{***}$ & 1.91$^{***}$ & 1.76$^{***}$ \\ 
+   & (0.07) & (0.06) & (1.76) \\ 
+  \textit{Day of Week-Time of Day FE} & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+  \textit{Month of Year FE} & $\checkmark$ & $\checkmark$ & $\checkmark$ \\
+  \textit{Complaint/Severity FE} & & $\checkmark$ & $\checkmark$ \\
+  \textit{Laboratory Tests Ordered} & & & $\checkmark$ \\
+  \midrule
+  F Statistic & 9.55 & 17.86 & 21.59 \\ 
+  N & 16,361 & 16,361 & 16,361 \\ 
+  \bottomrule
+  \end{tabularx}
+  \begin{tablenotes}
+  \small
+  \item Estimates of the first stage for the baseline sample described in the text. Seasonality shift fixed effects include Year-Month and Hospital-Day of week-Hour of day fixed effects. Chief complaint comes from the cleaned complaint that the patient came in with at the initial encounter. Column 3 corresponds to the baseline controls. Robust standard errors are clustered at the physician level.
+  \item $^{***} p < 0.001$, $^{**} p < 0.01$, $^{*} p < 0.05$.
+  \end{tablenotes}
+\end{table} 
+
+
+To estimate the reduced-form effects of being treated by a batch-preferring physician, we estimate the following equation:
+
+\begin{equation}
+Y_i = \mu_0 + \mu_1 Tendency_{i,j}^{phys} + \gamma X_i + \nu_i
+\end{equation}
+
+This reduced form will allow us to check that our instrument is a strong instrument. To study the effects of test batching in the ED on an outcome $Y_i$, we estimate the following 2SLS equations using our baseline sample:
+
+\begin{equation}
+Y_i = \beta_0 + \beta_1 Batched_i + \theta X_i + \varepsilon_i
+\end{equation}
+
+\begin{equation}
+Batched_i = \delta_0 + \delta_1 Tendency_{i,j}^{phys} + \delta_2 X_i + \nu_i
+\end{equation}
+
+Where $Y_i$ represents our main outcomes of interest: ED LOS, TIME TO RESULT, NUM IMAGES, 72HRA, and $X_i$ is the same as in the reduced-form approach. $Batched_i$ variable suffers from potential endogeneity concerns. For example, injury severity may be unobserved and correlated with need to run multiple tests, length of stay, and return with admission likelihood. Hence, we instrument $Batched_i$ with the assigned physician $j$'s underlying tendency to batch, $Tendency_{i,j}^{phys}$. We cluster robust standard errors at the physician level to account for the assignment process of patients to physicians.
+
+### Identifying Assumptions
+
+\
+The reduced-form approach delivers an unbiased estimate of the causal effect of being treated by a higher tendency to batch physician, since assignment of patients to ED physicians is random, conditional on seasonality and shift (``conditional independence"). The residualization in equation (1) controls for more controls than required to achieve quasi-random assignment; they are included for statistical precision in measuring physician tendency to batch. 
+
+Our instrumental variable approach, which aims to recover the causal effect of having diagnostic tests batch ordered, relies on three additional assumptions: relevance, exclusion, and monotonicity. We reported a strong first stage (i.e., relevance) at the end of the previous Section. The exclusion restriction requires that the instrument must influence the outcome of interest only through its effect on test batching. This is perhaps our strongest assumption and is at its core, untestable. However, several features of the ED setting suggest that such violation may likely only have a small impact and may be less concerning than in other health care settings. First, unlike in primary care settings, where the patient and primary care provider have many repeat encounters, the scope of what the emergency physician can do to impact medium-term outcomes is limited and well-observed by the researcher. Second, any violation of the exclusion restriction needs to directly affect the specific outcome of interest. The channel by which ED physicians can influence length of stay relative outcomes is likely through testing and diagnosis. Nevertheless, we take this assumption seriously and perform a placebo check in Section [...] as well as various robustness checks in Section [...].
+
+Finally, the monotonicity assumption is necessary for interpreting the coefficient estimates obtained from the IV approach as Local Average Treatment Effects (LATEs) if there are heterogeneous treatment effects. It requires that any patient who is (not) batched by a sequencer (batcher) would also (not) be batched by a batcher (sequencer) physician. The literature leveraging the judges design typically performs two informal tests for its implications. The first one provides that the first stage should be weakly positive for all subsamples (@dobbie2018effects). The second implication asserts that the instrument constructed by leaving out a particular subsample has predictive power over that same left-out subsample (@bhuller2020incarceration). Appendix Table  [...] presents both of these tests in the two columns for various subsamples of interest. 
+
+
+## Econometric Models
+
+# Results and Discussion
+## Determenants of Image Batching
+
+To investigate the drivers of batching behavior, we estimate the following regression model:
+
+\small
+\begin{equation}
+Batched_{i,j} = \beta_0 + \beta_1 EXPERIENCE_{i,j} + \beta_2 SEXM_{i,j} + \beta_3 PATIENTS\_TBS + \beta_4 OCCUPANCY + X_{i,j} + \epsilon_i
+\end{equation}
+
+\normalsize
+Where $Batched_{i,j}$ is a binary measure of whether physician $j$ batched tests for patient $i$. $EXPERIENCE_{i,j}$ is the number of years since the physician's residency graduation. $SEXM_{i,j}$ is a binary variable indicating the sex of the physician is male. $PATIENTS\_TBS$ is the number of remaining patients to be seen by the physician, excluding patient $i$, at the time of the patient's visit. $OCCUPANCY$ is the number of patients in the ED at the time of the arrival of the patient's visit. $X_{i,j}$ is the vectors of patient covariates described in the previous section. We cluster robust standard errors at the physician level.
+
+\begin{table}[!htbp] \centering 
+  \caption{} 
+  \label{} 
+\begin{tabular}{@{\extracolsep{5pt}}lcc} 
+\\[-1.8ex]\hline 
+\hline \\[-1.8ex] 
+ & Model 1 & Model 2 \\ 
+\\[-1.8ex] & (1) & (2)\\ 
+\hline \\[-1.8ex] 
+ EXPERIENCE & 0.001 (0.001) & 0.001 (0.001) \\ 
+  SEXM & 0.010 (0.028) & 0.010 (0.026) \\ 
+  PATIENTS\_TBS & $-$0.0002 (0.001) & 0.0001 (0.001) \\ 
+  OCCUPANCY & $-$0.0005 (0.0004) & $-$0.001 (0.0003) \\ 
+ & &   \\
+\textit{Day of Week-Time of Day FE} & $\checkmark$ & $\checkmark$  \\
+\textit{Month of Year FE} & $\checkmark$ & $\checkmark$   \\
+\textit{Complaint/Severity FE} & & $\checkmark$ \\
+\textit{Laboratory Tests Ordered} & & $\checkmark$  \\
+\hline \\[-1.8ex]
+ \textit{N} & 12,454 & 12,454 \\ 
+R$^{2}$ & 0.004 & 0.060 \\ 
+Adjusted R$^{2}$ & 0.0004 & 0.055 \\ 
+Residual Std. Error & 0.335 (df = 12411) & 0.326 (df = 12385) \\ 
+\hline 
+\hline \\[-1.8ex] 
+\textit{Notes:} & \multicolumn{2}{r}{$^{***}$Significant at the 1 percent level.} \\ 
+ & \multicolumn{2}{r}{$^{**}$Significant at the 5 percent level.} \\ 
+ & \multicolumn{2}{r}{$^{*}$Significant at the 10 percent level.} \\ 
+\end{tabular} 
+\end{table} 
+
+
+In the baseline model (Model 1), we include only covaraites neccessary to achieve for quasi-random assignment. We find that the number of years since the physician's residency graduation, sex of the physician, number of remaining patients to be seen by the physician over the course of their shift, and the number of patients in the ED at the time of the arrival of the patient's visit are not significantly associated with the likelihood of batching tests. In Model 2, we include additional covariates to control for potential confounding factors such as the severity of the . We find that the number of years since the physician's residency graduation
+
+
+
+
+
+
+## Impact on Emergency Department Operations and Patient Outcomes
+
+## Heterogeneity in Ordering Strategy
+
+## Generealizability of Results
+
+## Managerial Implications
+
+## Robustness Checks
+
+# Conclusion
+
+## Contributions
+
+## Conclusion
+
+\newpage
+

@@ -2,44 +2,37 @@
 ====================================================================
                             Model 1       Model 2       Model 3     
 --------------------------------------------------------------------
-batch.tendency                  1.06 ***      1.08 ***      1.08 ***
-                               (0.02)        (0.02)        (0.02)   
-test.inclination                0.00         -0.01         -0.01    
-                               (0.01)        (0.01)        (0.01)   
+batch.tendency                  1.27 ***      1.26 ***      1.16 ***
+                               (0.04)        (0.03)        (0.02)   
 --------------------------------------------------------------------
-Num. obs.                   41929         41929         41929       
-R^2 (full model)                0.03          0.23          0.23    
-R^2 (proj model)                0.02          0.03          0.03    
-Adj. R^2 (full model)           0.02          0.22          0.23    
-Adj. R^2 (proj model)           0.02          0.02          0.02    
-F statistic (full model)        6.85         47.05         46.10    
+Num. obs.                   35897         35897         35897       
+R^2 (full model)                0.01          0.06          0.07    
+R^2 (proj model)                0.01          0.01          0.01    
+Adj. R^2 (full model)           0.01          0.06          0.07    
+Adj. R^2 (proj model)           0.01          0.01          0.01    
+F statistic (full model)       13.01         26.67         29.88    
 F (full model): p-value         0.00          0.00          0.00    
-F statistic (proj model)     3678.09       5423.33       5325.57    
+F statistic (proj model)     1232.34       1872.67       2665.70    
 F (proj model): p-value         0.00          0.00          0.00    
-Num. groups: dayofweekt       168           168           168       
+Num. groups: dayofweekt        28            28            28       
 Num. groups: month_of_year     12            12            12       
-Num. groups: age_groups                       4             4       
-Num. groups: complaint_esi                   82            82       
-Num. groups: GENDER                                         2       
-Num. groups: race                                           6       
+Num. groups: complaint_esi                   53            53       
+Num. groups: LAB_PERF                                       2       
 ====================================================================
 *** p < 0.001; ** p < 0.01; * p < 0.05
 
 First Stage
 ============================================================================
-                                           any.batch                        
+                                            batched                         
                            (1)                (2)                (3)        
 ----------------------------------------------------------------------------
-batch.tendency           1.061***           1.082***           1.081***     
-                         (0.018)            (0.018)            (0.019)      
+batch.tendency           1.267***           1.255***           1.165***     
+                         (0.036)            (0.029)            (0.023)      
                                                                             
-test.inclination          0.001              -0.012             -0.012      
-                         (0.009)            (0.008)            (0.008)      
-                                                                            
-N                         41,929             41,929             41,929      
-R2                        0.029              0.230              0.230       
-Adjusted R2               0.025              0.225              0.225       
-Residual Std. Error 0.482 (df = 41748) 0.429 (df = 41664) 0.429 (df = 41658)
+N                         35,897             35,897             35,897      
+R2                        0.014              0.063              0.071       
+Adjusted R2               0.013              0.061              0.069       
+Residual Std. Error 0.244 (df = 35857) 0.238 (df = 35805) 0.237 (df = 35804)
 ============================================================================
 Notes:                                ***Significant at the 1 percent level.
                                        **Significant at the 5 percent level.
